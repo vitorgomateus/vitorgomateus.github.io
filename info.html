@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Information - Lightweight Page</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #2563eb;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #1e40af;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        p {
+            margin-bottom: 15px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .info-box {
+            background: #eff6ff;
+            border-left: 4px solid #2563eb;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .highlight {
+            background: #fef3c7;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">← Back to Chatbot</a>
+        
+        <h1>Lightweight Information Page</h1>
+        
+        <div class="info-box">
+            <strong>Note:</strong> This page is designed to be extremely lightweight with minimal JavaScript. 
+            If you experienced performance issues with the chatbot, you can safely use this page.
+        </div>
+
+        <h2>About This Chatbot</h2>
+        <p>
+            This is a <span class="highlight">100% client-side</span> chatbot that runs entirely in your browser. 
+            No data is sent to any servers, ensuring complete privacy.
+        </p>
+
+        <h2>Features</h2>
+        <ul>
+            <li>Client-side processing - all conversations stay on your device</li>
+            <li>No tracking or data collection</li>
+            <li>Performance monitoring to prevent browser slowdown</li>
+            <li>Automatic message pruning to manage memory</li>
+            <li>Typing indicators and smooth animations</li>
+        </ul>
+
+        <h2>Performance Optimization</h2>
+        <p>The chatbot includes several features to ensure smooth performance:</p>
+        <ul>
+            <li><strong>Message Limits:</strong> Automatically removes old messages to prevent memory issues</li>
+            <li><strong>Idle Scheduling:</strong> Uses browser idle time for processing</li>
+            <li><strong>Memory Monitoring:</strong> Alerts you if memory usage gets too high</li>
+            <li><strong>Graceful Degradation:</strong> This info page as a fallback option</li>
+        </ul>
+
+        <h2>Frequently Asked Questions</h2>
+        
+        <p><strong>Why might I experience performance issues?</strong></p>
+        <p>Performance can be affected by:</p>
+        <ul>
+            <li>Having many tabs open in your browser</li>
+            <li>Older or resource-constrained devices</li>
+            <li>Very long conversation histories</li>
+            <li>Other resource-intensive applications running</li>
+        </ul>
+
+        <p><strong>Is my data private?</strong></p>
+        <p>
+            Yes! Everything runs in your browser. No messages or data are sent to any server. 
+            The chatbot uses simple pattern matching to generate responses locally.
+        </p>
+
+        <p><strong>How can I improve performance?</strong></p>
+        <ul>
+            <li>Close unnecessary browser tabs</li>
+            <li>Restart your browser periodically</li>
+            <li>Use this lightweight info page instead of the chatbot</li>
+            <li>Clear your browser cache if needed</li>
+        </ul>
+
+        <h2>Contact & Support</h2>
+        <p>
+            For additional information or questions, feel free to explore the other sections of this website.
+        </p>
+
+        <div class="info-box">
+            <strong>Ready to try the chatbot?</strong><br>
+            <a href="index.html">Return to the chatbot interface</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,470 +1,65 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-156554308-1"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'UA-156554308-1',{
-        'custom_map': {'dimension1': 'entry_point'}
-      });
-    </script>
-
-  <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Curriculum Vitae for Vitor Gonçalves">
-    <meta name="author" content="Vitor Gonçalves, from a Bootstrap Template">
-  <title>Vitor Gonçalves CV</title>
-  <!-- <link rel="canonical" href="https://getbootstrap.com/docs/4.4/examples/cover/"> -->
-
-  <!-- Bootstrap core CSS
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">-->
-    <link rel="stylesheet" href="res/bootstrap/css/bootstrap.min.css">
-
-  <!-- Favicons -->
-    <link rel="apple-touch-icon" sizes="57x57" href="res/ico/apple-icon-57x57.png">
-    <link rel="apple-touch-icon" sizes="60x60" href="res/ico/apple-icon-60x60.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="res/ico/apple-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="res/ico/apple-icon-76x76.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="res/ico/apple-icon-114x114.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="res/ico/apple-icon-120x120.png">
-    <link rel="apple-touch-icon" sizes="144x144" href="res/ico/apple-icon-144x144.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="res/ico/apple-icon-152x152.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="res/ico/apple-icon-180x180.png">
-    <link rel="icon" type="image/png" sizes="192x192"  href="res/ico/android-icon-192x192.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="res/ico/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="96x96" href="res/ico/favicon-96x96.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="res/ico/favicon-16x16.png">
-    <link rel="manifest" href="res/ico/manifest.json">
-    <meta name="msapplication-TileColor" content="#ffffff">
-    <meta name="msapplication-TileImage" content="res/ico/ms-icon-144x144.png">
-    <meta name="theme-color" content="#ffffff">
-
-  <!-- Our project just needs Font Awesome Solid 
-    <link href="res/fa/css/fontawesome.css" rel="stylesheet">
-    <link href="res/fa/css/solid.css" rel="stylesheet">
-    <link href="res/fa/css/brands.css" rel="stylesheet">-->
-    <script src="https://kit.fontawesome.com/cd4ab06dd7.js" crossorigin="anonymous"></script>
-
-    <link href="index.css" rel="stylesheet">
-    <!-- experiment with material
-      <link href="res/css/material.css" rel="stylesheet">-->
-
-   <!-- Custom styles for this template 
-    <link href="cover.css" rel="stylesheet">-->
-  </head>
-
-<body data-spy="scroll" data-target="#my-navbar">
-  <div class="toast-wrapper">
-  </div>
-  <nav id="my-navbar" class="navbar navbar-expand-md navbar-dark sticky-top bg-dark">
-    <a class="py-2 mr-5 b-0" href="#" aria-label="top">
-      <h3 class="p-0 m-0">
-        <subtle>Vitor G |</subtle> UX D.
-      </h3>
-    </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarItems" aria-controls="navbarItems" aria-expanded="true" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse text-right" id="navbarItems">
-        <a class="nav-link py-2 mx-2" href="#work">CV</a>
-        <a class="nav-link py-2 mx-2" href="projects.html">Portfolio</a>
-        <a class="nav-link py-2 mx-2" href="contact.html">Contact</a>
-      <!--<div class="container">justify-content-between
-        data-toggle="collapse" data-target="#navbarItems" 
-      </div>-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLM Chatbot Assistant</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Performance Warning Banner -->
+    <div id="performanceWarning" class="performance-warning hidden">
+        ⚠️ Performance issues detected. <a href="info.html">Switch to lightweight info page</a>
     </div>
-  </nav>
 
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>AI Assistant</h1>
+            <div class="header-actions">
+                <a href="info.html" class="info-link" title="Having performance issues? Try the lightweight info page">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                    Info Page
+                </a>
+            </div>
+        </header>
 
-  <div class="cover position-relative overflow-hidden bg-dark">
-    <div class="col-md-5 p-lg-5 mx-auto my-5">
-      <h1 class="cover-heading">Hello fellow human.</h1>
-      <p class="lead">
-        This is the Curriculum Vitae for Vitor Gonçalves, a UX Desinger from Portugal. Feel free to look around, get in touch, or download the PDF.
-      </p>
-      <!-- 
-      <p class="lead">
-        You need to know if your application is being used to its full potential by the users. 
-        Or you have a complex set of concepts that need to be simplified into an elegant UI.
-      </p>
-      <p class="lead">
-        You need it to be intuitive, flexible and to be informed in real data, working closely with the final user.
-      </p>
-      <p class="lead">
-        And you want an iterative rollout so all stakeholders can follow the project and avoid regressions.
-      </p>
-      <p class="lead"> <br>
-        Dropping the third-person now, I'm currently open to freelancing gigs of graphical design, or even UX. Plese, feel free to download the PDF or get in touch.
-        This is the online <i>Curriculum Vitae</i> for Vitor Gonçalves, a UX Designer from Portugal. He is nice. <br> This CV is undertaking some fine-tuning, but in the meantime feel free to download the PDF or get in touch.<br><br>
-      Thank you for passing by.-->
-        
-      </p>
-      <a href="mailto:geral@umvitor.pt" class="btn btn-default mx-1"> <i class="fas fa-envelope"></i> Get in Touch</a>
-      <a id="dl-btn-banner" href="res/vg-cv-en-2020.pdf" target="_blank" rel="noopener noreferrer" class="btn btn-secondary mx-1" download> <i class="fas fa-download"></i> Download PDF</a>
-    </div>
-    <div class="product-device shadow-sm d-none d-md-block"></div>
-    <div class="product-device product-device-2 shadow-sm d-none d-md-block"></div>
-  </div>
-  <div class="container-fluid  container-about">
-    
-    <!-- ABOUT -->
-    <section id="about">
-      <div class="row"> 
-        <div class="col-12 col-md-6 px-lg-5 my-5 my-md-2 mx-auto text-center face-card">
-          <div class="row">
-            <div class="col-md-6 order-md-2">
-                <img class="about-pic" src="res/img/profile_circle_2_bw_sm.webp" alt="profile photo">
+        <!-- Chat Container -->
+        <div class="chat-container">
+            <!-- Messages Area -->
+            <div class="messages-wrapper">
+                <div id="messages" class="messages"></div>
             </div>
 
-            <div class="col-md-6 order-md-1 text-left">
-              <h2>
-                <span class="name-d">UX Designer</span>
-                <span class="name-v">Vitor</span>
-                <span class="name-d-2">UX Designer</span>
-                <span class="name-g">Gonçalves</span>
-              </h2>
-              <div class="about-details">
-                <table>
-                  <tr>
-                    <td><i class="fas fa-birthday-cake mr-1"></i></td>
-                    <td>March, 1991</td>
-                  </tr>
-                  <tr id="info-location" data-toggle="tooltip" data-placement="top" title="Available to move anywhere">
-                    <td><i class="fas fa-map-marker-alt mr-1"></i></td>
-                    <td>Currently in Aveiro, Portugal</td>
-                  </tr>
-                  <!--<tr>
-                    <td><i class="fas fa-box-open mr-1"></i></td>
-                    <td>Available to move anywhere in Europe</td>
-                  </tr>-->
-                  <tr>
-                    <td><i class="fas fa-scroll mr-1"></i></td>
-                    <td>Ms Multimedia Communication</td>
-                  </tr>
-                  </table>
-              </div>
-            <!-- <div class="about-details">
-              <span><i class="fas fa-birthday-cake mr-1"></i>March 28, 1991</span>
-              <span><i class="fas fa-map-marker-alt mr-1"></i>Aveiro, Portugal</span>
-              <span><i class="fas fa-box-open mr-1"></i>Available to move anywhere in Europe</span>
-              </div>-->
+            <!-- Input Area -->
+            <div class="input-container">
+                <textarea 
+                    id="userInput" 
+                    class="user-input" 
+                    placeholder="Type your message..."
+                    rows="1"
+                    maxlength="2000"
+                ></textarea>
+                <button id="sendBtn" class="send-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                </button>
             </div>
-
-
-          </div>  
-        </div> 
-      </div>
-    </section>
-
-    <!-- SKILLS -->
-    <section class="pt-1">
-      <div class="col-md-12 px-lg-5 mx-auto my-5 my-md-2 text-center">
-        <h5>
-          <span class="badge badge-pill badge-dark">fast prototyping</span> 
-          <span class="badge badge-pill badge-dark">user research</span> 
-          <span class="badge badge-pill badge-dark">usability testing</span>
-          <br>
-          <span class="badge badge-pill badge-dark">UI design</span> 
-          <span class="badge badge-pill badge-dark">HTML/ CSS/ Javascript</span> 
-          <span class="badge badge-pill badge-dark">AngularJS</span> 
-          <br>
-          <span class="badge badge-pill badge-dark">vector design</span> 
-          <span class="badge badge-pill badge-dark">digital composition</span> 
-          <br>
-          <span class="badge badge-pill badge-dark">photography capture and editing</span> 
-        </h5> 
-      </p>
-      </div>
-    </section>
-
-  </div>
-    <!-- WORK & EDUCATION -->
-  <div class="container" id="vitor-cv">
-    <section id="work">
-      <div class="px-lg-5 mx-auto my-5 mt-md-2 mb-md-5 pb-md-5 text-left">
-      <h2>Work</h2>
-        <!-- card-group-xs-2-md-3 -->
-        <div class="row">
-          <div class="col-12 col-md-6 col-lg-4 pb-2">
-            <div class="card">
-              <!-- <img src="..." class="card-img-top" alt="..."> -->
-              <div class="card-header">
-                <h5 class="card-title">UX Designer</h5>
-                <a href="https://www.linkedin.com/company/watgrid/"><h6>@ Watgrid </h6></a>
-              </div>
-              <div class="card-body">
-                <p class="card-text">
-                  Very inovative and disruptive project in applying digital technologies to wine monitoring. My work was mostly focused on UX Design and Development but also helped with digital communication. Was an amazing opportunity to develop teamwork skills and to work on a large scale project improving on adaptability as well as on technical skills.
-                </p>
-                <span class="badge badge-pill badge-dark">vector design</span> 
-                <span class="badge badge-pill badge-dark">AngularJS</span> 
-                <span class="badge badge-pill badge-dark">fast prototyping</span> 
-                <span class="badge badge-pill badge-dark">user research</span> 
-                <span class="badge badge-pill badge-dark">usability testing</span>
-                <span class="badge badge-pill badge-dark">google analytics</span>
-              </div>
-              <div class="card-footer">
-                <p class="card-text"><small class="text-muted">(1y 7mo) Jun 18 - Dec 19</small></p>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-12 col-md-6 col-lg-4 pb-2">
-            <div class="card">
-              <div class="card-header">
-                <h5 class="card-title">Digital Communication</h5>
-                <a href="https://myfriendsinportugal.com/"><h6>@ My Friends In </h6></a>
-              </div>
-              <div class="card-body">
-                <p class="card-text">Amazing experience as part of a small team in a young start-up. The team was friendly and we all pitched in for the challenges that are always part of a start-up. My work was focused on frontend by working with Wordpress, and finetuning in the PHP code. also contributed to video and graphical in digital communication.</p>
-                <span class="badge badge-pill badge-dark">vector design</span> 
-                <span class="badge badge-pill badge-dark">Wordpress</span> 
-                <span class="badge badge-pill badge-dark">branding</span>
-              </div>
-              <div class="card-footer"> 
-                <p class="card-text"><small class="text-muted">(11mo) Mar 17 - Jan 18</small></p>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-12 col-md-6 col-lg-4 pb-2">
-            <div class="card">
-              <div class="card-header">
-                <h5 class="card-title">Photographer</h5>
-                <a href="https://www.fotofelicidade.com/"><h6>@ Foto Felicidade </h6></a>
-              </div>
-              <div class="card-body">
-                <p class="card-text">
-                  Job included:
-                  <ul>
-                    <li>weddings and other similar social events;</li>
-                    <li>studio photo sessions;</li>
-                    <li>outdoors photo sessions;</li>
-                    <li>photo and video coverage of events such as concerts, popular festivals, and rampshows.</li>
-                  </ul>
-                </p>
-                <span class="badge badge-pill badge-dark">photography capture and editing</span> 
-                <span class="badge badge-pill badge-dark">vector design</span> 
-                <span class="badge badge-pill badge-dark">digital composition</span> 
-              </div>
-              <div class="card-footer">
-                <p class="card-text"><small class="text-muted">(10y) 2007 - 2017</small></p>
-              </div>
-            </div>
-          </div>
         </div>
 
-      </div>
-    </section>
-    
-    <!-- EDUCATION -->
-    <section id="education">
-      <div class="px-lg-5 mx-auto my-5 mt-md-2 mb-md-5 pb-md-5 text-left">
-      <h2>Education</h2>
-        <div class="row">
+        <!-- Footer Info -->
+        <footer class="footer">
+            <p>100% local LLM • Zero data sent to servers • All processing in your browser • <a href="info.html">Need help?</a></p>
+        </footer>
+    </div>
 
-          <div class="col-12 col-md-6 col-lg-4 pb-2">
-            <div class="card">
-              <!-- <img src="..." class="card-img-top" alt="..."> -->
-              <div class="card-header">
-                <h5 class="card-title">Master's in Multimedia Communication</h5>
-                <h6>@ Universidade de Aveiro</h6>
-              </div>
-              <div class="card-body">
-                <p class="card-text">
-                  <span class="badge badge-pill badge-dark">UI design</span> 
-                  <span class="badge badge-pill badge-dark">HTML/ CSS/ Javascript</span> 
-                  <span class="badge badge-pill badge-dark">React+Redux</span> 
-                  <br>
-                  <span class="badge badge-pill badge-dark">Unity 3D</span> 
-                  <span class="badge badge-pill badge-dark">Arduino</span> 
-                  <br>
-                  <span class="badge badge-pill badge-dark">fast prototyping</span> 
-                  <span class="badge badge-pill badge-dark">user research</span> 
-                  <span class="badge badge-pill badge-dark">usability testing</span>
-                </p>
-              </div>
-              <div class="card-footer">
-                <p class="card-text"><small class="text-muted">2019</small></p>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-12 col-md-6 col-lg-4 pb-2">
-            <div class="card">
-              <div class="card-header">
-                <h5 class="card-title">Bachelor's in New Technologies of Communication</h5>
-                <h6>@ Universidade de Aveiro</h6>
-              </div>
-              <div class="card-body">
-                <p class="card-text">
-                  <span class="badge badge-pill badge-dark">photography capture and editing</span> 
-                  <span class="badge badge-pill badge-dark">3D modeling and animation</span> 
-                  <span class="badge badge-pill badge-dark">video-game development</span>
-                  <br>
-                  <span class="badge badge-pill badge-dark">vector design</span> 
-                  <span class="badge badge-pill badge-dark">digital composition</span> 
-                  <br>
-                  <span class="badge badge-pill badge-dark">UI design</span> 
-                  <span class="badge badge-pill badge-dark">HTML/ CSS/ Javascript</span> 
-                  <span class="badge badge-pill badge-dark">Cordoba</span>
-                </p>
-              </div>
-              <div class="card-footer">
-                <p class="card-text"><small class="text-muted">2014</small></p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </section>
-    
-
-  </div>
-    <!-- CONTACTS -->
-  <div class="container">
-    <section id="contacts">
-      <div class="px-lg-5 mx-auto my-5 mt-md-2 mb-md-5 pb-md-5 text-left">
-      <h2>Contacts</h2>
-          <p><a href="https://www.linkedin.com/in/vitorgo/"> <i class="fab fa-linkedin"></i> LinkedIn</a></p>
-          <p><a href="mailto:geral@umvitor.pt"><i class="fa fa-envelope"></i> geral@umvitor.pt</a></p>
-      </div>  
-    </section>
-
-  </div>
-
-
-
-  <!-- Bootstrap
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>-->
-    <script src="res/js/jquery-3.4.1.slim.min.js"></script>
-    <script src="res/js/popper.min.js"></script>
-    <script src="res/bootstrap/js/bootstrap.min.js"></script>
-
-
-
-  <!-- Visible -->
-    <script type="text/javascript" src="res/visible/jquery.visible.js"></script>
-  <!-- Moment -->
-    <script type="text/javascript" src="res/js/moment.js"></script>
-  <!-- POWER ACTION BUTTON -->
-    <script type="text/javascript" src="res/js/power_action_button.js"></script>
-  <!-- GA INQUIRY -->
-    <script type="text/javascript" src="res/js/ga_inquiry.js"></script>
-    <script>
-      feedback.initialize("#navbarItems",".toast-wrapper");
-    </script>
-  <!-- FOOTER -->
-    <script type="text/javascript" src="res/js/footer.js"></script>
-
-
-  <script>
-
-    $('body').scrollspy({ target: '#my-navbar' });
-
-    $(function(){ 
-       var navMain = $(".navbar-collapse"); // avoid dependency on #id
-       // "a:not([data-toggle])" - to avoid issues caused
-       // when you have dropdown inside navbar
-       navMain.on("click", "a:not([data-toggle])", null, function () {
-           navMain.collapse('hide');
-       });
-   });
-
-   
-  $(function () {
-    $('#info-location').tooltip({offset:-50})
-  })
-
-  $(document).ready(function () {
-    // ** Get visitor origin ** 
-    if(decodeURI(window.location).substring(0,4)==="file")
-      return;
-    var params = searchToObject();
-    var value = 'unknown';
-    var not_hashes = ['about', 'work', 'education', 'contacts'];
-    var valuesIdx = {
-      '0':'global',
-      '1':'friends',
-      '2':'job'
-    }
-    var values = {
-      '00':'GL',
-      '01':'UX',
-      '02':'GD',
-      '03':'LI',
-      '10':'Tanya',
-      '11':'Tomás',
-      '12':'André',
-      '13':'Andreia',
-      '14':'Pooja',
-      '15':'Illustre',
-      '21':'WireMaze',
-      '22':'web_desinger',
-      '23':'Angry Ventures',
-      '24':'Remedy',
-      '98':'TEST'
-    };
-    if(params.hasOwnProperty('a'))
-      if(values.hasOwnProperty(params.a))
-        value = values[params.a];
-      else if(valuesIdx.hasOwnProperty(params.a.charAt(0)))
-        value = values[params.a];
-      else
-        value = params.a;
-    else if(location.hash && !not_hashes.index(location.hash.substring(1))) {
-      var h = location.hash.substring(1);
-      value = values.hasOwnProperty(h) ? values[h] : h;
-    }else{
-      return;
-    }
-    if( Object.prototype.toString.call(value) == '[object String]' && value.length > 2)
-      console.log("Hello "+value+ ". Welcome.");
-    //ga('set', 'dimension1', value);
-
-
-    /*ga(function(tracker) {
-      // Logs the tracker created above to the console.
-      console.log("setting on tracker", value, tracker);
-    var tracker = null;
-    if ("ga" in window) {
-        tracker = ga.getAll()[0];
-    }else{
-      console.log("ga error");
-    }
-      if(tracker)
-        tracker.set('dimension1', value);
-    });*/
-    //ga('set', 'dimension1', value);
-    //ga('send', 'pageview');
-    gtag('event', 'entry_point_event', {'dimension1': value});
-  });
-
-  function searchToObject() {
-    var pairs = window.location.search.substring(1).split("&"),
-      obj = {},
-      pair,
-      i;
-
-    for ( i in pairs ) {
-      if ( pairs[i] === "" ) continue;
-
-      pair = pairs[i].split("=");
-      obj[ decodeURIComponent( pair[0] ) ] = decodeURIComponent( pair[1] );
-    }
-
-    return obj;
-  }
-
-  </script>
-
+    <script type="module" src="chatbot.js"></script>
 </body>
 </html>
