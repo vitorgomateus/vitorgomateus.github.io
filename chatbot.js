@@ -13,17 +13,43 @@ class Chatbot {
         this.userInput = document.getElementById('userInput');
         this.sendBtn = document.getElementById('sendBtn');
         this.performanceWarning = document.getElementById('performanceWarning');
+        this.aiToggle = document.getElementById('aiToggle');
+        this.menuBtn = document.getElementById('menuBtn');
+        this.menuBtnBottom = document.getElementById('menuBtnBottom');
+        this.drawer = document.getElementById('drawer');
+        this.drawerOverlay = document.getElementById('drawerOverlay');
+        this.closeDrawer = document.getElementById('closeDrawer');
+        this.clearCacheBtn = document.getElementById('clearCache');
+        this.accessibilityBtn = document.getElementById('accessibilityMode');
         
         // WebLLM engine - using Phi-3.5-mini for best balance of speed and quality
         this.selectedModel = "Phi-3.5-mini-instruct-q4f16_1-MLC";
+        // Alternative models (uncomment to test):
+        // this.selectedModel = "Llama-3.2-3B-Instruct-q4f16_1-MLC"; // 1.7GB - Meta's Llama
+        // this.selectedModel = "Qwen2.5-3B-Instruct-q4f16_1-MLC"; // 1.9GB - Strong reasoning
+        // this.selectedModel = "gemma-2-2b-it-q4f16_1-MLC"; // 1.4GB - Google's Gemma (most lightweight)
+        // this.selectedModel = "TinyLlama-1.1B-Chat-v1.0-q4f16_1-MLC"; // 0.6GB - Ultra lightweight
+        
         this.engine = null;
         this.isModelLoaded = false;
         this.conversationHistory = [];
         
+        // Performance tuning variables
+        this.maxMessages = 50; // Max messages before pruning
+        this.maxHistory = 10; // Max conversation history sent to model
+        this.maxTokens = 512; // Max tokens in response
+        this.temperature = 0.7; // Response randomness (0-1)
+        this.prunePercent = 0.25; // Percent of messages to remove when pruning
+        this.memoryCheckInterval = 20000; // Memory check interval (ms)
+        this.memoryWarningThreshold = 75; // Memory usage warning % 
+        this.slowResponseThreshold = 1500; // Slow response time (ms)
+        this.performanceCheckThreshold = 1000; // Trigger warning if avg > this (ms)
+        
         // State management
         this.messageCount = 0;
-        this.maxMessages = 50; // Conservative limit for memory
         this.isProcessing = false;
+        this.aiEnabled = true;
+        this.accessibilityMode = false;
         
         // Performance tracking
         this.performanceMetrics = {
@@ -36,6 +62,9 @@ class Chatbot {
     }
     
     init() {
+        // Set random primary color
+        this.setRandomPrimaryColor();
+        
         // Event listeners
         this.sendBtn.addEventListener('click', () => this.handleSend());
         
@@ -48,6 +77,19 @@ class Chatbot {
         
         // Auto-resize textarea
         this.userInput.addEventListener('input', () => this.autoResize());
+        
+        // AI Toggle
+        this.aiToggle.addEventListener('change', (e) => this.toggleAI(e.target.checked));
+        
+        // Drawer controls
+        this.menuBtn.addEventListener('click', () => this.openDrawer());
+        this.menuBtnBottom.addEventListener('click', () => this.openDrawer());
+        this.closeDrawer.addEventListener('click', () => this.closeDrawerPanel());
+        this.drawerOverlay.addEventListener('click', () => this.closeDrawerPanel());
+        
+        // Drawer buttons
+        this.clearCacheBtn.addEventListener('click', () => this.handleClearCache());
+        this.accessibilityBtn.addEventListener('click', () => this.toggleAccessibility());
         
         // Disable send until model loads
         this.sendBtn.disabled = true;
@@ -67,10 +109,36 @@ class Chatbot {
         this.startPerformanceMonitoring();
     }
     
+    setRandomPrimaryColor() {
+        // Generate random hue (0-360)
+        const hue = Math.floor(Math.random() * 360);
+        // Ensure minimum 50% saturation
+        const saturation = 50 + Math.floor(Math.random() * 50);
+        // Keep lightness moderate for good contrast
+        const lightness = 45 + Math.floor(Math.random() * 15);
+        
+        const primaryColor = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+        const primaryDark = `hsl(${hue}, ${saturation}%, ${lightness - 10}%)`;
+        
+        // Set CSS variables
+        document.documentElement.style.setProperty('--primary', primaryColor);
+        document.documentElement.style.setProperty('--primary-dark', primaryDark);
+    }
+    
     async handleSend() {
         const message = this.userInput.value.trim();
         
-        if (!message || this.isProcessing || !this.isModelLoaded) return;
+        if (!message || this.isProcessing) return;
+        
+        // If AI is disabled, show info instead
+        if (!this.aiEnabled) {
+            this.userInput.value = '';
+            this.addUserMessage(message);
+            this.addBotMessage("AI is currently turned off. Please enable it using the toggle switch in the header, or visit the info page for static information.");
+            return;
+        }
+        
+        if (!this.isModelLoaded) return;
         
         // Clear input and reset
         this.userInput.value = '';
@@ -165,8 +233,7 @@ class Chatbot {
     
     async generateLLMResponse(userMessage) {
         // Keep only recent conversation history to manage memory
-        const maxHistory = 10; // Last 10 messages
-        const recentHistory = this.conversationHistory.slice(-maxHistory);
+        const recentHistory = this.conversationHistory.slice(-this.maxHistory);
         
         // Build messages array
         const messages = [
@@ -179,8 +246,8 @@ class Chatbot {
         let response = '';
         const chunks = await this.engine.chat.completions.create({
             messages: messages,
-            temperature: 0.7,
-            max_tokens: 512,
+            temperature: this.temperature,
+            max_tokens: this.maxTokens,
             stream: true,
         });
         
@@ -243,8 +310,8 @@ class Chatbot {
     }
     
     pruneOldMessages() {
-        // Remove oldest 25% to maintain performance
-        const messagesToRemove = Math.floor(this.maxMessages * 0.25);
+        // Remove oldest messages based on prunePercent
+        const messagesToRemove = Math.floor(this.maxMessages * this.prunePercent);
         const messages = this.messagesContainer.querySelectorAll('.message');
         
         // Use document fragment for efficient DOM manipulation
@@ -275,8 +342,8 @@ class Chatbot {
         this.performanceMetrics.avgResponseTime = 
             (prevAvg * (count - 1) + responseTime) / count;
         
-        // Track slow responses (> 1.5 seconds)
-        if (responseTime > 1500) {
+        // Track slow responses based on threshold
+        if (responseTime > this.slowResponseThreshold) {
             this.performanceMetrics.slowResponses++;
         }
         
@@ -289,7 +356,7 @@ class Chatbot {
         if ('performance' in window && 'memory' in performance) {
             setInterval(() => {
                 this.checkMemoryUsage();
-            }, 20000); // Check every 20 seconds
+            }, this.memoryCheckInterval);
         }
         
         // Monitor long tasks (if supported)
@@ -316,8 +383,8 @@ class Chatbot {
         const totalMemory = performance.memory.jsHeapSizeLimit;
         const usagePercent = (usedMemory / totalMemory) * 100;
         
-        // Warn at 75% memory usage
-        if (usagePercent > 75) {
+        // Warn based on threshold
+        if (usagePercent > this.memoryWarningThreshold) {
             this.showPerformanceWarning();
         }
     }
@@ -325,10 +392,8 @@ class Chatbot {
     checkPerformance() {
         const metrics = this.performanceMetrics;
         
-        // Show warning if performance degrades:
-        // - Average response time > 1 second
-        // - More than 25% of responses are slow
-        if (metrics.avgResponseTime > 1000 || 
+        // Show warning if performance degrades
+        if (metrics.avgResponseTime > this.performanceCheckThreshold || 
             (metrics.slowResponses / metrics.messagesSent) > 0.25) {
             this.showPerformanceWarning();
         }
@@ -343,6 +408,94 @@ class Chatbot {
         setTimeout(() => {
             this.performanceWarning.classList.add('hidden');
         }, 15000);
+    }
+    
+    // ===================================
+    // UI Controls
+    // ===================================
+    
+    toggleAI(enabled) {
+        this.aiEnabled = enabled;
+        
+        if (!enabled) {
+            this.addBotMessage("AI turned off. I'll show you information instead. You can turn AI back on using the toggle.");
+            this.userInput.disabled = true;
+            this.sendBtn.disabled = true;
+        } else if (this.isModelLoaded) {
+            this.addBotMessage("AI is back on! How can I help you?");
+            this.userInput.disabled = false;
+            this.sendBtn.disabled = false;
+            this.userInput.focus();
+        }
+    }
+    
+    openDrawer() {
+        this.drawer.classList.add('open');
+        this.drawerOverlay.classList.add('visible');
+    }
+    
+    closeDrawerPanel() {
+        this.drawer.classList.remove('open');
+        this.drawerOverlay.classList.remove('visible');
+    }
+    
+    async handleClearCache() {
+        if (confirm('This will clear the cached model (~1.9GB). You will need to download it again next time. Continue?')) {
+            try {
+                // Clear cache storage
+                if ('caches' in window) {
+                    const cacheNames = await caches.keys();
+                    await Promise.all(cacheNames.map(name => caches.delete(name)));
+                }
+                
+                // Clear IndexedDB (where WebLLM stores models)
+                if ('indexedDB' in window) {
+                    await new Promise((resolve, reject) => {
+                        const req = indexedDB.deleteDatabase('webllm');
+                        req.onsuccess = resolve;
+                        req.onerror = reject;
+                    });
+                }
+                
+                alert('Cache cleared successfully! Please refresh the page.');
+            } catch (error) {
+                console.error('Error clearing cache:', error);
+                alert('Failed to clear cache. Check console for details.');
+            }
+        }
+    }
+    
+    toggleAccessibility() {
+        this.accessibilityMode = !this.accessibilityMode;
+        
+        if (this.accessibilityMode) {
+            // Lower contrast
+            document.documentElement.style.setProperty('--text', '#4a5568');
+            document.documentElement.style.setProperty('--bg', '#f7fafc');
+            document.documentElement.style.setProperty('--border', '#cbd5e0');
+            
+            // Load OpenDyslexic font
+            const link = document.createElement('link');
+            link.href = 'https://cdn.jsdelivr.net/npm/open-dyslexic@1.0.3/open-dyslexic-regular.css';
+            link.rel = 'stylesheet';
+            document.head.appendChild(link);
+            
+            document.body.style.fontFamily = 'OpenDyslexic, "Work Sans", sans-serif';
+            
+            this.accessibilityBtn.textContent = 'Normal Mode';
+            alert('Accessibility mode enabled: Lower contrast + OpenDyslexic font');
+        } else {
+            // Reset to defaults
+            document.documentElement.style.setProperty('--text', '#1e293b');
+            document.documentElement.style.setProperty('--bg', '#f8fafc');
+            document.documentElement.style.setProperty('--border', '#e2e8f0');
+            document.body.style.fontFamily = '';
+            
+            this.accessibilityBtn.textContent = 'Accessibility Mode';
+            alert('Normal mode restored');
+        }
+        
+        this.closeDrawerPanel();
     }
 }
 

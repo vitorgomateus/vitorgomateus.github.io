@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LLM Chatbot Assistant</title>
+    <title>Vítor Gonçalves</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%23000'/%3E%3Ctext x='50' y='72' font-family='Arial,sans-serif' font-size='60' font-weight='bold' fill='%23fff' text-anchor='middle'%3Ev%3C/text%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -16,18 +20,46 @@
     <div class="container">
         <!-- Header -->
         <header class="header">
-            <h1>AI Assistant</h1>
+            <h1>Vítor Gonçalves</h1>
             <div class="header-actions">
-                <a href="info.html" class="info-link" title="Having performance issues? Try the lightweight info page">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="12" y1="16" x2="12" y2="12"></line>
-                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                <label class="ai-toggle" title="Toggle AI on/off">
+                    <input type="checkbox" id="aiToggle" checked>
+                    <span class="toggle-slider"></span>
+                    <span class="toggle-label">AI</span>
+                </label>
+                <button id="menuBtn" class="menu-btn" aria-label="Menu">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
                     </svg>
-                    Info Page
-                </a>
+                </button>
             </div>
         </header>
+        
+        <!-- Side Drawer -->
+        <div id="drawer" class="drawer">
+            <div class="drawer-content">
+                <button id="closeDrawer" class="close-drawer" aria-label="Close">×</button>
+                
+                <h2>About</h2>
+                <p>This is a proof-of-concept chatbot running a local LLM entirely in your browser using WebLLM technology.</p>
+                
+                <h3>Credits</h3>
+                <p><strong>Built by:</strong> Vítor Gonçalves</p>
+                <p><strong>Technology:</strong></p>
+                <ul>
+                    <li>WebLLM (MLC AI)</li>
+                    <li>Phi-3.5-mini (Microsoft)</li>
+                    <li>WebGPU</li>
+                </ul>
+                
+                <h3>Settings</h3>
+                <button id="clearCache" class="drawer-btn">Clear Model Cache</button>
+                <button id="accessibilityMode" class="drawer-btn">Accessibility Mode</button>
+            </div>
+        </div>
+        <div id="drawerOverlay" class="drawer-overlay"></div>
 
         <!-- Chat Container -->
         <div class="chat-container">
@@ -38,6 +70,13 @@
 
             <!-- Input Area -->
             <div class="input-container">
+                <button id="menuBtnBottom" class="menu-btn-bottom" aria-label="Menu">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
                 <textarea 
                     id="userInput" 
                     class="user-input" 
@@ -56,7 +95,7 @@
 
         <!-- Footer Info -->
         <footer class="footer">
-            <p>100% local LLM • Zero data sent to servers • All processing in your browser • <a href="info.html">Need help?</a></p>
+            <p>100% local, privaye LLM chatbot, happening on your device.</p>
         </footer>
     </div>
 
