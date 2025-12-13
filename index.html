@@ -56,7 +56,11 @@
                 
                 <h3>Settings</h3>
                 <button id="clearCache" class="drawer-btn">Clear Model Cache</button>
-                <button id="accessibilityMode" class="drawer-btn">Accessibility Mode</button>
+                <label class="drawer-toggle">
+                    <input type="checkbox" id="accessibilityMode">
+                    <span class="toggle-slider"></span>
+                    <span class="toggle-text">Accessibility Mode</span>
+                </label>
             </div>
         </div>
         <div id="drawerOverlay" class="drawer-overlay"></div>
@@ -70,13 +74,6 @@
 
             <!-- Input Area -->
             <div class="input-container">
-                <button id="menuBtnBottom" class="menu-btn-bottom" aria-label="Menu">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="3" y1="12" x2="21" y2="12"></line>
-                        <line x1="3" y1="6" x2="21" y2="6"></line>
-                        <line x1="3" y1="18" x2="21" y2="18"></line>
-                    </svg>
-                </button>
                 <textarea 
                     id="userInput" 
                     class="user-input" 

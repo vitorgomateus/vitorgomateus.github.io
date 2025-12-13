@@ -15,7 +15,6 @@ class Chatbot {
         this.performanceWarning = document.getElementById('performanceWarning');
         this.aiToggle = document.getElementById('aiToggle');
         this.menuBtn = document.getElementById('menuBtn');
-        this.menuBtnBottom = document.getElementById('menuBtnBottom');
         this.drawer = document.getElementById('drawer');
         this.drawerOverlay = document.getElementById('drawerOverlay');
         this.closeDrawer = document.getElementById('closeDrawer');
@@ -82,13 +81,12 @@ class Chatbot {
         
         // Drawer controls
         this.menuBtn.addEventListener('click', () => this.openDrawer());
-        this.menuBtnBottom.addEventListener('click', () => this.openDrawer());
         this.closeDrawer.addEventListener('click', () => this.closeDrawerPanel());
         this.drawerOverlay.addEventListener('click', () => this.closeDrawerPanel());
         
         // Drawer buttons
         this.clearCacheBtn.addEventListener('click', () => this.handleClearCache());
-        this.accessibilityBtn.addEventListener('click', () => this.toggleAccessibility());
+        this.accessibilityBtn.addEventListener('change', (e) => this.toggleAccessibility(e.target.checked));
         
         // Disable send until model loads
         this.sendBtn.disabled = true;
@@ -111,17 +109,36 @@ class Chatbot {
     setRandomPrimaryColor() {
         // Generate random hue (0-360)
         const hue = Math.floor(Math.random() * 360);
-        // Ensure minimum 50% saturation
-        const saturation = 50 + Math.floor(Math.random() * 50);
-        // Keep lightness moderate for good contrast
-        const lightness = 45 + Math.floor(Math.random() * 15);
+        // High saturation for vibrant colors (60-90%)
+        const saturation = 60 + Math.floor(Math.random() * 31);
+        // Low lightness for good contrast with white text (25-40%)
+        const lightness = 25 + Math.floor(Math.random() * 16);
         
         const primaryColor = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
-        const primaryDark = `hsl(${hue}, ${saturation}%, ${lightness - 10}%)`;
+        const primaryDark = `hsl(${hue}, ${saturation}%, ${Math.max(15, lightness - 10)}%)`;
         
         // Set CSS variables
         document.documentElement.style.setProperty('--primary', primaryColor);
         document.documentElement.style.setProperty('--primary-dark', primaryDark);
+        
+        // Update favicon with primary color
+        this.updateFavicon(hue, saturation, lightness);
+    }
+    
+    updateFavicon(hue, saturation, lightness) {
+        // Ensure dark enough background for white text (cap at 35% lightness for accessibility)
+        const faviconLightness = Math.min(lightness, 35);
+        const faviconSvg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='hsl(${hue}, ${saturation}%, ${faviconLightness}%)'/><text x='50' y='72' font-family='Arial,sans-serif' font-size='60' font-weight='bold' fill='#fff' text-anchor='middle'>v</text></svg>`;
+        const faviconUrl = `data:image/svg+xml,${encodeURIComponent(faviconSvg)}`;
+        
+        // Update existing favicon or create new one
+        let link = document.querySelector("link[rel='icon']");
+        if (!link) {
+            link = document.createElement('link');
+            link.rel = 'icon';
+            document.head.appendChild(link);
+        }
+        link.href = faviconUrl;
     }
     
     async handleSend() {
@@ -464,37 +481,36 @@ class Chatbot {
         }
     }
     
-    toggleAccessibility() {
-        this.accessibilityMode = !this.accessibilityMode;
-        
-        if (this.accessibilityMode) {
-            // Lower contrast
+    toggleAccessibility(enabled) {
+        if (enabled) {
+            // Warm color scheme with lower contrast
             document.documentElement.style.setProperty('--text', '#4a5568');
-            document.documentElement.style.setProperty('--bg', '#f7fafc');
-            document.documentElement.style.setProperty('--border', '#cbd5e0');
+            document.documentElement.style.setProperty('--text-light', '#9ca3af');
+            document.documentElement.style.setProperty('--bg', '#fef3e2');
+            document.documentElement.style.setProperty('--surface', '#fdf8f0');
+            document.documentElement.style.setProperty('--border', '#e8d4b8');
+            document.documentElement.style.setProperty('--bot-bubble', '#f9ead5');
+            document.documentElement.style.setProperty('--warning-bg', '#fff4e6');
+            document.documentElement.style.setProperty('--warning-border', '#f59e0b');
             
-            // Load OpenDyslexic font
-            const link = document.createElement('link');
-            link.href = 'https://cdn.jsdelivr.net/npm/open-dyslexic@1.0.3/open-dyslexic-regular.css';
-            link.rel = 'stylesheet';
-            document.head.appendChild(link);
-            
+            // Apply OpenDyslexic font (loaded via @font-face in CSS)
             document.body.style.fontFamily = 'OpenDyslexic, "Work Sans", sans-serif';
-            
-            this.accessibilityBtn.textContent = 'Normal Mode';
-            alert('Accessibility mode enabled: Lower contrast + OpenDyslexic font');
+            // Reduce root font size to 12px
+            document.documentElement.style.fontSize = '12px';
         } else {
             // Reset to defaults
             document.documentElement.style.setProperty('--text', '#1e293b');
+            document.documentElement.style.setProperty('--text-light', '#64748b');
             document.documentElement.style.setProperty('--bg', '#f8fafc');
+            document.documentElement.style.setProperty('--surface', '#ffffff');
             document.documentElement.style.setProperty('--border', '#e2e8f0');
+            document.documentElement.style.setProperty('--bot-bubble', '#f1f5f9');
+            document.documentElement.style.setProperty('--warning-bg', '#fef3c7');
+            document.documentElement.style.setProperty('--warning-border', '#f59e0b');
             document.body.style.fontFamily = '';
-            
-            this.accessibilityBtn.textContent = 'Accessibility Mode';
-            alert('Normal mode restored');
+            // Reset root font size to 14px
+            document.documentElement.style.fontSize = '14px';
         }
-        
-        this.closeDrawerPanel();
     }
 }
 
