@@ -47,7 +47,6 @@ class Chatbot {
         this.messageCount = 0;
         this.isProcessing = false;
         this.aiEnabled = true;
-        this.accessibilityMode = false;
         
         // Performance tracking
         this.performanceMetrics = {
@@ -208,7 +207,6 @@ class Chatbot {
     async checkWebGPUSupport() {
         if (!navigator.gpu) {
             this.addBotMessage("⚠️ WebGPU is not supported in your browser. Please use Chrome 113+ or Edge 113+ with WebGPU enabled.");
-            this.loadModelBtn.disabled = true;
             return false;
         }
         return true;
