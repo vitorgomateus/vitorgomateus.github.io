@@ -22,13 +22,12 @@ class Chatbot {
         this.clearCacheBtn = document.getElementById('clearCache');
         this.accessibilityBtn = document.getElementById('accessibilityMode');
         
-        // WebLLM engine - using Phi-3.5-mini for best balance of speed and quality
-        this.selectedModel = "Phi-3.5-mini-instruct-q4f16_1-MLC";
-        // Alternative models (uncomment to test):
+        // WebLLM engine
+        // this.selectedModel = "Phi-3.5-mini-instruct-q4f16_1-MLC"; // for best balance of speed and quality
         // this.selectedModel = "Llama-3.2-3B-Instruct-q4f16_1-MLC"; // 1.7GB - Meta's Llama
         // this.selectedModel = "Qwen2.5-3B-Instruct-q4f16_1-MLC"; // 1.9GB - Strong reasoning
         // this.selectedModel = "gemma-2-2b-it-q4f16_1-MLC"; // 1.4GB - Google's Gemma (most lightweight)
-        // this.selectedModel = "TinyLlama-1.1B-Chat-v1.0-q4f16_1-MLC"; // 0.6GB - Ultra lightweight
+        this.selectedModel = "TinyLlama-1.1B-Chat-v1.0-q4f16_1-MLC"; // 0.6GB - Ultra lightweight
         
         this.engine = null;
         this.isModelLoaded = false;
