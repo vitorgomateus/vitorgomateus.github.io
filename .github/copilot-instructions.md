@@ -20,6 +20,15 @@
 - Font sizes: Always rem, never px
 - State: Class properties only, no persistence
 - Model cache: Auto-clears on version change via `checkModelVersion()`
+- User messages: Track separately (`this.userMessages++`), not in `performanceMetrics.messagesSent`
+
+**System instructions & extraction:**
+- Edit `this.systemInstructions` in constructor to control model behavior
+- Model appends `[EXTRACT]{"name":"...","email":"...","company":"...","position":"...","context":"..."}[/EXTRACT]` to every response
+- Extraction happens during normal response (no extra API calls), then stripped before display
+- Extracted info stored in `this.extractedInfo` object
+- Extracted info injected into system prompt for persistent context (survives limited `maxHistory`)
+- Context field is cumulative/open-ended (projects, technologies, methodologies, interests)
 
 ## Documentation Standards
 
