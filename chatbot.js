@@ -55,8 +55,15 @@ class Chatbot {
         this.performanceMetrics = {
             messagesSent: 0,
             avgResponseTime: 0,
-            slowResponses: 0
+            slowResponses: 0,
+            maxResponseTime: 0
         };
+        
+        // Feedback tracking
+        this.pageLoadTime = Date.now();
+        this.modelLoadTime = 0;
+        this.feedbackShown = false;
+        this.userMessages = 0;
         
         this.init();
     }
@@ -105,6 +112,9 @@ class Chatbot {
             
             // Start performance monitoring
             this.startPerformanceMonitoring();
+            
+            // Start feedback timer (60 seconds)
+            setTimeout(() => this.showFeedbackForm(), 60000);
         });
     }
     
@@ -166,6 +176,7 @@ class Chatbot {
         
         // Add user message
         this.addUserMessage(message);
+        this.userMessages++;
         
         // Add to conversation history
         this.conversationHistory.push({ role: "user", content: message });
@@ -260,6 +271,7 @@ class Chatbot {
             
             const endTime = performance.now();
             const loadTime = ((endTime - startTime) / 1000).toFixed(1);
+            this.modelLoadTime = loadTime;
             
             this.isModelLoaded = true;
             
@@ -269,7 +281,7 @@ class Chatbot {
             this.userInput.focus();
             
             // Hide loading stats
-            // this.loadingStats.classList.add('hidden');
+            // this.loadingStats.classList.add('hidden'); // to be uncommented later
             
             // Log loading metrics
             console.log(`Model loaded in ${loadTime}s`);
@@ -397,6 +409,12 @@ class Chatbot {
         const count = this.performanceMetrics.messagesSent;
         this.performanceMetrics.avgResponseTime = 
             (prevAvg * (count - 1) + responseTime) / count;
+        
+        // Track max response time
+        this.performanceMetrics.maxResponseTime = Math.max(
+            this.performanceMetrics.maxResponseTime,
+            responseTime
+        );
         
         // Track slow responses based on threshold
         if (responseTime > this.slowResponseThreshold) {
@@ -531,6 +549,130 @@ class Chatbot {
                 alert('Failed to clear cache. Check console for details.');
             }
         }
+    }
+    
+    showFeedbackForm() {
+        if (this.feedbackShown || !this.aiEnabled) return;
+        this.feedbackShown = true;
+        
+        const timeSpent = ((Date.now() - this.pageLoadTime) / 1000).toFixed(0);
+        const avgReplyTime = (this.performanceMetrics.avgResponseTime / 1000).toFixed(1);
+        const maxReplyTime = (this.performanceMetrics.maxResponseTime / 1000).toFixed(1);
+        const device = navigator.userAgent;
+        const referrer = document.referrer || 'Direct';
+        const language = navigator.language;
+        const modelName = this.selectedModel;
+        
+        const formHTML = `
+            <div style="margin: 16px 0;">
+                <p style="margin-bottom: 16px; font-weight: 500;">If you're entertained by this, consider sending feedback:</p>
+                
+                <div style="margin-bottom: 12px;">
+                    <input type="text" id="fb-name-input" placeholder="Your name" style="width: 100%; padding: 8px; margin-bottom: 8px; border: 1px solid var(--border); border-radius: 4px; font-family: inherit;">
+                    <input type="email" id="fb-email-input" placeholder="Your email" style="width: 100%; padding: 8px; margin-bottom: 8px; border: 1px solid var(--border); border-radius: 4px; font-family: inherit;">
+                    <input type="text" id="fb-company-input" placeholder="Company" style="width: 100%; padding: 8px; margin-bottom: 8px; border: 1px solid var(--border); border-radius: 4px; font-family: inherit;">
+                    <textarea id="fb-message-input" placeholder="Additional message (optional)" style="width: 100%; padding: 8px; margin-bottom: 8px; border: 1px solid var(--border); border-radius: 4px; font-family: inherit; min-height: 60px; resize: vertical;"></textarea>
+                </div>
+                
+                <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 12px;">
+                    <div>
+                        <label style="display: flex; align-items: center; gap: 6px; font-weight: 500; margin-bottom: 6px;">
+                            <input type="checkbox" id="fb-personal" checked> Personal Info
+                        </label>
+                        <div style="margin-left: 24px; font-size: 0.86rem; color: var(--text-light);">
+                            Name, Email, Company, Message
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label style="display: flex; align-items: center; gap: 6px; font-weight: 500; margin-bottom: 6px;">
+                            <input type="checkbox" id="fb-usage" checked> Usage Stats
+                        </label>
+                        <div style="margin-left: 24px; font-size: 0.86rem; color: var(--text-light);">
+                            Time spent: ${timeSpent}s, Messages: ${this.userMessages}, Avg reply: ${avgReplyTime}s, Max reply: ${maxReplyTime}s
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label style="display: flex; align-items: center; gap: 6px; font-weight: 500; margin-bottom: 6px;">
+                            <input type="checkbox" id="fb-technical" checked> Technical Info
+                        </label>
+                        <div style="margin-left: 24px; font-size: 0.86rem; color: var(--text-light);">
+                            Model: ${modelName}, Loading: ${this.modelLoadTime}s, Language: ${language}, Referrer: ${referrer}
+                        </div>
+                    </div>
+                </div>
+                
+                <button id="fb-send" style="padding: 8px 16px; background: var(--primary); color: white; border: none; border-radius: 4px; cursor: pointer; font-family: inherit; font-weight: 500;">Send Feedback</button>
+            </div>
+        `;
+        
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'message bot';
+        const bubbleDiv = document.createElement('div');
+        bubbleDiv.className = 'message-bubble';
+        bubbleDiv.innerHTML = formHTML;
+        messageDiv.appendChild(bubbleDiv);
+        this.messagesContainer.appendChild(messageDiv);
+        this.messageCount++;
+        this.scrollToBottom();
+        
+        // Handle send button
+        document.getElementById('fb-send').addEventListener('click', () => {
+            const name = document.getElementById('fb-name-input').value;
+            const email = document.getElementById('fb-email-input').value;
+            const company = document.getElementById('fb-company-input').value;
+            const customMessage = document.getElementById('fb-message-input').value;
+            
+            if (!name || !email) {
+                alert('Please enter your name and email');
+                return;
+            }
+            
+            const parts = [];
+            
+            // Personal Info
+            if (document.getElementById('fb-personal').checked) {
+                parts.push('=== Personal Info ===');
+                parts.push(`Name: ${name}`);
+                parts.push(`Email: ${email}`);
+                if (company) parts.push(`Company: ${company}`);
+                if (customMessage) {
+                    parts.push('');
+                    parts.push('Message:');
+                    parts.push(customMessage);
+                }
+                parts.push('');
+            }
+            
+            // Usage Stats
+            if (document.getElementById('fb-usage').checked) {
+                parts.push('=== Usage Stats ===');
+                parts.push(`Time spent: ${timeSpent}s`);
+                parts.push(`User messages: ${this.userMessages}`);
+                parts.push(`Avg reply time: ${avgReplyTime}s`);
+                parts.push(`Max reply time: ${maxReplyTime}s`);
+                parts.push('');
+            }
+            
+            // Technical Info
+            if (document.getElementById('fb-technical').checked) {
+                parts.push('=== Technical Info ===');
+                parts.push(`Model: ${modelName}`);
+                parts.push(`Loading time: ${this.modelLoadTime}s`);
+                parts.push(`Language: ${language}`);
+                parts.push(`Referrer: ${referrer}`);
+                parts.push(`Device: ${device}`);
+                parts.push('');
+            }
+            
+            const body = parts.join('%0D%0A');
+            const subject = 'Chatbot Feedback';
+            const mailtoLink = `mailto:vitor@goncalves.pt?subject=${encodeURIComponent(subject)}&body=${body}`;
+            
+            window.location.href = mailtoLink;
+            this.addBotMessage('Thank you for your feedback! 🙏');
+        });
     }
     
     toggleAccessibility(enabled) {
