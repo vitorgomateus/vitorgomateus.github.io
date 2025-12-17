@@ -12,7 +12,6 @@ class Chatbot {
         this.messagesContainer = document.getElementById('messages');
         this.userInput = document.getElementById('userInput');
         this.sendBtn = document.getElementById('sendBtn');
-        this.performanceWarning = document.getElementById('performanceWarning');
         this.aiToggle = document.getElementById('aiToggle');
         this.menuBtn = document.getElementById('menuBtn');
         this.drawer = document.getElementById('drawer');
@@ -23,6 +22,7 @@ class Chatbot {
         this.chatContainer = document.getElementById('chatContainer');
         this.staticContent = document.getElementById('staticContent');
         this.loadingStats = document.getElementById('loadingStats');
+        this.alertContainer = document.getElementById('alertContainer');
         
         // WebLLM engine
         this.selectedModel = "Phi-3.5-mini-instruct-q4f16_1-MLC"; // for best balance of speed and quality
@@ -568,14 +568,7 @@ Use empty strings for unknown fields. For 'context', accumulate any relevant pro
     }
     
     showPerformanceWarning() {
-        if (!this.performanceWarning.classList.contains('hidden')) return;
-        
-        this.performanceWarning.classList.remove('hidden');
-        
-        // Auto-dismiss after 15 seconds
-        setTimeout(() => {
-            this.performanceWarning.classList.add('hidden');
-        }, 15000);
+        this.showAlert('⚠️ Performance issues detected. Consider switching to static mode using the AI toggle.', 'error');
     }
     
     // ===================================
@@ -634,13 +627,24 @@ Use empty strings for unknown fields. For 'context', accumulate any relevant pro
         }
     }
     
+    showAlert(message, type = 'info') {
+        this.alertContainer.textContent = message;
+        this.alertContainer.className = `alert-container alert-${type}`;
+        this.alertContainer.classList.remove('hidden');
+        
+        // Auto-dismiss after 5 seconds
+        setTimeout(() => {
+            this.alertContainer.classList.add('hidden');
+        }, 5000);
+    }
+    
     async handleClearCache() {
         if (confirm('This will clear the cached model (~1.9GB). You will need to download it again next time. Continue?')) {
             try {
                 await this.clearCacheInternal();
-                alert('Cache cleared successfully! Please refresh the page.');
+                this.showAlert('Cache cleared successfully! Please refresh the page.', 'success');
             } catch (error) {
-                alert('Failed to clear cache. Check console for details.');
+                this.showAlert('Failed to clear cache. Check console for details.', 'error');
             }
         }
     }
@@ -719,7 +723,7 @@ Use empty strings for unknown fields. For 'context', accumulate any relevant pro
             const customMessage = document.getElementById('fb-message-input').value;
             
             if (!name || !email) {
-                alert('Please enter your name and email');
+                this.showAlert('Please enter your name and email', 'error');
                 return;
             }
             

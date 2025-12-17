@@ -70,33 +70,6 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
-/* Performance Warning Banner */
-.performance-warning {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
-    padding: 12px 20px;
-    background: var(--warning-bg);
-    border-bottom: 2px solid var(--warning-border);
-    color: var(--warning-text);
-    font-size: 1rem;
-    text-align: center;
-    will-change: transform;
-    transform: translateZ(0); /* GPU acceleration */
-}
-
-.performance-warning a {
-    color: var(--primary);
-    font-weight: 600;
-    text-decoration: underline;
-}
-
-.performance-warning.hidden {
-    display: none;
-}
-
 /* Main Container */
 .container {
     max-width: 768px;
@@ -407,6 +380,35 @@ body {
 .send-btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+}
+
+/* Alert Container */
+.alert-container {
+    flex-shrink: 0;
+    padding: 12px 16px;
+    font-size: 0.93rem;
+    text-align: center;
+    border-top: 1px solid var(--border);
+    transition: opacity 0.2s ease;
+}
+
+.alert-container.hidden {
+    display: none;
+}
+
+.alert-container.alert-info {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.alert-container.alert-success {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.alert-container.alert-error {
+    background: #fee2e2;
+    color: #991b1b;
 }
 
 /* Footer */
