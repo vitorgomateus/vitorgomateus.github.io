@@ -348,6 +348,9 @@ Use empty strings for unknown fields. For 'context', accumulate any relevant pro
                 response += delta;
             }
             
+            // Strip extraction metadata before displaying
+            response = response.replace(/\[EXTRACT\][\s\S]*?\[\/EXTRACT\]/g, '').trim();
+            
             typingIndicator.remove();
             this.addBotMessage(response.trim());
         } catch (error) {
@@ -395,7 +398,7 @@ Use empty strings for unknown fields. For 'context', accumulate any relevant pro
         }
         
         // Extract user info from model's metadata and strip it from response
-        const extractMatch = response.match(/\[EXTRACT\](\{.*?\})\[\/EXTRACT\]/);
+        const extractMatch = response.match(/\[EXTRACT\]([\s\S]*?)\[\/EXTRACT\]/);
         if (extractMatch) {
             try {
                 const extracted = JSON.parse(extractMatch[1]);
@@ -414,9 +417,10 @@ Use empty strings for unknown fields. For 'context', accumulate any relevant pro
             } catch (e) {
                 // Ignore parsing errors
             }
-            // Remove extraction metadata from response
-            response = response.replace(/\[EXTRACT\]\{.*?\}\[\/EXTRACT\]/, '').trim();
         }
+        
+        // Remove all extraction metadata from response (handles multiple occurrences and newlines)
+        response = response.replace(/\[EXTRACT\][\s\S]*?\[\/EXTRACT\]/g, '').trim();
         
         return response.trim();
     }
