@@ -65,6 +65,15 @@ class Chatbot {
         this.feedbackShown = false;
         this.userMessages = 0;
         
+        // Extracted user info from conversation
+        this.extractedInfo = {
+            name: '',
+            email: '',
+            company: '',
+            position: '',
+            context: ''  // Open-ended: projects, technologies, interests, methodologies
+        };
+        
         // System instructions (edit here to control model behavior)
         this.systemInstructions = `Your name is Goma, a generative AI portfolio for Vítor Gonçalves, running entirely in the user's browser with complete privacy.
 
@@ -77,7 +86,11 @@ Guidelines:
 - Mention you're running locally via WebLLM when relevant
 - Don't make up information - if unsure, say so warmly
 - Use markdown formatting when appropriate
-- When discussing yourself, emphasize you're Vítor's experimental AI portfolio project`;
+- When discussing yourself, emphasize you're Vítor's experimental AI portfolio project
+
+IMPORTANT: At the end of EVERY response, add extraction metadata in this exact format:
+[EXTRACT]{"name":"<name>","email":"<email>","company":"<company>","position":"<job title/role>","context":"<relevant info: projects, technologies, interests, goals>"}[/EXTRACT]
+Use empty strings for unknown fields. For 'context', accumulate any relevant professional details, technologies they mention, projects they're working on, methodologies they use, or specific interests. This metadata will be hidden from the user.`;
         
         this.init();
     }
@@ -347,9 +360,22 @@ Guidelines:
         // Keep only recent conversation history to manage memory
         const recentHistory = this.conversationHistory.slice(-this.maxHistory);
         
+        // Build context-aware system prompt with extracted user info
+        let systemPrompt = this.systemInstructions;
+        const knownInfo = [];
+        if (this.extractedInfo.name) knownInfo.push(`Name: ${this.extractedInfo.name}`);
+        if (this.extractedInfo.email) knownInfo.push(`Email: ${this.extractedInfo.email}`);
+        if (this.extractedInfo.company) knownInfo.push(`Company: ${this.extractedInfo.company}`);
+        if (this.extractedInfo.position) knownInfo.push(`Position: ${this.extractedInfo.position}`);
+        if (this.extractedInfo.context) knownInfo.push(`Context: ${this.extractedInfo.context}`);
+        
+        if (knownInfo.length > 0) {
+            systemPrompt += `\n\nUser context (from earlier in conversation):\n${knownInfo.join('\n')}`;
+        }
+        
         // Build messages array
         const messages = [
-            { role: "system", content: this.systemInstructions },
+            { role: "system", content: systemPrompt },
             ...recentHistory,
             { role: "user", content: userMessage }
         ];
@@ -366,6 +392,30 @@ Guidelines:
         for await (const chunk of chunks) {
             const delta = chunk.choices[0]?.delta?.content || '';
             response += delta;
+        }
+        
+        // Extract user info from model's metadata and strip it from response
+        const extractMatch = response.match(/\[EXTRACT\](\{.*?\})\[\/EXTRACT\]/);
+        if (extractMatch) {
+            try {
+                const extracted = JSON.parse(extractMatch[1]);
+                if (extracted.name && !this.extractedInfo.name) this.extractedInfo.name = extracted.name;
+                if (extracted.email && !this.extractedInfo.email) this.extractedInfo.email = extracted.email;
+                if (extracted.company && !this.extractedInfo.company) this.extractedInfo.company = extracted.company;
+                if (extracted.position && !this.extractedInfo.position) this.extractedInfo.position = extracted.position;
+                // Context is cumulative - append new info if it adds value
+                if (extracted.context && extracted.context.trim()) {
+                    if (!this.extractedInfo.context) {
+                        this.extractedInfo.context = extracted.context;
+                    } else if (!this.extractedInfo.context.includes(extracted.context)) {
+                        this.extractedInfo.context += '; ' + extracted.context;
+                    }
+                }
+            } catch (e) {
+                // Ignore parsing errors
+            }
+            // Remove extraction metadata from response
+            response = response.replace(/\[EXTRACT\]\{.*?\}\[\/EXTRACT\]/, '').trim();
         }
         
         return response.trim();
@@ -612,9 +662,9 @@ Guidelines:
                 <p style="margin-bottom: 16px; font-weight: 500;">If you're entertained by this, consider sending feedback:</p>
                 
                 <div style="margin-bottom: 12px;">
-                    <input type="text" id="fb-name-input" placeholder="Your name" style="width: 100%; padding: 8px; margin-bottom: 8px; border: 1px solid var(--border); border-radius: 4px; font-family: inherit;">
-                    <input type="email" id="fb-email-input" placeholder="Your email" style="width: 100%; padding: 8px; margin-bottom: 8px; border: 1px solid var(--border); border-radius: 4px; font-family: inherit;">
-                    <input type="text" id="fb-company-input" placeholder="Company" style="width: 100%; padding: 8px; margin-bottom: 8px; border: 1px solid var(--border); border-radius: 4px; font-family: inherit;">
+                    <input type="text" id="fb-name-input" placeholder="Your name" value="${this.extractedInfo.name}" style="width: 100%; padding: 8px; margin-bottom: 8px; border: 1px solid var(--border); border-radius: 4px; font-family: inherit;">
+                    <input type="email" id="fb-email-input" placeholder="Your email" value="${this.extractedInfo.email}" style="width: 100%; padding: 8px; margin-bottom: 8px; border: 1px solid var(--border); border-radius: 4px; font-family: inherit;">
+                    <input type="text" id="fb-company-input" placeholder="Company" value="${this.extractedInfo.company}" style="width: 100%; padding: 8px; margin-bottom: 8px; border: 1px solid var(--border); border-radius: 4px; font-family: inherit;">
                     <textarea id="fb-message-input" placeholder="Additional message (optional)" style="width: 100%; padding: 8px; margin-bottom: 8px; border: 1px solid var(--border); border-radius: 4px; font-family: inherit; min-height: 60px; resize: vertical;"></textarea>
                 </div>
                 
