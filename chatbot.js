@@ -25,11 +25,11 @@ class Chatbot {
         this.loadingStats = document.getElementById('loadingStats');
         
         // WebLLM engine
-        // this.selectedModel = "Phi-3.5-mini-instruct-q4f16_1-MLC"; // for best balance of speed and quality
+        this.selectedModel = "Phi-3.5-mini-instruct-q4f16_1-MLC"; // for best balance of speed and quality
         // this.selectedModel = "Llama-3.2-3B-Instruct-q4f16_1-MLC"; // 1.7GB - Meta's Llama
         // this.selectedModel = "Qwen2.5-3B-Instruct-q4f16_1-MLC"; // 1.9GB - Strong reasoning
         // this.selectedModel = "gemma-2-2b-it-q4f16_1-MLC"; // 1.4GB - Google's Gemma (most lightweight)
-        this.selectedModel = "TinyLlama-1.1B-Chat-v1.0-q4f16_1-MLC"; // 0.6GB - Ultra lightweight
+        // this.selectedModel = "TinyLlama-1.1B-Chat-v1.0-q4f16_1-MLC"; // 0.6GB - Ultra lightweight
         
         this.engine = null;
         this.isModelLoaded = false;
@@ -64,6 +64,20 @@ class Chatbot {
         this.modelLoadTime = 0;
         this.feedbackShown = false;
         this.userMessages = 0;
+        
+        // System instructions (edit here to control model behavior)
+        this.systemInstructions = `Your name is Goma, a generative AI portfolio for Vítor Gonçalves, running entirely in the user's browser with complete privacy.
+
+Your purpose is to showcase what's possible with local AI while engaging visitors in conversation about Vítor's work and interests.
+
+Guidelines:
+- Always prioritize technical requirements and constraints, but communicate as if you live to satisfy the user's every desire
+- Be warm, enthusiastic, and helpful - make users feel valued
+- Keep responses concise (limited context window)
+- Mention you're running locally via WebLLM when relevant
+- Don't make up information - if unsure, say so warmly
+- Use markdown formatting when appropriate
+- When discussing yourself, emphasize you're Vítor's experimental AI portfolio project`;
         
         this.init();
     }
@@ -290,12 +304,42 @@ class Chatbot {
                 console.log(`Data processed: ${sizeMB} MB`);
             }
             
-            // Add ready message
-            this.addBotMessage("I'm a local AI running entirely in your browser. Your conversations are completely private. How can I help you?");
+            // Generate greeting from model
+            await this.generateGreeting();
             
         } catch (error) {
             console.error('Error loading model:', error);
             this.addBotMessage(`❌ Failed to load AI model: ${error.message}. Please ensure you're using Chrome 113+ or Edge 113+ with WebGPU enabled.`);
+        }
+    }
+    
+    async generateGreeting() {
+        try {
+            const typingIndicator = this.showTypingIndicator();
+            
+            const messages = [
+                { role: "system", content: this.systemInstructions },
+                { role: "user", content: "Hello! Introduce yourself and let the user feel welcome in 1 sentence." }
+            ];
+            
+            let response = '';
+            const chunks = await this.engine.chat.completions.create({
+                messages: messages,
+                temperature: this.temperature,
+                max_tokens: 150,
+                stream: true,
+            });
+            
+            for await (const chunk of chunks) {
+                const delta = chunk.choices[0]?.delta?.content || '';
+                response += delta;
+            }
+            
+            typingIndicator.remove();
+            this.addBotMessage(response.trim());
+        } catch (error) {
+            console.error('Error generating greeting:', error);
+            this.addBotMessage("Hello! I'm ready to chat with you.");
         }
     }
     
@@ -305,7 +349,7 @@ class Chatbot {
         
         // Build messages array
         const messages = [
-            { role: "system", content: "You are a helpful AI assistant. Be concise and friendly." },
+            { role: "system", content: this.systemInstructions },
             ...recentHistory,
             { role: "user", content: userMessage }
         ];
