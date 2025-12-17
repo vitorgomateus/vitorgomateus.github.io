@@ -20,6 +20,9 @@ class Chatbot {
         this.closeDrawer = document.getElementById('closeDrawer');
         this.clearCacheBtn = document.getElementById('clearCache');
         this.accessibilityBtn = document.getElementById('accessibilityMode');
+        this.chatContainer = document.getElementById('chatContainer');
+        this.staticContent = document.getElementById('staticContent');
+        this.loadingStats = document.getElementById('loadingStats');
         
         // WebLLM engine
         // this.selectedModel = "Phi-3.5-mini-instruct-q4f16_1-MLC"; // for best balance of speed and quality
@@ -91,18 +94,18 @@ class Chatbot {
         this.sendBtn.disabled = true;
         this.userInput.disabled = true;
         
-        // Initial greeting
-        this.addBotMessage("Loading AI model... Please wait, this may take a minute. The model (1.9GB) will be cached for future visits.");
-        
-        // Check WebGPU support and auto-load model
-        this.checkWebGPUSupport().then(supported => {
-            if (supported) {
-                this.loadModel();
-            }
+        // Check for model changes (async to allow cache clearing)
+        this.checkModelVersion().then(() => {
+            // Check WebGPU support and auto-load model
+            this.checkWebGPUSupport().then(supported => {
+                if (supported) {
+                    this.loadModel();
+                }
+            });
+            
+            // Start performance monitoring
+            this.startPerformanceMonitoring();
         });
-        
-        // Start performance monitoring
-        this.startPerformanceMonitoring();
     }
     
     setRandomPrimaryColor() {
@@ -204,6 +207,16 @@ class Chatbot {
         this.userInput.style.height = Math.min(this.userInput.scrollHeight, 120) + 'px';
     }
     
+    async checkModelVersion() {
+        const cachedModel = localStorage.getItem('selectedModel');
+        if (cachedModel && cachedModel !== this.selectedModel) {
+            console.log(`Model changed from ${cachedModel} to ${this.selectedModel}. Clearing cache...`);
+            await this.clearCacheInternal();
+            console.log('Cache cleared. New model will be downloaded.');
+        }
+        localStorage.setItem('selectedModel', this.selectedModel);
+    }
+    
     async checkWebGPUSupport() {
         if (!navigator.gpu) {
             this.addBotMessage("⚠️ WebGPU is not supported in your browser. Please use Chrome 113+ or Edge 113+ with WebGPU enabled.");
@@ -213,22 +226,40 @@ class Chatbot {
     }
     
     async loadModel() {
+        const startTime = performance.now();
+        let totalBytes = 0;
+        let fetchStartTime = null;
+        let fetchEndTime = null;
+        
         try {
             // Initialize engine with progress callback
             this.engine = await webllm.CreateMLCEngine(this.selectedModel, {
                 initProgressCallback: (progress) => {
-                    console.log(progress.text);
-                    // Update the last bot message with progress
-                    const messages = this.messagesContainer.querySelectorAll('.message.bot');
-                    if (messages.length > 0) {
-                        const lastMessage = messages[messages.length - 1];
-                        const bubble = lastMessage.querySelector('.message-bubble');
-                        if (bubble && progress.text) {
-                            bubble.textContent = `Loading... ${progress.text}`;
-                        }
+                    // Track fetch timing
+                    if (progress.text && progress.text.includes('Fetching') && !fetchStartTime) {
+                        fetchStartTime = performance.now();
+                    }
+                    if (progress.text && (progress.text.includes('Loading model') || progress.text.includes('Initializing')) && fetchStartTime && !fetchEndTime) {
+                        fetchEndTime = performance.now();
+                        const fetchTime = ((fetchEndTime - fetchStartTime) / 1000).toFixed(1);
+                        console.log(`Model fetched in ${fetchTime}s`);
+                    }
+                    
+                    // Track total bytes if available
+                    if (progress.progress !== undefined) {
+                        totalBytes = Math.max(totalBytes, progress.progress * 100);
+                    }
+                    
+                    // Show progress in loading stats
+                    if (progress.text) {
+                        this.loadingStats.textContent = progress.text;
+                        this.loadingStats.classList.remove('hidden');
                     }
                 }
             });
+            
+            const endTime = performance.now();
+            const loadTime = ((endTime - startTime) / 1000).toFixed(1);
             
             this.isModelLoaded = true;
             
@@ -237,7 +268,18 @@ class Chatbot {
             this.userInput.disabled = false;
             this.userInput.focus();
             
-            this.addBotMessage("🚀 Ready! I'm a local AI running entirely in your browser. Your conversations are completely private. How can I help you?");
+            // Hide loading stats
+            // this.loadingStats.classList.add('hidden');
+            
+            // Log loading metrics
+            console.log(`Model loaded in ${loadTime}s`);
+            if (totalBytes > 0) {
+                const sizeMB = (totalBytes / (1024 * 1024)).toFixed(1);
+                console.log(`Data processed: ${sizeMB} MB`);
+            }
+            
+            // Add ready message
+            this.addBotMessage("I'm a local AI running entirely in your browser. Your conversations are completely private. How can I help you?");
             
         } catch (error) {
             console.error('Error loading model:', error);
@@ -432,14 +474,19 @@ class Chatbot {
         this.aiEnabled = enabled;
         
         if (!enabled) {
-            this.addBotMessage("AI turned off. I'll show you information instead. You can turn AI back on using the toggle.");
-            this.userInput.disabled = true;
-            this.sendBtn.disabled = true;
-        } else if (this.isModelLoaded) {
-            this.addBotMessage("AI is back on! How can I help you?");
-            this.userInput.disabled = false;
-            this.sendBtn.disabled = false;
-            this.userInput.focus();
+            // Switch to static content
+            this.chatContainer.classList.add('hidden');
+            this.staticContent.classList.remove('hidden');
+        } else {
+            // Switch to chat UI
+            this.chatContainer.classList.remove('hidden');
+            this.staticContent.classList.add('hidden');
+            
+            if (this.isModelLoaded) {
+                this.userInput.disabled = false;
+                this.sendBtn.disabled = false;
+                this.userInput.focus();
+            }
         }
     }
     
@@ -453,27 +500,34 @@ class Chatbot {
         this.drawerOverlay.classList.remove('visible');
     }
     
+    async clearCacheInternal() {
+        try {
+            // Clear cache storage
+            if ('caches' in window) {
+                const cacheNames = await caches.keys();
+                await Promise.all(cacheNames.map(name => caches.delete(name)));
+            }
+            
+            // Clear IndexedDB (where WebLLM stores models)
+            if ('indexedDB' in window) {
+                await new Promise((resolve, reject) => {
+                    const req = indexedDB.deleteDatabase('webllm');
+                    req.onsuccess = resolve;
+                    req.onerror = reject;
+                });
+            }
+        } catch (error) {
+            console.error('Error clearing cache:', error);
+            throw error;
+        }
+    }
+    
     async handleClearCache() {
         if (confirm('This will clear the cached model (~1.9GB). You will need to download it again next time. Continue?')) {
             try {
-                // Clear cache storage
-                if ('caches' in window) {
-                    const cacheNames = await caches.keys();
-                    await Promise.all(cacheNames.map(name => caches.delete(name)));
-                }
-                
-                // Clear IndexedDB (where WebLLM stores models)
-                if ('indexedDB' in window) {
-                    await new Promise((resolve, reject) => {
-                        const req = indexedDB.deleteDatabase('webllm');
-                        req.onsuccess = resolve;
-                        req.onerror = reject;
-                    });
-                }
-                
+                await this.clearCacheInternal();
                 alert('Cache cleared successfully! Please refresh the page.');
             } catch (error) {
-                console.error('Error clearing cache:', error);
                 alert('Failed to clear cache. Check console for details.');
             }
         }
@@ -492,7 +546,7 @@ class Chatbot {
             document.documentElement.style.setProperty('--warning-border', '#f59e0b');
             
             // Apply OpenDyslexic font (loaded via @font-face in CSS)
-            document.body.style.fontFamily = 'OpenDyslexic, "Work Sans", sans-serif';
+            document.body.style.fontFamily = 'OpenDyslexic, -apple-system, BlinkMacSystemFont, sans-serif';
             // Reduce root font size to 12px
             document.documentElement.style.fontSize = '12px';
         } else {
