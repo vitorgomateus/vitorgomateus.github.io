@@ -25,11 +25,11 @@ class Chatbot {
         this.alertContainer = document.getElementById('alertContainer');
         
         // WebLLM engine
-        this.selectedModel = "Phi-3.5-mini-instruct-q4f16_1-MLC"; // for best balance of speed and quality
+        // this.selectedModel = "Phi-3.5-mini-instruct-q4f16_1-MLC"; // for best balance of speed and quality
         // this.selectedModel = "Llama-3.2-3B-Instruct-q4f16_1-MLC"; // 1.7GB - Meta's Llama
         // this.selectedModel = "Qwen2.5-3B-Instruct-q4f16_1-MLC"; // 1.9GB - Strong reasoning
         // this.selectedModel = "gemma-2-2b-it-q4f16_1-MLC"; // 1.4GB - Google's Gemma (most lightweight)
-        // this.selectedModel = "TinyLlama-1.1B-Chat-v1.0-q4f16_1-MLC"; // 0.6GB - Ultra lightweight
+        this.selectedModel = "TinyLlama-1.1B-Chat-v1.0-q4f16_1-MLC"; // 0.6GB - Ultra lightweight
         
         this.engine = null;
         this.isModelLoaded = false;
@@ -50,6 +50,8 @@ class Chatbot {
         this.messageCount = 0;
         this.isProcessing = false;
         this.aiEnabled = true;
+        this.shouldInterrupt = false;
+        this.pendingMessages = [];
         
         // Performance tracking
         this.performanceMetrics = {
@@ -126,7 +128,6 @@ Use empty strings for unknown fields. For 'context', accumulate any relevant pro
         
         // Disable send until model loads
         this.sendBtn.disabled = true;
-        this.userInput.disabled = true;
         
         // Show privacy message immediately
         this.addPrivacyMessage();
@@ -186,7 +187,7 @@ Use empty strings for unknown fields. For 'context', accumulate any relevant pro
     async handleSend() {
         const message = this.userInput.value.trim();
         
-        if (!message || this.isProcessing) return;
+        if (!message) return;
         
         // If AI is disabled, show info instead
         if (!this.aiEnabled) {
@@ -197,6 +198,17 @@ Use empty strings for unknown fields. For 'context', accumulate any relevant pro
         }
         
         if (!this.isModelLoaded) return;
+        
+        // If processing, queue message and interrupt
+        if (this.isProcessing) {
+            this.pendingMessages.push(message);
+            this.shouldInterrupt = true;
+            this.userInput.value = '';
+            this.autoResize();
+            this.addUserMessage(message);
+            this.userMessages++;
+            return;
+        }
         
         // Clear input and reset
         this.userInput.value = '';
@@ -225,12 +237,39 @@ Use empty strings for unknown fields. For 'context', accumulate any relevant pro
             // Track performance metrics
             this.trackPerformance(endTime - startTime);
             
-            // Remove typing, add response
+            // Remove typing, add response (always show it to maintain order)
             typingIndicator.remove();
             this.addBotMessage(response);
             
             // Add to conversation history
             this.conversationHistory.push({ role: "assistant", content: response });
+            
+            // If interrupted, immediately process batched messages
+            if (this.shouldInterrupt && this.pendingMessages.length > 0) {
+                this.shouldInterrupt = false;
+                const batchedMessage = this.pendingMessages.join('\n\n');
+                this.pendingMessages = [];
+                
+                // Add batched message to history
+                this.conversationHistory.push({ role: "user", content: batchedMessage });
+                
+                // Show typing indicator for batched response
+                const newTypingIndicator = this.showTypingIndicator();
+                
+                const batchStartTime = performance.now();
+                const batchedResponse = await this.generateLLMResponse(batchedMessage);
+                const batchEndTime = performance.now();
+                
+                // Track performance metrics
+                this.trackPerformance(batchEndTime - batchStartTime);
+                
+                // Remove typing, add response
+                newTypingIndicator.remove();
+                this.addBotMessage(batchedResponse);
+                
+                // Add to conversation history
+                this.conversationHistory.push({ role: "assistant", content: batchedResponse });
+            }
             
         } catch (error) {
             console.error('Error generating response:', error);
@@ -305,11 +344,6 @@ Use empty strings for unknown fields. For 'context', accumulate any relevant pro
             
             this.isModelLoaded = true;
             
-            // Enable chat
-            this.sendBtn.disabled = false;
-            this.userInput.disabled = false;
-            this.userInput.focus();
-            
             // Hide loading stats
             // this.loadingStats.classList.add('hidden'); // to be uncommented later
             
@@ -320,7 +354,7 @@ Use empty strings for unknown fields. For 'context', accumulate any relevant pro
                 console.log(`Data processed: ${sizeMB} MB`);
             }
             
-            // Generate greeting from model
+            // Generate greeting from model (enables chat after completion)
             await this.generateGreeting();
             
         } catch (error) {
@@ -356,9 +390,17 @@ Use empty strings for unknown fields. For 'context', accumulate any relevant pro
             
             typingIndicator.remove();
             this.addBotMessage(response.trim());
+            
+            // Enable chat after first message
+            this.sendBtn.disabled = false;
+            this.userInput.focus();
         } catch (error) {
             console.error('Error generating greeting:', error);
             this.addBotMessage("Hello! I'm ready to chat with you.");
+            
+            // Enable chat even if greeting fails
+            this.sendBtn.disabled = false;
+            this.userInput.focus();
         }
     }
     
