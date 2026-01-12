@@ -152,9 +152,31 @@ slowResponseThreshold = 1500  // Slow response (ms)
 
 ## System Instructions & Extraction
 
-**Control model behavior:**
-- Edit `this.systemInstructions` in constructor to control model behavior
-- Defines "Goma" persona and guidelines
+**Where to edit:**
+- Location: `this.systemInstructions` in constructor (chatbot.js lines 71-88)
+- Current persona: "Goma" - Vítor's AI portfolio chatbot
+
+**Writing effective system instructions:**
+- **Be concise:** Limited context window (maxTokens: 512), every word counts
+- **Structure clearly:** Identity → Purpose → Guidelines → Technical directives
+- **Personality first:** Define WHO the model is (name, role, voice) at the top
+- **Specific behaviors:** "Keep responses concise" not "Be helpful"
+- **Handle edge cases:** What to do when uncertain, how to handle off-topic
+- **Test after changes:** Send varied messages, check tone/length/accuracy
+
+**Behavioral guidelines:**
+- **Warmth over formality:** Match the "clean, modern, engaging" aesthetic
+- **Brevity over completeness:** Small model, limited tokens - prioritize key info
+- **Honesty over invention:** Should say "I don't know" rather than hallucinate
+- **Context-aware:** Should reference extracted user info naturally when relevant
+- **Brand-aligned:** Should mention local processing/privacy when appropriate
+
+**Extraction requirements (CRITICAL):**
+- **Must keep:** The `[EXTRACT]{...}[/EXTRACT]` directive at the end
+- **Format:** JSON with 5 fields: name, email, company, position, context
+- **Stripping:** Handled automatically by regex `/\[EXTRACT\][\s\S]*?\[\/EXTRACT\]/g`
+- **If removed:** Context persistence breaks, feedback form won't pre-fill
+- **Testing:** Check that extraction still works after instruction changes
 
 **Context extraction (zero overhead):**
 - Model appends `[EXTRACT]{"name":"...","email":"...","company":"...","position":"...","context":"..."}[/EXTRACT]` to every response
@@ -162,7 +184,6 @@ slowResponseThreshold = 1500  // Slow response (ms)
 - Extracted info stored in `this.extractedInfo` object
 - Extracted info injected into system prompt for persistent context (survives limited `maxHistory`)
 - Context field is cumulative/open-ended (projects, technologies, methodologies, interests)
-- Regex pattern: `/\[EXTRACT\][\s\S]*?\[\/EXTRACT\]/g` (handles newlines)
 
 ---
 
