@@ -1,25 +1,77 @@
 # AI Agent Instructions
 
-## Quick Reference - Where Things Are)
+## Task Type Decision Tree (Read This FIRST!)
 
-**Key Locations:**
-- **Model config:** chatbot.js lines 23-28 (`this.selectedModel`)
-- **System instructions:** chatbot.js lines 71-88 (`this.systemInstructions`)
-- **Performance tuning:** chatbot.js lines 32-41 (thresholds)
-- **Extraction logic:** chatbot.js lines 355-380 (`generateLLMResponse`)
-- **Feedback form:** chatbot.js lines 596-730 (`showFeedbackForm`)
-- **Alert system:** chatbot.js lines 553-562 (`showAlert`)
-- **CSS variables:** styles.css lines 1-30
-- **Alert styles:** styles.css lines 580-633
+**Before starting any task:**
+1. Read user request
+2. Identify task type(s) from list below
+3. Read ONLY the file sections listed for that type
+4. Make changes
+5. **Update line ranges below if code shifts >20 lines**
 
-**Task-Based Reading:**
-- UI/styling changes → styles.css only
-- Model behavior/extraction → chatbot.js lines 71-88, 355-380
-- Performance tuning → chatbot.js lines 32-41, 477-574
-- Feedback/forms → chatbot.js lines 596-730
-- DOM structure → index.html (entire file is short)
+**Line ranges are approximate guides (±5-10 lines drift is normal). They're for navigation efficiency, not exact targeting.**
 
-**Note:** Line ranges are approximate guides (±5-10 lines drift is normal). Update them when making large edits (20+ lines shifted). They're for navigation efficiency, not exact targeting.
+---
+
+**Identify task type before reading files:**
+
+### 1. Styling/Visual Changes
+*Examples: "Change colors", "Adjust spacing", "Modify button style", "Update fonts"*
+- **Read:** styles.css (relevant section only)
+- **Also read:** index.html if adding/removing HTML structure
+- **Skip:** chatbot.js (unless inline styles need removal)
+
+### 2. Model Personality/Behavior
+*Examples: "Make it friendlier", "Change tone", "Add greeting variation", "Handle off-topic better"*
+- **Read:** chatbot.js lines 71-88 only (`this.systemInstructions`)
+- **Skip:** Everything else unless testing requires it
+
+### 3. User Data Extraction
+*Examples: "Extract phone numbers", "Capture more context", "Add new extraction field"*
+- **Read:** chatbot.js lines 71-88 (extraction directive in system instructions)
+- **Read:** chatbot.js lines 355-380 (`generateLLMResponse` - parsing logic)
+- **Read:** chatbot.js lines 596-730 if feedback form needs updating
+
+### 4. Feedback System
+*Examples: "Change feedback timing", "Modify form fields", "Update mailto format"*
+- **Read:** chatbot.js lines 596-730 (`showFeedbackForm`)
+- **Skip:** Rest of chatbot.js
+
+### 5. Performance Tuning
+*Examples: "Speed up responses", "Reduce memory usage", "Adjust message limits"*
+- **Read:** chatbot.js lines 32-41 (threshold variables)
+- **Read:** chatbot.js lines 476-574 (monitoring logic)
+- **Skip:** UI and model behavior sections
+
+### 6. Alert/Notification System
+*Examples: "Change alert styling", "Modify warning messages", "Adjust auto-dismiss timing"*
+- **Read:** chatbot.js lines 553-562 (`showAlert` method)
+- **Read:** styles.css lines 580-633 (alert styling)
+- **Read:** index.html for alert container structure
+
+### 7. Model Selection/Configuration
+*Examples: "Switch to different model", "Change temperature", "Adjust max tokens"*
+- **Read:** chatbot.js lines 23-28 (model selection)
+- **Read:** chatbot.js lines 32-41 (performance variables including temperature, maxTokens)
+
+### 8. DOM Structure/Layout
+*Examples: "Add new section", "Rearrange elements", "Remove footer"*
+- **Read:** index.html (entire file - it's short)
+- **Read:** styles.css (relevant layout sections)
+
+### 9. Privacy Message/Icons
+*Examples: "Change privacy icons", "Modify first message", "Update SVG styling"*
+- **Read:** chatbot.js lines 360-410 (`addPrivacyMessage` method)
+- **Read:** styles.css if icon styling needed
+
+### 10. Complex/Multi-Part Requests
+*Examples: "Redesign feedback flow", "Add new feature with UI and behavior"*
+- **Break down into subtasks first**
+- **Identify type for each subtask**
+- **Read only relevant sections for each subtask**
+- **Use manage_todo_list to track progress**
+
+---
 
 ## Project Context
 100% client-side AI chatbot using WebLLM (Phi-3.5-mini). Zero server communication. See [README.md](../README.md) for user-facing overview.
