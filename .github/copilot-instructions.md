@@ -84,6 +84,8 @@
 - **Performance Critical:** Aggressive monitoring to prevent browser slowdown
 - **Mobile Only:** 375px × 620px, no responsive breakpoints
 - **No Build Tools:** Direct ES modules, vanilla JS/CSS
+- **Aesthetic:** Clean, modern, engaging UI/UX
+- **Accessibility:** correct aria roles, HTML semantics and focus management
 
 ---
 

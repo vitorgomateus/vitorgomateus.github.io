@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Young+Serif&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="portfolio.css">
 </head>
 <body>
     <!-- Main Container -->
@@ -62,7 +63,30 @@
 
         <!-- Static Content (shown when AI is off) -->
         <div id="staticContent" class="static-content hidden">
-            <p>This website is a project of Vítor Gonçalves</p>
+            <section class="portfolio-section executive-summary">
+                <h2>About</h2>
+                <div id="summary-container"></div>
+            </section>
+            
+            <section class="portfolio-section">
+                <h2>Skills</h2>
+                <div id="skills-container" class="portfolio-grid"></div>
+            </section>
+            
+            <section class="portfolio-section">
+                <h2>Education</h2>
+                <div id="education-container" class="portfolio-grid"></div>
+            </section>
+            
+            <section class="portfolio-section">
+                <h2>Experience</h2>
+                <div id="experience-container" class="portfolio-grid"></div>
+            </section>
+            
+            <section class="portfolio-section">
+                <h2>Projects</h2>
+                <div id="projects-container" class="portfolio-grid"></div>
+            </section>
         </div>
 
         <!-- Chat Container -->
@@ -95,6 +119,7 @@
         </div>
     </div>
 
+    <script src="portfolio.js"></script>
     <script type="module" src="chatbot.js"></script>
 </body>
 </html>

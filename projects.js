@@ -2,8 +2,63 @@ var projects_container = $('.container-projects');
 var projects_wrapper = $('.projects-wrapper');
 
 var appendable = "";
+var siteData = null;
+var projects_obj = {}; // Legacy format, will be populated from data.json
 
-var projects_obj = {
+// Fetch data from JSON file
+console.log('[projects.js] Starting data.json fetch...');
+fetch('data.json')
+  .then(response => {
+    console.log('[projects.js] Fetch response received:', response.status);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response.json();
+  })
+  .then(data => {
+    console.log('[projects.js] Data parsed successfully:', data);
+    siteData = data;
+    
+    // Filter active projects only
+    const activeProjects = data.projects.filter(proj => proj.active);
+    console.log(`[projects.js] Found ${activeProjects.length} active projects out of ${data.projects.length} total`);
+    
+    // Convert new format to legacy format for existing rendering logic
+    activeProjects.forEach(proj => {
+      console.log(`[projects.js] Processing project: ${proj.id}`);
+      projects_obj[proj.id] = {
+        code: proj.id,
+        title: proj.title,
+        sub_title: proj.subtitle,
+        time_text: proj.year,
+        description: proj.shortDescription,
+        full_description: proj.fullDescription,
+        badges: proj.skills,
+        images: proj.images.map(img => ({
+          src: img.src,
+          big_src: img.bigSrc,
+          alt: img.alt,
+          text: img.caption,
+          class: img.class,
+          link: img.link
+        }))
+      };
+    });
+    
+    console.log('[projects.js] Projects converted to legacy format:', Object.keys(projects_obj));
+    
+    // Render projects
+    renderProjects();
+  })
+  .catch(error => {
+    console.error('[projects.js] Error loading data.json:', error);
+    // Fallback: show error message
+    projects_wrapper.append('<p class="text-center">Error loading projects data. Please refresh the page.</p>');
+  });
+
+function renderProjects() {
+  console.log('[projects.js] Starting renderProjects()');
+  appendable = "";
   // Watgrid
   winegrid:{
     code: "winegrid",
@@ -586,8 +641,18 @@ $.each(projects_obj, function(k,proj){
   "</section> ";
 });
 
+console.log('[projects.js] HTML generation complete, appending to DOM');
 projects_wrapper.append(appendable);
+console.log('[projects.js] Projects rendered successfully');
 
+// Handle URL hash for direct linking
 $(document).ready(function(){
-  openText(window.location.hash.substring(1));
+  console.log('[projects.js] Document ready, checking hash:', window.location.hash);
+  const hash = window.location.hash.substring(1);
+  if (hash) {
+    openText(hash);
+  }
 });
+}
+
+// Keep all existing helper functions unchanged
