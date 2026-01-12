@@ -1,11 +1,6 @@
 # AI Agent Instructions
 
-## Quick Reference - Where Things Are
-
-**Critical Rules:**
-- Font sizes: ALWAYS rem, NEVER px (14px root, 12px accessibility mode)
-- Animations: GPU-only (`transform`, `opacity`)
-- No device detection, no responsive breakpoints (fixed 768×1024px)
+## Quick Reference - Where Things Are)
 
 **Key Locations:**
 - **Model config:** chatbot.js lines 23-28 (`this.selectedModel`)
