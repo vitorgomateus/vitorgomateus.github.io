@@ -353,7 +353,11 @@ Use empty strings for unknown fields. For 'context', accumulate any relevant pro
     shouldUseRAG(query) {
         // Skip RAG for short queries (greetings, simple questions)
         const wordCount = query.trim().split(/\s+/).length;
-        return this.ragEnabled && wordCount >= this.ragMinWords;
+        const shouldUse = this.ragEnabled && wordCount >= this.ragMinWords;
+        
+        console.log(`RAG Decision: ${shouldUse ? 'YES' : 'NO'} (words: ${wordCount}, min: ${this.ragMinWords}, enabled: ${this.ragEnabled})`);
+        
+        return shouldUse;
     }
     
     cosineSimilarity(vecA, vecB) {
@@ -373,13 +377,18 @@ Use empty strings for unknown fields. For 'context', accumulate any relevant pro
     
     async searchEmbeddings(query) {
         if (!this.ragEnabled || !this.embeddings || !this.embeddingModel) {
+            console.log('RAG Search: Skipped (not ready)');
             return [];
         }
         
         try {
+            console.log(`RAG Search: Query "${query}"`);
+            
             // Generate embedding for the query
             const output = await this.embeddingModel(query, { pooling: 'mean', normalize: true });
             const queryEmbedding = Array.from(output.data);
+            
+            console.log(`RAG Search: Query embedding generated (${queryEmbedding.length} dimensions)`);
             
             // Calculate cosine similarity with all chunks
             const results = [];
@@ -396,9 +405,22 @@ Use empty strings for unknown fields. For 'context', accumulate any relevant pro
                 }
             }
             
+            console.log(`RAG Search: Found ${results.length} chunks above threshold (${this.ragConfidenceThreshold})`);
+            
             // Sort by score descending and take top k
             results.sort((a, b) => b.score - a.score);
-            return results.slice(0, this.ragTopK);
+            const topResults = results.slice(0, this.ragTopK);
+            
+            if (topResults.length > 0) {
+                console.log('RAG Search: Top chunks selected:');
+                topResults.forEach((result, i) => {
+                    console.log(`  ${i + 1}. [${result.type}] Score: ${result.score.toFixed(3)} - ${result.content.substring(0, 60)}...`);
+                });
+            } else {
+                console.log('RAG Search: No chunks found above confidence threshold');
+            }
+            
+            return topResults;
         } catch (error) {
             console.error('Error searching embeddings:', error);
             return [];
@@ -596,10 +618,12 @@ Use empty strings for unknown fields. For 'context', accumulate any relevant pro
                     .join('\n\n');
                 
                 systemPrompt += `\n\nRelevant context from Vítor's portfolio:\n${contextInfo}`;
-                console.log(`RAG: Found ${relevantChunks.length} relevant chunks`);
+                console.log(`RAG: Injected ${relevantChunks.length} chunks into system prompt (${contextInfo.length} chars)`);
             } else {
-                console.log('RAG: No relevant chunks found for query');
+                console.log('RAG: No relevant chunks to inject');
             }
+        } else {
+            console.log('RAG: Skipped for this query');
         }
         
         // Build messages array
@@ -904,7 +928,7 @@ Use empty strings for unknown fields. For 'context', accumulate any relevant pro
         this.sendBtn.addEventListener('click', resetInactivityTimer);
         
         // 3. User scrolling messages
-        this.messages.addEventListener('scroll', resetInactivityTimer);
+        this.messagesContainer.parentElement.addEventListener('scroll', resetInactivityTimer);
         
         // 4. User focusing input
         this.userInput.addEventListener('focus', resetInactivityTimer);
