@@ -38,6 +38,7 @@ function renderAll() {
   
   renderSummary(siteData.personal);
   renderSkills(siteData.personal.skills);
+  renderLanguages(siteData.personal.languages);
   renderEducation(siteData.education);
   renderExperience(siteData.experience);
   renderProjects(siteData.projects.filter(p => p.active));
@@ -81,6 +82,20 @@ function renderSkills(skills) {
       </div>
     </article>
   `).join('');
+}
+
+/**
+ * Render languages
+ */
+function renderLanguages(languages) {
+  const container = document.getElementById('languages-container');
+  if (!container || !languages) return;
+  
+  const languageList = Object.entries(languages).map(([lang, level]) => 
+    `<span class="language-item"><strong>${lang.charAt(0).toUpperCase() + lang.slice(1)}:</strong> ${level}</span>`
+  ).join(' • ');
+  
+  container.innerHTML = `<p class="languages-list">${languageList}</p>`;
 }
 
 /**
@@ -203,6 +218,7 @@ function openProjectModal(projectId) {
   modal.innerHTML = `
     <div class="modal-overlay" aria-hidden="true"></div>
     <div class="modal-content" role="document">
+      <div class="modal-inner">
       <header class="modal-header">
         <h2 id="modal-title" class="modal-title">${project.title}</h2>
         <button class="modal-close" 
@@ -244,6 +260,7 @@ function openProjectModal(projectId) {
           Close
         </button>
       </footer>
+      </div>
     </div>
   `;
   
