@@ -33,6 +33,38 @@ First load will download the model (~1.9GB). Subsequent loads are instant.
 - **Acceleration:** WebGPU
 - **Fonts:** Young Serif, Work Sans
 
+## How It Works
+
+### Query Flow
+1. **User Input** → User sends a message through the chat interface
+2. **Context Extraction** → Previous conversation messages are limited to last 10 turns to manage memory
+3. **User Info Injection** → Extracted user details (name, email, company, context) from earlier messages are added to system prompt for persistent context
+4. **RAG Augmentation** _(Future)_ → Semantic search against `embeddings.json` to find relevant portfolio data chunks
+5. **Model Query** → Conversation history + system instructions sent to local LLM via WebLLM
+6. **Streaming Response** → Model generates response with streaming enabled for better UX
+7. **Metadata Extraction** → Model appends `[EXTRACT]{...}[/EXTRACT]` JSON with user info (stripped before display)
+8. **Response Display** → Clean response shown to user, extracted info stored for future context
+
+### Context Management
+- **System Instructions**: Define model personality (Goma), behavior guidelines, and extraction format
+- **Conversation History**: Rolling window of last 10 messages to prevent memory bloat
+- **User Context**: Name, email, company, position, and interests persist across entire session
+- **Extraction Format**: Model embeds structured JSON in every response for zero-overhead data capture
+
+### RAG System _(In Development)_
+- **Embeddings**: 19 pre-generated chunks (summary, skills, education, experience, projects) with 384-dim vectors
+- **Model**: `all-MiniLM-L6-v2` via sentence-transformers
+- **Search**: Client-side cosine similarity to find top-k relevant chunks
+- **Injection**: Relevant context prepended to system prompt before model query
+
+Generate embeddings:
+```bash
+python -m venv venv
+.\venv\Scripts\Activate.ps1
+pip install sentence-transformers
+python generate_embeddings.py
+```
+
 ## Features
 - 100% local AI processing
 - Performance monitoring with warnings

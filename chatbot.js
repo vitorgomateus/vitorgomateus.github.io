@@ -5,6 +5,7 @@
  */
 
 import * as webllm from "https://esm.run/@mlc-ai/web-llm";
+import { pipeline } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2';
 
 class Chatbot {
     constructor() {
@@ -35,6 +36,14 @@ class Chatbot {
         this.engine = null;
         this.isModelLoaded = false;
         this.conversationHistory = [];
+        
+        // RAG system
+        this.embeddings = null; // Loaded from embeddings.json
+        this.ragEnabled = false; // Set to true if embeddings load successfully
+        this.embeddingModel = null; // Transformers.js embedding pipeline
+        this.ragMinWords = 3; // Minimum words to trigger RAG search
+        this.ragTopK = 3; // Number of top chunks to retrieve
+        this.ragConfidenceThreshold = 0.3; // Min similarity score (0-1)
         
         // Performance tuning variables
         this.maxMessages = 50; // Max messages before pruning
@@ -135,6 +144,9 @@ Use empty strings for unknown fields. For 'context', accumulate any relevant pro
         
         // Show privacy message immediately
         this.addPrivacyMessage();
+        
+        // Load embeddings for RAG system (async, non-blocking)
+        this.loadEmbeddings();
         
         // Check for model changes (async to allow cache clearing)
         this.checkModelVersion().then(() => {
@@ -310,6 +322,87 @@ Use empty strings for unknown fields. For 'context', accumulate any relevant pro
             console.log('Cache cleared. New model will be downloaded.');
         }
         localStorage.setItem('selectedModel', this.selectedModel);
+    }
+     
+    async loadEmbeddings() {
+        try {
+            const response = await fetch('embeddings.json');
+            if (!response.ok) {
+                console.log('embeddings.json not found. RAG system disabled.');
+                return;
+            }
+            
+            this.embeddings = await response.json();
+            console.log(`Embeddings loaded: ${this.embeddings.chunks.length} chunks`);
+            
+            // Load embedding model for query encoding
+            console.log('Loading embedding model...');
+            this.embeddingModel = await pipeline(
+                'feature-extraction',
+                'Xenova/all-MiniLM-L6-v2'
+            );
+            
+            this.ragEnabled = true;
+            console.log('✓ RAG enabled: Embeddings and model ready');
+        } catch (error) {
+            console.log('Failed to load embeddings or model. RAG system disabled.', error);
+            this.ragEnabled = false;
+        }
+    }
+    
+    shouldUseRAG(query) {
+        // Skip RAG for short queries (greetings, simple questions)
+        const wordCount = query.trim().split(/\s+/).length;
+        return this.ragEnabled && wordCount >= this.ragMinWords;
+    }
+    
+    cosineSimilarity(vecA, vecB) {
+        // Calculate cosine similarity between two vectors
+        let dotProduct = 0;
+        let normA = 0;
+        let normB = 0;
+        
+        for (let i = 0; i < vecA.length; i++) {
+            dotProduct += vecA[i] * vecB[i];
+            normA += vecA[i] * vecA[i];
+            normB += vecB[i] * vecB[i];
+        }
+        
+        return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
+    }
+    
+    async searchEmbeddings(query) {
+        if (!this.ragEnabled || !this.embeddings || !this.embeddingModel) {
+            return [];
+        }
+        
+        try {
+            // Generate embedding for the query
+            const output = await this.embeddingModel(query, { pooling: 'mean', normalize: true });
+            const queryEmbedding = Array.from(output.data);
+            
+            // Calculate cosine similarity with all chunks
+            const results = [];
+            for (const chunk of this.embeddings.chunks) {
+                const similarity = this.cosineSimilarity(queryEmbedding, chunk.embedding);
+                
+                if (similarity >= this.ragConfidenceThreshold) {
+                    results.push({
+                        content: chunk.content,
+                        type: chunk.type,
+                        metadata: chunk.metadata,
+                        score: similarity
+                    });
+                }
+            }
+            
+            // Sort by score descending and take top k
+            results.sort((a, b) => b.score - a.score);
+            return results.slice(0, this.ragTopK);
+        } catch (error) {
+            console.error('Error searching embeddings:', error);
+            return [];
+        }
     }
     
     async checkWebGPUSupport() {
@@ -491,6 +584,22 @@ Use empty strings for unknown fields. For 'context', accumulate any relevant pro
         
         if (knownInfo.length > 0) {
             systemPrompt += `\n\nUser context (from earlier in conversation):\n${knownInfo.join('\n')}`;
+        }
+        
+        // RAG: Search embeddings for relevant context
+        if (this.shouldUseRAG(userMessage)) {
+            const relevantChunks = await this.searchEmbeddings(userMessage);
+            
+            if (relevantChunks.length > 0) {
+                const contextInfo = relevantChunks
+                    .map(chunk => `[${chunk.type}] ${chunk.content}`)
+                    .join('\n\n');
+                
+                systemPrompt += `\n\nRelevant context from Vítor's portfolio:\n${contextInfo}`;
+                console.log(`RAG: Found ${relevantChunks.length} relevant chunks`);
+            } else {
+                console.log('RAG: No relevant chunks found for query');
+            }
         }
         
         // Build messages array
