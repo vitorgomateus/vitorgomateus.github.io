@@ -17,6 +17,7 @@ class Chatbot {
         this.drawer = document.getElementById('drawer');
         this.drawerOverlay = document.getElementById('drawerOverlay');
         this.closeDrawer = document.getElementById('closeDrawer');
+        this.modelInfo = document.getElementById('modelInfo');
         this.clearCacheBtn = document.getElementById('clearCache');
         this.accessibilityBtn = document.getElementById('accessibilityMode');
         this.chatContainer = document.getElementById('chatContainer');
@@ -66,6 +67,9 @@ class Chatbot {
         this.modelLoadTime = 0;
         this.feedbackShown = false;
         this.userMessages = 0;
+        this.lastActivityTime = Date.now();
+        this.inactivityTimer = null;
+        this.inactivityThreshold = 300000; // 5 minutes
         
         // Extracted user info from conversation
         this.extractedInfo = {
@@ -144,8 +148,8 @@ Use empty strings for unknown fields. For 'context', accumulate any relevant pro
             // Start performance monitoring
             this.startPerformanceMonitoring();
             
-            // Start feedback timer (60 seconds)
-            setTimeout(() => this.showFeedbackForm(), 600000);
+            // Start inactivity monitoring for feedback form
+            this.startInactivityMonitoring();
         });
     }
     
@@ -166,6 +170,17 @@ Use empty strings for unknown fields. For 'context', accumulate any relevant pro
         
         // Update favicon with primary color
         this.updateFavicon(hue, saturation, lightness);
+    }
+    
+    getModelDisplayName() {
+        const modelNames = {
+            'Phi-3.5-mini-instruct-q4f16_1-MLC': 'Phi-3.5-mini (1.9GB)',
+            'Llama-3.2-3B-Instruct-q4f16_1-MLC': 'Llama-3.2-3B (1.7GB)',
+            'Qwen2.5-3B-Instruct-q4f16_1-MLC': 'Qwen2.5-3B (1.9GB)',
+            'gemma-2-2b-it-q4f16_1-MLC': 'Gemma-2-2B (1.4GB)',
+            'TinyLlama-1.1B-Chat-v1.0-q4f16_1-MLC': 'TinyLlama-1.1B-Chat (0.6GB)'
+        };
+        return modelNames[this.selectedModel] || this.selectedModel;
     }
     
     updateFavicon(hue, saturation, lightness) {
@@ -343,6 +358,11 @@ Use empty strings for unknown fields. For 'context', accumulate any relevant pro
             this.modelLoadTime = loadTime;
             
             this.isModelLoaded = true;
+            
+            // Update model info in drawer
+            if (this.modelInfo) {
+                this.modelInfo.textContent = this.getModelDisplayName();
+            }
             
             // Hide loading stats
             // this.loadingStats.classList.add('hidden'); // to be uncommented later
@@ -750,6 +770,58 @@ Use empty strings for unknown fields. For 'context', accumulate any relevant pro
         }
     }
     
+    /**
+     * Start monitoring user inactivity for feedback form
+     */
+    startInactivityMonitoring() {
+        // Track user activity
+        const resetInactivityTimer = () => {
+            this.lastActivityTime = Date.now();
+            if (this.inactivityTimer) {
+                clearTimeout(this.inactivityTimer);
+            }
+            if (!this.feedbackShown) {
+                this.inactivityTimer = setTimeout(() => {
+                    this.checkInactivity();
+                }, this.inactivityThreshold);
+            }
+        };
+        
+        // Activity indicators:
+        // 1. User typing in input
+        this.userInput.addEventListener('input', resetInactivityTimer);
+        
+        // 2. User sending message
+        this.sendBtn.addEventListener('click', resetInactivityTimer);
+        
+        // 3. User scrolling messages
+        this.messages.addEventListener('scroll', resetInactivityTimer);
+        
+        // 4. User focusing input
+        this.userInput.addEventListener('focus', resetInactivityTimer);
+        
+        // Start initial timer
+        resetInactivityTimer();
+    }
+    
+    /**
+     * Check if user has been inactive and show feedback form
+     */
+    checkInactivity() {
+        const timeSinceActivity = Date.now() - this.lastActivityTime;
+        
+        // Only show if:
+        // - Haven't shown before
+        // - User has been inactive for threshold duration
+        // - User has sent at least one message
+        if (!this.feedbackShown && 
+            timeSinceActivity >= this.inactivityThreshold && 
+            this.conversationHistory.length > 0) {
+            this.showFeedbackForm();
+            this.feedbackShown = true;
+        }
+    }
+
     showFeedbackForm() {
         if (this.feedbackShown || !this.aiEnabled) return;
         this.feedbackShown = true;
