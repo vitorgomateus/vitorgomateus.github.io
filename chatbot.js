@@ -27,11 +27,11 @@ class Chatbot {
         this.alertContainer = document.getElementById('alertContainer');
         
         // WebLLM engine
-        // this.selectedModel = "Phi-3.5-mini-instruct-q4f16_1-MLC"; // for best balance of speed and quality
+        this.selectedModel = "Phi-3.5-mini-instruct-q4f16_1-MLC"; // for best balance of speed and quality
         // this.selectedModel = "Llama-3.2-3B-Instruct-q4f16_1-MLC"; // 1.7GB - Meta's Llama
         // this.selectedModel = "Qwen2.5-3B-Instruct-q4f16_1-MLC"; // 1.9GB - Strong reasoning
         // this.selectedModel = "gemma-2-2b-it-q4f16_1-MLC"; // 1.4GB - Google's Gemma (most lightweight)
-        this.selectedModel = "TinyLlama-1.1B-Chat-v1.0-q4f16_1-MLC"; // 0.6GB - Ultra lightweight
+        // this.selectedModel = "TinyLlama-1.1B-Chat-v1.0-q4f16_1-MLC"; // 0.6GB - Ultra lightweight
         
         this.engine = null;
         this.isModelLoaded = false;
@@ -48,8 +48,8 @@ class Chatbot {
         // Performance tuning variables
         this.maxMessages = 50; // Max messages before pruning
         this.maxHistory = 10; // Max conversation history sent to model
-        this.maxTokens = 512; // Max tokens in response
-        this.temperature = 0.7; // Response randomness (0-1)
+        this.maxTokens = 420; // Max tokens in response
+        this.temperature = 0.3; // Response randomness (0-1)
         this.prunePercent = 0.25; // Percent of messages to remove when pruning
         this.memoryCheckInterval = 20000; // Memory check interval (ms)
         this.memoryWarningThreshold = 75; // Memory usage warning % 
@@ -382,8 +382,6 @@ Use empty strings for unknown fields. For 'context', accumulate any relevant pro
         }
         
         try {
-            console.log(`RAG Search: Query "${query}"`);
-            
             // Generate embedding for the query
             const output = await this.embeddingModel(query, { pooling: 'mean', normalize: true });
             const queryEmbedding = Array.from(output.data);
@@ -592,6 +590,8 @@ Use empty strings for unknown fields. For 'context', accumulate any relevant pro
     }
     
     async generateLLMResponse(userMessage) {
+        const startTime = performance.now();
+        
         // Keep only recent conversation history to manage memory
         const recentHistory = this.conversationHistory.slice(-this.maxHistory);
         
@@ -629,9 +629,13 @@ Use empty strings for unknown fields. For 'context', accumulate any relevant pro
         // Build messages array
         const messages = [
             { role: "system", content: systemPrompt },
-            ...recentHistory,
-            { role: "user", content: userMessage }
+            ...recentHistory
         ];
+        console.groupCollapsed("prompt");
+        console.log("knownInfo",knownInfo);
+        console.log("messages",messages);
+        console.log("systemPrompt",systemPrompt);
+        console.groupEnd();
         
         // Generate response with streaming
         let response = '';
@@ -669,8 +673,19 @@ Use empty strings for unknown fields. For 'context', accumulate any relevant pro
             }
         }
         
+        console.groupCollapsed("response");
+        console.log(response);
+        console.log(extractMatch);
+        console.log(this.extractedInfo);
+        console.groupEnd();
+        
         // Remove all extraction metadata from response (handles multiple occurrences and newlines)
         response = response.replace(/\[EXTRACT\][\s\S]*?\[\/EXTRACT\]/g, '').trim();
+
+        const endTime = performance.now();
+        const duration = ((endTime - startTime) / 1000).toFixed(2);
+        console.log(`Reply generated in ${duration}s`);
+        console.log('---------------');
         
         return response.trim();
     }
