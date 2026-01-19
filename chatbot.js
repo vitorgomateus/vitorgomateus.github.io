@@ -23,8 +23,8 @@ class Chatbot {
         this.accessibilityBtn = document.getElementById('accessibilityMode');
         this.chatContainer = document.getElementById('chatContainer');
         this.staticContent = document.getElementById('staticContent');
-        this.loadingStats = document.getElementById('loadingStats');
         this.alertContainer = document.getElementById('alertContainer');
+        this.suggestionsContainer = document.getElementById('suggestionsContainer');
         
         // WebLLM engine - Lightweight conversational models
         // Format: Model ID | Size | Company | Strengths >> Notes
@@ -115,6 +115,40 @@ class Chatbot {
         ];
         this.personalityIndex = 0; // Cycles through personalities
         
+        // Pre-made greetings (chosen randomly)
+        this.greetings = [
+            "Hi! I'm Goma, Vítor's portfolio assistant. What brings you here today?",
+            "Welcome! I'm here to help you learn about Vítor's work. What interests you?",
+            "Hello! Curious about Vítor's projects? I'm happy to share details!",
+            "Hey there! I'm Goma. What would you like to know about Vítor?",
+            "Hi! Looking to learn about Vítor's UX design work? Let's chat!",
+            "Welcome! I can tell you all about Vítor's portfolio. What would you like to know?",
+            "Hello! I'm Goma, your guide to Vítor's work and experience. What can I help with?",
+            "Hi there! Interested in Vítor's design philosophy or projects? Ask away!",
+            "Hey! I'm here to showcase Vítor's work. What catches your interest?",
+            "Welcome! I'm Goma. Want to know about Vítor's background or projects?",
+            "Hi! I'm Vítor's AI assistant. What would you like to explore?",
+            "Hello! Ready to dive into Vítor's portfolio? What are you looking for?",
+            "Hey there! I can share insights about Vítor's work. What interests you most?",
+            "Hi! I'm Goma. Let me help you discover Vítor's design journey!",
+            "Welcome! Curious about Vítor's skills or experience? I'm here to help!",
+            "Hello! I'm here to answer questions about Vítor's portfolio. What would you like to know?",
+            "Hey! Looking for a UX designer? Let me tell you about Vítor!",
+            "Hi there! I'm Goma, and I'd love to share Vítor's story with you!",
+            "Welcome! Want to learn what makes Vítor's work unique? Let's talk!",
+            "Hello! I'm your guide to Vítor's portfolio. What can I show you?"
+        ];
+        
+        // Post-reply suggestion messages
+        this.suggestionMessages = [
+            "What's the carbon footprint of this website?",
+            "Can Vítor do more than pretty things?",
+            "Where is Vítor from?"
+        ];
+        
+        // Permission granted flag
+        this.permissionGranted = false;
+        
         // System instructions (edit here to control model behavior)
         // Your purpose is to showcase what's possible with local AI while engaging visitors in conversation about Vítor's work and interests.
         // Use empty strings for unknown fields. For 'context', accumulate any relevant professional details, technologies they mention, projects they're working on, methodologies they use, or specific interests. This metadata will be hidden from the user.
@@ -179,10 +213,10 @@ class Chatbot {
         
         // Check for model changes (async to allow cache clearing)
         this.checkModelVersion().then(() => {
-            // Check WebGPU support and auto-load model
+            // Check WebGPU support then ask permission
             this.checkWebGPUSupport().then(supported => {
                 if (supported) {
-                    this.loadModel();
+                    this.showPermissionPrompt();
                 }
             });
             
@@ -468,6 +502,22 @@ class Chatbot {
         let fetchStartTime = null;
         let fetchEndTime = null;
         
+        // Show loading message in chat with animated progress bar
+        const loadingMessageDiv = document.createElement('div');
+        loadingMessageDiv.className = 'message bot';
+        const loadingBubbleDiv = document.createElement('div');
+        loadingBubbleDiv.className = 'message-bubble';
+        const loadingText = document.createElement('div');
+        loadingText.textContent = 'Loading model...';
+        loadingText.style.marginBottom = '8px';
+        const progressBar = this.createLoadingBar(120000); // 120s expected
+        loadingBubbleDiv.appendChild(loadingText);
+        loadingBubbleDiv.appendChild(progressBar);
+        loadingMessageDiv.appendChild(loadingBubbleDiv);
+        this.messagesContainer.appendChild(loadingMessageDiv);
+        this.messageCount++;
+        this.scrollToBottom();
+        
         try {
             // Initialize engine with progress callback
             this.engine = await webllm.CreateMLCEngine(this.selectedModel, {
@@ -487,10 +537,9 @@ class Chatbot {
                         totalBytes = Math.max(totalBytes, progress.progress * 100);
                     }
                     
-                    // Show progress in loading stats
+                    // Update loading message text
                     if (progress.text) {
-                        this.loadingStats.textContent = progress.text;
-                        this.loadingStats.classList.remove('hidden');
+                        loadingText.textContent = progress.text;
                     }
                 }
             });
@@ -506,8 +555,9 @@ class Chatbot {
                 this.modelInfo.textContent = this.getModelDisplayName();
             }
             
-            // Hide loading stats
-            // this.loadingStats.classList.add('hidden'); // to be uncommented later
+            // Remove loading message
+            loadingMessageDiv.remove();
+            this.messageCount--;
             
             // Log loading metrics
             console.log(`Model loaded in ${loadTime}s`);
@@ -516,67 +566,27 @@ class Chatbot {
                 console.log(`Data processed: ${sizeMB} MB`);
             }
             
-            // Generate greeting from model (enables chat after completion)
+            // Show greeting (pre-made, no model generation needed)
             await this.generateGreeting();
             
         } catch (error) {
             console.error('Error loading model:', error);
-            this.addBotMessage(`❌ Failed to load AI model: ${error.message}. Please ensure you're using Chrome 113+ or Edge 113+ with WebGPU enabled.`);
+            loadingMessageDiv.remove();
+            this.messageCount--;
+            this.addBotMessage(`❌ Failed to load AI model: ${error.message}. Please ensure you're using Chrome 113+ or Edge 113+ with WebGPU enabled.`, false);
         }
     }
     
     async generateGreeting() {
-        try {
-            const typingIndicator = this.showTypingIndicator();
-            
-            // Use base instructions with personality for greeting
-            const greetingPersonality = this.personalities[this.personalityIndex];
-            this.personalityIndex = (this.personalityIndex + 1) % this.personalities.length;
-            console.log(`🎭 Greeting personality: "${greetingPersonality}"`);
-            
-            const greetingInstructions = this.baseInstructions.replace('PERSONALITY_PLACEHOLDER', greetingPersonality);
-            
-            const messages = [
-                { role: "system", content: greetingInstructions },
-                { role: "user", content: "Hello! Introduce yourself and let the user feel welcome in 1 sentence." }
-            ];
-            
-            let response = '';
-            const chunks = await this.engine.chat.completions.create({
-                messages: messages,
-                temperature: this.temperature,
-                max_tokens: this.maxTokens,
-                stream: true,
-            });
-
-            console.groupCollapsed("greetingPrompt");
-            console.log("messages", messages);
-            console.log("greetingInstructions", greetingInstructions);
-            console.groupEnd();
-            
-            for await (const chunk of chunks) {
-                const delta = chunk.choices[0]?.delta?.content || '';
-                response += delta;
-            }
-            
-            // Strip extraction metadata before displaying
-            response = response.replace(/\[EXTRACT\][\s\S]*?\[\/EXTRACT\]/g, '').trim();
-            
-            typingIndicator.remove();
-            this.addBotMessage(response.trim());
-            
-            // Enable chat after first message
-            this.sendBtn.disabled = false;
-            this.userInput.focus();
-        } catch (error) {
-            console.error('Error generating greeting:', error);
-            this.addBotMessage("Hello! I'm ready to chat with you.");
-            typingIndicator.remove();
-            
-            // Enable chat even if greeting fails
-            this.sendBtn.disabled = false;
-            this.userInput.focus();
-        }
+        // Pick random greeting from pre-made list
+        const randomIndex = Math.floor(Math.random() * this.greetings.length);
+        const greeting = this.greetings[randomIndex];
+        
+        this.addBotMessage(greeting);
+        
+        // Enable chat after greeting
+        this.sendBtn.disabled = false;
+        this.userInput.focus();
     }
     
     addPrivacyMessage() {
@@ -592,6 +602,7 @@ class Chatbot {
         container.style.alignItems = 'center';
         container.style.gap = '1rem';
         container.style.justifyContent = 'center';
+        container.style.flexWrap = 'wrap';
         
         // No cloud icon (cloud with slash)
         const noCloudSvg = `
@@ -611,6 +622,17 @@ class Chatbot {
             </svg>
         `;
         
+        // Accessible icon
+        const accessibleSvg = `
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="5" r="2"/>
+                <path d="M12 7v6"/>
+                <path d="M8 11h8"/>
+                <path d="M9 13l-2 8"/>
+                <path d="M15 13l2 8"/>
+            </svg>
+        `;
+        
         container.innerHTML = `
             <div style="display: flex; align-items: center; gap: 0.5rem;">
                 ${noCloudSvg}
@@ -620,6 +642,11 @@ class Chatbot {
             <div style="display: flex; align-items: center; gap: 0.5rem;">
                 ${noTrackingSvg}
                 <span>Fully private</span>
+            </div>
+            <span style="color: var(--text-light);">•</span>
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                ${accessibleSvg}
+                <span>Accessible</span>
             </div>
         `;
         
@@ -741,8 +768,13 @@ class Chatbot {
         this.addMessage(text, 'user');
     }
     
-    addBotMessage(text) {
+    addBotMessage(text, showSuggestions = true) {
         this.addMessage(text, 'bot');
+        
+        // Show suggestions after bot message (if enabled and model is loaded)
+        if (showSuggestions && this.isModelLoaded && this.permissionGranted) {
+            this.showSuggestions();
+        }
     }
     
     addMessage(text, type) {
@@ -778,7 +810,12 @@ class Chatbot {
         typingDiv.className = 'typing-indicator';
         typingDiv.innerHTML = '<span></span><span></span><span></span>';
         
+        // Add thin loading bar (50s animation)
+        const loadingBar = this.createLoadingBar(50000);
+        loadingBar.style.marginTop = '8px';
+        
         bubbleDiv.appendChild(typingDiv);
+        bubbleDiv.appendChild(loadingBar);
         messageDiv.appendChild(bubbleDiv);
         this.messagesContainer.appendChild(messageDiv);
         
@@ -907,6 +944,9 @@ class Chatbot {
                 this.userInput.disabled = false;
                 this.sendBtn.disabled = false;
                 this.userInput.focus();
+            } else if (!this.permissionGranted) {
+                // Show permission prompt again if it was declined before
+                this.showPermissionPrompt();
             }
         }
     }
@@ -1171,6 +1211,106 @@ class Chatbot {
             // Reset root font size to 14px
             document.documentElement.style.fontSize = '14px';
         }
+    }
+    
+    showSuggestions() {
+        // Clear existing suggestions
+        this.suggestionsContainer.innerHTML = '';
+        
+        // Pick 1 random suggestion
+        const shuffled = [...this.suggestionMessages].sort(() => Math.random() - 0.5);
+        const selected = shuffled[0];
+        
+        const button = document.createElement('button');
+        button.textContent = selected;
+        button.className = 'suggestion-btn';
+        
+        button.addEventListener('click', () => {
+            this.userInput.value = selected;
+            this.handleSend();
+            this.hideSuggestions();
+        });
+        
+        this.suggestionsContainer.appendChild(button);
+    }
+    
+    hideSuggestions() {
+        this.suggestionsContainer.innerHTML = '';
+    }
+    
+    showPermissionPrompt() {
+        // Add permission message
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'message bot';
+        const bubbleDiv = document.createElement('div');
+        bubbleDiv.className = 'message-bubble';
+        bubbleDiv.textContent = 'Experiment using a local model to interact with this portfolio! Need to load ~1.9GB and it will take ~120s. Shall we continue?';
+        messageDiv.appendChild(bubbleDiv);
+        this.messagesContainer.appendChild(messageDiv);
+        this.messageCount++;
+        this.scrollToBottom();
+        
+        // Show permission buttons in suggestions area
+        this.suggestionsContainer.innerHTML = '';
+        
+        const yesButton = document.createElement('button');
+        yesButton.textContent = 'Yes!';
+        yesButton.className = 'suggestion-btn primary';
+        
+        const noButton = document.createElement('button');
+        noButton.textContent = 'Switch off GenAI';
+        noButton.className = 'suggestion-btn';
+        
+        yesButton.addEventListener('click', () => {
+            // Add user's "yes" to chat
+            this.addUserMessage('Yes!');
+            this.permissionGranted = true;
+            this.hideSuggestions();
+            this.loadModel();
+        });
+        
+        noButton.addEventListener('click', () => {
+            // Add user's "no" to chat
+            this.addUserMessage('Switch off GenAI');
+            this.hideSuggestions();
+            // Turn off AI and show static content
+            this.aiToggle.checked = false;
+            this.toggleAI(false);
+            this.addBotMessage('AI disabled. Browse the static portfolio instead!', false);
+        });
+        
+        this.suggestionsContainer.appendChild(yesButton);
+        this.suggestionsContainer.appendChild(noButton);
+    }
+    
+    createLoadingBar(duration) {
+        // Create animated loading bar
+        const container = document.createElement('div');
+        container.style.width = '100%';
+        container.style.height = '3px';
+        container.style.backgroundColor = 'var(--border)';
+        container.style.borderRadius = '2px';
+        container.style.overflow = 'hidden';
+        container.style.position = 'relative';
+        
+        const bar = document.createElement('div');
+        bar.style.height = '100%';
+        bar.style.width = '0%';
+        bar.style.backgroundColor = 'var(--primary)';
+        bar.style.borderRadius = '2px';
+        bar.style.transition = `width ${duration}ms linear`;
+        bar.style.boxShadow = '0 0 10px var(--primary)';
+        
+        container.appendChild(bar);
+        
+        // Animate bar
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                bar.style.width = '100%';
+            });
+        });
+        
+        return container;
     }
 }
 

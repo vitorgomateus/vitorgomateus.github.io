@@ -411,6 +411,51 @@ body {
     color: #991b1b;
 }
 
+/* Suggestions Container */
+.suggestions-container {
+    display: none;
+    flex-shrink: 0;
+    padding: 0.75rem 1rem;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: center;
+    background-color: var(--surface);
+}
+
+.suggestions-container:not(:empty) {
+    display: flex;
+}
+
+.suggestion-btn {
+    padding: 8px 14px;
+    border-radius: 16px;
+    background: transparent;
+    color: var(--primary);
+    border: 1px solid var(--primary);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 1.07rem;
+    line-height: 1.4;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.suggestion-btn:hover {
+    background: var(--primary);
+    color: white;
+}
+
+.suggestion-btn.primary {
+    background: var(--primary);
+    color: white;
+    border: none;
+}
+
+.suggestion-btn.primary:hover {
+    opacity: 0.9;
+}
+
 /* Footer */
 .footer {
     flex-shrink: 0;
