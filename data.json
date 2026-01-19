@@ -369,7 +369,7 @@
       "It's very hard to customize the bot's behavior without overloading it with instructions. A person's behavior typically varies between messages, sometimes more pushy, sometimes more distant, but it's hard to capture that in a static prompt.",
       "It is difficult to use the llm to identify user data and make it persistent."
     ],
-    "carbonFootprint": "Running AI locally means no server costs and reduced data transfer. However, initial model download is 1.9GB. Cached locally after first load."
+    "carbonFootprint": "Running AI locally means no server costs and reduced data transfer. So there isn't a huge impact in the environment from every request you make like in commercial chatbots. Isn't that great?"
   },
   "footer": {
     "contact": {
