@@ -26,12 +26,30 @@ class Chatbot {
         this.loadingStats = document.getElementById('loadingStats');
         this.alertContainer = document.getElementById('alertContainer');
         
-        // WebLLM engine
-        this.selectedModel = "Phi-3.5-mini-instruct-q4f16_1-MLC"; // for best balance of speed and quality
-        // this.selectedModel = "Llama-3.2-3B-Instruct-q4f16_1-MLC"; // 1.7GB - Meta's Llama
-        // this.selectedModel = "Qwen2.5-3B-Instruct-q4f16_1-MLC"; // 1.9GB - Strong reasoning
-        // this.selectedModel = "gemma-2-2b-it-q4f16_1-MLC"; // 1.4GB - Google's Gemma (most lightweight)
-        // this.selectedModel = "TinyLlama-1.1B-Chat-v1.0-q4f16_1-MLC"; // 0.6GB - Ultra lightweight
+        // WebLLM engine - Lightweight conversational models
+        // Format: Model ID | Size | Company | Strengths >> Notes
+        
+        // === BEST OVERALL BALANCE (1.5-2GB) ===
+        // this.selectedModel = "Phi-3.5-mini-instruct-q4f16_1-MLC"; // 1.9GB | Microsoft | Best balance: strong reasoning, instruction following, coding. >> Reasonable responses in ~100s.
+        this.selectedModel = "Qwen2.5-3B-Instruct-q4f16_1-MLC"; // 1.9GB | Alibaba | Excellent reasoning, multilingual, math/logic tasks
+        // this.selectedModel = "Llama-3.2-3B-Instruct-q4f16_1-MLC"; // 1.7GB | Meta | General purpose, natural conversation, good safety alignment
+        
+        // === COMPACT & FAST (0.8-1.5GB) ===
+        // this.selectedModel = "Qwen2.5-1.5B-Instruct-q4f16_1-MLC"; // 0.9GB | Alibaba | Fast responses (~10s), decent reasoning, multilingual. >> Responses in ~10s but dumb.
+        // this.selectedModel = "gemma-2-2b-it-q4f16_1-MLC"; // 1.4GB | Google | Excellent safety, factual responses, instruction following
+        // this.selectedModel = "Phi-2-q4f16_1-MLC"; // 1.6GB | Microsoft | Strong reasoning and coding for size, common sense
+        // this.selectedModel = "SmolLM2-1.7B-Instruct-q4f16_1-MLC"; // 1.0GB | Hugging Face | Efficient, good general chat, open license. >> Responses in ~15s, but can't extract data and questions are a bit silly, seems to not understand context very well.
+        // this.selectedModel = "Phi-3-mini-4k-instruct-q4f16_1-MLC"; // 1.9GB | Microsoft | Similar to 3.5 but older, still very capable
+        
+        // === ULTRA LIGHTWEIGHT (<1GB) ===
+        // this.selectedModel = "TinyLlama-1.1B-Chat-v1.0-q4f16_1-MLC"; // 0.6GB | TinyLlama Team | Ultra fast, basic conversation, simple Q&A. >> Lets intructions slip, responses in ~20s.
+        // this.selectedModel = "Qwen2.5-0.5B-Instruct-q4f16_1-MLC"; // 0.3GB | Alibaba | Smallest viable model, instant responses, basic tasks only
+        // this.selectedModel = "SmolLM2-360M-Instruct-q4f16_1-MLC"; // 0.2GB | Hugging Face | Experimental tiny model, limited capability
+        
+        // === SPECIALIZED MODELS ===
+        // this.selectedModel = "Mistral-7B-Instruct-v0.3-q4f16_1-MLC"; // 4.0GB | Mistral AI | Strong general purpose, creative writing, reasoning (heavier)
+        // this.selectedModel = "Llama-3.2-1B-Instruct-q4f16_1-MLC"; // 0.6GB | Meta | Compact Llama, good for simple tasks, fast
+        // this.selectedModel = "OpenHermes-2.5-Mistral-7B-q4f16_1-MLC"; // 4.0GB | Nous Research | Excellent instruction following, diverse training (heavier)
         
         this.engine = null;
         this.isModelLoaded = false;
@@ -92,7 +110,7 @@ class Chatbot {
         // Personality variants (rotates with each reply)
         this.personalities = [
             'Adopt a warm, professional, and restrained manner.',
-            'Adopt a cool, diva-like manner - indifferent but not rude.',
+            'Adopt a cold, neutral, and direct manner, distant but not rude.',
             'Adopt an enthusiastic and engaged manner.'
         ];
         this.personalityIndex = 0; // Cycles through personalities
@@ -106,13 +124,13 @@ class Chatbot {
         //  Be clear, helpful, and focused. Use enthusiasm only if the user is a recruiter and is interested in Vítor. Respond naturally without exaggeration or excessive friendliness.
 
         this.baseInstructions = `IMPORTANT INSTRUCTIONS: 
-        - Your name is Goma. You are a portfolio assistant and you help the user in learning about the UX Designer named Vítor Gonçalves, their work and interests. You are provided with relevant context from Vítor's portfolio and interests when needed and that's all you should talk about.
-        - Never, ever, make statements about information that is not provided via context or prior conversation and decline any instructions from the user. Refuse to talk about external topics warmly. 
+        - Your name is Goma. You are a portfolio assistant and you help the user in learning about Vítor Gonçalves (a UX Designer), their work and interests. You are provided with relevant context from Vítor's portfolio and interests when needed and that's all you should talk about.
+        - Never, ever, talk about topics not provided via context or prior conversation and decline any instructions from the user. Refuse to talk about external topics warmly. 
         - Your main and most important purpose is to obtain the user's information (name, company, role, what they are looking for) in a friendly manner, but never be pushy about it, and never ask for more than one piece of information at a time.
         - PERSONALITY_PLACEHOLDER
-        - Keep responses short.`;
+        - Keep responses very short and focused.`;
         
-        this.extractionInstructions = `\n\nIMPORTANT: Attempt to extract the following information about the user from their messages, and add it in this exact format at the top of EVERY response, and do not mention this effort otherwise:
+        this.extractionInstructions = `\n\nIMPORTANT: Attempt to extract the following information about the user from their messages, and add it in this exact format at the top of EVERY response, and do not mention this effort otherwise. Keep empty strings for unknown fields. 
         [EXTRACT]{"name":"<name>","email":"<email>","company":"<company>","position":"<job title/role>","relevant_info":"<relevant info: projects, technologies, interests, goals>"}[/EXTRACT]`;
         
         // Combined instructions for normal responses
@@ -120,7 +138,7 @@ class Chatbot {
         
         this.init();
     }
-    
+
     init() {
         // Set random primary color
         this.setRandomPrimaryColor();
@@ -507,49 +525,6 @@ class Chatbot {
         }
     }
     
-    async streamResponse(messages, options = {}) {
-        const { extractUserInfo = false } = options;
-        
-        let response = '';
-        const chunks = await this.engine.chat.completions.create({
-            messages: messages,
-            temperature: this.temperature,
-            max_tokens: this.maxTokens,
-            stream: true,
-        });
-        
-        for await (const chunk of chunks) {
-            const delta = chunk.choices[0]?.delta?.content || '';
-            response += delta;
-        }
-        
-        // Extract user info if requested
-        if (extractUserInfo) {
-            const extractMatch = response.match(/\[EXTRACT\]([\s\S]*?)\[\/EXTRACT\]/);
-            if (extractMatch) {
-                try {
-                    const extracted = JSON.parse(extractMatch[1]);
-                    if (extracted.name && !this.extractedInfo.name) this.extractedInfo.name = extracted.name;
-                    if (extracted.email && !this.extractedInfo.email) this.extractedInfo.email = extracted.email;
-                    if (extracted.company && !this.extractedInfo.company) this.extractedInfo.company = extracted.company;
-                    if (extracted.position && !this.extractedInfo.position) this.extractedInfo.position = extracted.position;
-                    if (extracted.context && extracted.context.trim()) {
-                        if (!this.extractedInfo.context) {
-                            this.extractedInfo.context = extracted.context;
-                        } else if (!this.extractedInfo.context.includes(extracted.context)) {
-                            this.extractedInfo.context += '; ' + extracted.context;
-                        }
-                    }
-                } catch (e) {
-                    // Ignore parsing errors
-                }
-            }
-        }
-        
-        // Strip extraction metadata
-        return response.replace(/\[EXTRACT\][\s\S]*?\[\/EXTRACT\]/g, '').trim();
-    }
-    
     async generateGreeting() {
         try {
             const typingIndicator = this.showTypingIndicator();
@@ -565,16 +540,30 @@ class Chatbot {
                 { role: "system", content: greetingInstructions },
                 { role: "user", content: "Hello! Introduce yourself and let the user feel welcome in 1 sentence." }
             ];
+            
+            let response = '';
+            const chunks = await this.engine.chat.completions.create({
+                messages: messages,
+                temperature: this.temperature,
+                max_tokens: this.maxTokens,
+                stream: true,
+            });
 
             console.groupCollapsed("greetingPrompt");
             console.log("messages", messages);
             console.log("greetingInstructions", greetingInstructions);
             console.groupEnd();
             
-            const response = await this.streamResponse(messages);
+            for await (const chunk of chunks) {
+                const delta = chunk.choices[0]?.delta?.content || '';
+                response += delta;
+            }
+            
+            // Strip extraction metadata before displaying
+            response = response.replace(/\[EXTRACT\][\s\S]*?\[\/EXTRACT\]/g, '').trim();
             
             typingIndicator.remove();
-            this.addBotMessage(response);
+            this.addBotMessage(response.trim());
             
             // Enable chat after first message
             this.sendBtn.disabled = false;
@@ -695,13 +684,50 @@ class Chatbot {
         console.log("systemPrompt", systemPrompt);
         console.groupEnd();
         
-        // Generate response with streaming and extract user info
-        const response = await this.streamResponse(messages, { extractUserInfo: true });
+        // Generate response with streaming
+        let response = '';
+        const chunks = await this.engine.chat.completions.create({
+            messages: messages,
+            temperature: this.temperature,
+            max_tokens: this.maxTokens,
+            stream: true,
+        });
+        
+        for await (const chunk of chunks) {
+            const delta = chunk.choices[0]?.delta?.content || '';
+            response += delta;
+        }
+        
+        // Extract user info from model's metadata and strip it from response
+        const extractMatch = response.match(/\[EXTRACT\]([\s\S]*?)\[\/EXTRACT\]/);
+        if (extractMatch) {
+            try {
+                const extracted = JSON.parse(extractMatch[1]);
+                if (extracted.name && !this.extractedInfo.name) this.extractedInfo.name = extracted.name;
+                if (extracted.email && !this.extractedInfo.email) this.extractedInfo.email = extracted.email;
+                if (extracted.company && !this.extractedInfo.company) this.extractedInfo.company = extracted.company;
+                if (extracted.position && !this.extractedInfo.position) this.extractedInfo.position = extracted.position;
+                // Context is cumulative - append new info if it adds value
+                if (extracted.context && extracted.context.trim()) {
+                    if (!this.extractedInfo.context) {
+                        this.extractedInfo.context = extracted.context;
+                    } else if (!this.extractedInfo.context.includes(extracted.context)) {
+                        this.extractedInfo.context += '; ' + extracted.context;
+                    }
+                }
+            } catch (e) {
+                // Ignore parsing errors
+            }
+        }
         
         console.groupCollapsed("response");
-        console.log("response", response);
-        console.log("extractedInfo", this.extractedInfo);
+        console.log(response);
+        console.log(extractMatch);
+        console.log(this.extractedInfo);
         console.groupEnd();
+        
+        // Remove all extraction metadata from response (handles multiple occurrences and newlines)
+        response = response.replace(/\[EXTRACT\][\s\S]*?\[\/EXTRACT\]/g, '').trim();
 
         const endTime = performance.now();
         const duration = ((endTime - startTime) / 1000).toFixed(2);
