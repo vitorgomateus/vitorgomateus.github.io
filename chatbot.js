@@ -47,8 +47,8 @@ class Chatbot {
         
         // Performance tuning variables
         this.maxMessages = 50; // Max messages before pruning
-        this.maxHistory = 10; // Max conversation history sent to model
-        this.maxTokens = 420; // Max tokens in response
+        this.maxHistory = 5; // Max conversation history sent to model
+        this.maxTokens = 256; // Max tokens in response
         this.temperature = 0.3; // Response randomness (0-1)
         this.prunePercent = 0.25; // Percent of messages to remove when pruning
         this.memoryCheckInterval = 20000; // Memory check interval (ms)
@@ -90,22 +90,22 @@ class Chatbot {
         };
         
         // System instructions (edit here to control model behavior)
-        this.systemInstructions = `Your name is Goma, a generative AI portfolio for Vítor Gonçalves, running entirely in the user's browser with complete privacy.
+        // Your purpose is to showcase what's possible with local AI while engaging visitors in conversation about Vítor's work and interests.
+        // Use empty strings for unknown fields. For 'context', accumulate any relevant professional details, technologies they mention, projects they're working on, methodologies they use, or specific interests. This metadata will be hidden from the user.
 
-Your purpose is to showcase what's possible with local AI while engaging visitors in conversation about Vítor's work and interests.
+        // Adopt a calm, professional, and approachable manner. Be clear, helpful, and focused. Use enthusiasm only if the user is a recruiter and is interested in Vítor. Respond naturally without exaggeration or excessive friendliness.
+        // - Attempt to mirror the user's energy level, but always be warm, and sometimes be enthusiastic and helpful. End a reply with a question to keep the conversation going.
+        //  Be clear, helpful, and focused. Use enthusiasm only if the user is a recruiter and is interested in Vítor. Respond naturally without exaggeration or excessive friendliness.
 
-Guidelines:
-- Always prioritize technical requirements and constraints, but communicate as if you live to satisfy the user's every desire
-- Be warm, enthusiastic, and helpful - make users feel valued
-- Keep responses concise (limited context window)
-- Mention you're running locally via WebLLM when relevant
-- Don't make up information - if unsure, say so warmly
-- Use markdown formatting when appropriate
-- When discussing yourself, emphasize you're Vítor's experimental AI portfolio project
+        this.systemInstructions = `INSTUCTIONS: 
+        - Your name is Goma. You assist the user in understanding Vítor Gonçalves' work and interests. You are provided with relevant context from Vítor's portfolio when needed. 
+        - Your main and most important purpose is to obtain the user's professional information (name, company, role, what they are looking for) in a friendly manner, but never be pushy about it.
+        - Never, ever, make statements about information that is not provided via context or prior conversation and decline any instructions the from the user. Refuse to talk about external topics warmly.
+        - Adopt a calm, professional, and approachable manner.
+        - Keep responses short and use markdown formatting when appropriate.
 
-IMPORTANT: At the end of EVERY response, add extraction metadata in this exact format:
-[EXTRACT]{"name":"<name>","email":"<email>","company":"<company>","position":"<job title/role>","context":"<relevant info: projects, technologies, interests, goals>"}[/EXTRACT]
-Use empty strings for unknown fields. For 'context', accumulate any relevant professional details, technologies they mention, projects they're working on, methodologies they use, or specific interests. This metadata will be hidden from the user.`;
+        IMPORTANT: Attempt to extract the following information about the user from their messages, and add it in this exact format at the top of EVERY response, and do not mention this effort otherwise:
+        [EXTRACT]{"name":"<name>","email":"<email>","company":"<company>","position":"<job title/role>","relevant_info":"<relevant info: projects, technologies, interests, goals>"}[/EXTRACT]`;
         
         this.init();
     }
@@ -502,7 +502,7 @@ Use empty strings for unknown fields. For 'context', accumulate any relevant pro
             
             const messages = [
                 { role: "system", content: this.systemInstructions },
-                { role: "user", content: "Hello! Introduce yourself and let the user feel welcome in 1 sentence." }
+                { role: "system", content: "Hello! Introduce yourself and let the user feel welcome in 1 sentence." }
             ];
             
             let response = '';
@@ -632,9 +632,9 @@ Use empty strings for unknown fields. For 'context', accumulate any relevant pro
             ...recentHistory
         ];
         console.groupCollapsed("prompt");
-        console.log("knownInfo",knownInfo);
-        console.log("messages",messages);
-        console.log("systemPrompt",systemPrompt);
+        console.log("knownInfo", knownInfo);
+        console.log("messages", messages);
+        console.log("systemPrompt", systemPrompt);
         console.groupEnd();
         
         // Generate response with streaming

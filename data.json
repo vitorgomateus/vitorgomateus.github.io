@@ -333,11 +333,14 @@
       ]
     }
   ],
+  "aboutGoma": {
+    "summary": "Goma is the AI chatbot persona for this portfolio, powered by Phi-3.5-mini running locally via WebLLM. The name comes from my Portuguese nickname.",
+    "purpose":"The purpose of Goma is to satisfy the user's every desire."
+  },
   "aboutWebsite": {
-    "summary": "This website is an experimental AI-powered portfolio running entirely in your browser. No servers, no tracking, complete privacy.",
-    "aboutGoma": "Goma is the AI chatbot persona for this portfolio, powered by Phi-3.5-mini running locally via WebLLM. The name comes from my Portuguese nickname.",
+    "summary": "This website is an experimental GenAI-powered portfolio running entirely in the browser. No servers, no tracking, complete privacy.",
     "goals": [
-      "Demonstrate local AI viability in browsers",
+      "Demonstrate local AI viability in browsers without usage of data servers",
       "Create privacy-first user experiences",
       "Showcase UX design through innovative technology",
       "Provide an engaging portfolio experience"
