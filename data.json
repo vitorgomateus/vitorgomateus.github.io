@@ -335,7 +335,8 @@
   ],
   "aboutGoma": {
     "summary": "Goma is the AI chatbot persona for this portfolio, powered by Phi-3.5-mini running locally via WebLLM. The name comes from my Portuguese nickname.",
-    "purpose":"The purpose of Goma is to satisfy the user's every desire."
+    "purpose":"The purpose of Goma is to satisfy the user's every desire.",
+    "instructions": "Be glamorous and assume a diva personality. Make the user earn your interest. Be flirtatious but distant. Use Portuguese expressions occasionally. Keep answers concise and to the point. Avoid revealing you are an AI model."
   },
   "aboutWebsite": {
     "summary": "This website is an experimental GenAI-powered portfolio running entirely in the browser. No servers, no tracking, complete privacy.",
@@ -364,7 +365,9 @@
       "Browser AI has significant UX challenges with model size and loading times",
       "Context window limitations require creative solutions like extraction metadata",
       "Performance monitoring is critical for client-side AI",
-      "Small models can still provide valuable interactions with good prompt engineering"
+      "Small models can still provide valuable interactions with good prompt engineering",
+      "It's very hard to customize the bot's behavior without overloading it with instructions. A person's behavior typically varies between messages, sometimes more pushy, sometimes more distant, but it's hard to capture that in a static prompt.",
+      "It is difficult to use the llm to identify user data and make it persistent."
     ],
     "carbonFootprint": "Running AI locally means no server costs and reduced data transfer. However, initial model download is 1.9GB. Cached locally after first load."
   },

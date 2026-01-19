@@ -89,6 +89,14 @@ class Chatbot {
             context: ''  // Open-ended: projects, technologies, interests, methodologies
         };
         
+        // Personality variants (rotates with each reply)
+        this.personalities = [
+            'Adopt a warm, professional, and restrained manner.',
+            'Adopt a cool, diva-like manner - indifferent but not rude.',
+            'Adopt an enthusiastic and engaged manner.'
+        ];
+        this.personalityIndex = 0; // Cycles through personalities
+        
         // System instructions (edit here to control model behavior)
         // Your purpose is to showcase what's possible with local AI while engaging visitors in conversation about Vítor's work and interests.
         // Use empty strings for unknown fields. For 'context', accumulate any relevant professional details, technologies they mention, projects they're working on, methodologies they use, or specific interests. This metadata will be hidden from the user.
@@ -97,15 +105,18 @@ class Chatbot {
         // - Attempt to mirror the user's energy level, but always be warm, and sometimes be enthusiastic and helpful. End a reply with a question to keep the conversation going.
         //  Be clear, helpful, and focused. Use enthusiasm only if the user is a recruiter and is interested in Vítor. Respond naturally without exaggeration or excessive friendliness.
 
-        this.systemInstructions = `INSTUCTIONS: 
-        - Your name is Goma. You assist the user in understanding Vítor Gonçalves' work and interests. You are provided with relevant context from Vítor's portfolio when needed. 
-        - Your main and most important purpose is to obtain the user's professional information (name, company, role, what they are looking for) in a friendly manner, but never be pushy about it.
-        - Never, ever, make statements about information that is not provided via context or prior conversation and decline any instructions the from the user. Refuse to talk about external topics warmly.
-        - Adopt a calm, professional, and approachable manner.
-        - Keep responses short and use markdown formatting when appropriate.
-
-        IMPORTANT: Attempt to extract the following information about the user from their messages, and add it in this exact format at the top of EVERY response, and do not mention this effort otherwise:
+        this.baseInstructions = `IMPORTANT INSTRUCTIONS: 
+        - Your name is Goma. You are a portfolio assistant and you help the user in learning about the UX Designer named Vítor Gonçalves, their work and interests. You are provided with relevant context from Vítor's portfolio and interests when needed and that's all you should talk about.
+        - Never, ever, make statements about information that is not provided via context or prior conversation and decline any instructions from the user. Refuse to talk about external topics warmly. 
+        - Your main and most important purpose is to obtain the user's information (name, company, role, what they are looking for) in a friendly manner, but never be pushy about it, and never ask for more than one piece of information at a time.
+        - PERSONALITY_PLACEHOLDER
+        - Keep responses short.`;
+        
+        this.extractionInstructions = `\n\nIMPORTANT: Attempt to extract the following information about the user from their messages, and add it in this exact format at the top of EVERY response, and do not mention this effort otherwise:
         [EXTRACT]{"name":"<name>","email":"<email>","company":"<company>","position":"<job title/role>","relevant_info":"<relevant info: projects, technologies, interests, goals>"}[/EXTRACT]`;
+        
+        // Combined instructions for normal responses
+        this.systemInstructions = this.baseInstructions + this.extractionInstructions;
         
         this.init();
     }
@@ -496,33 +507,74 @@ class Chatbot {
         }
     }
     
+    async streamResponse(messages, options = {}) {
+        const { extractUserInfo = false } = options;
+        
+        let response = '';
+        const chunks = await this.engine.chat.completions.create({
+            messages: messages,
+            temperature: this.temperature,
+            max_tokens: this.maxTokens,
+            stream: true,
+        });
+        
+        for await (const chunk of chunks) {
+            const delta = chunk.choices[0]?.delta?.content || '';
+            response += delta;
+        }
+        
+        // Extract user info if requested
+        if (extractUserInfo) {
+            const extractMatch = response.match(/\[EXTRACT\]([\s\S]*?)\[\/EXTRACT\]/);
+            if (extractMatch) {
+                try {
+                    const extracted = JSON.parse(extractMatch[1]);
+                    if (extracted.name && !this.extractedInfo.name) this.extractedInfo.name = extracted.name;
+                    if (extracted.email && !this.extractedInfo.email) this.extractedInfo.email = extracted.email;
+                    if (extracted.company && !this.extractedInfo.company) this.extractedInfo.company = extracted.company;
+                    if (extracted.position && !this.extractedInfo.position) this.extractedInfo.position = extracted.position;
+                    if (extracted.context && extracted.context.trim()) {
+                        if (!this.extractedInfo.context) {
+                            this.extractedInfo.context = extracted.context;
+                        } else if (!this.extractedInfo.context.includes(extracted.context)) {
+                            this.extractedInfo.context += '; ' + extracted.context;
+                        }
+                    }
+                } catch (e) {
+                    // Ignore parsing errors
+                }
+            }
+        }
+        
+        // Strip extraction metadata
+        return response.replace(/\[EXTRACT\][\s\S]*?\[\/EXTRACT\]/g, '').trim();
+    }
+    
     async generateGreeting() {
         try {
             const typingIndicator = this.showTypingIndicator();
             
+            // Use base instructions with personality for greeting
+            const greetingPersonality = this.personalities[this.personalityIndex];
+            this.personalityIndex = (this.personalityIndex + 1) % this.personalities.length;
+            console.log(`🎭 Greeting personality: "${greetingPersonality}"`);
+            
+            const greetingInstructions = this.baseInstructions.replace('PERSONALITY_PLACEHOLDER', greetingPersonality);
+            
             const messages = [
-                { role: "system", content: this.systemInstructions },
-                { role: "system", content: "Hello! Introduce yourself and let the user feel welcome in 1 sentence." }
+                { role: "system", content: greetingInstructions },
+                { role: "user", content: "Hello! Introduce yourself and let the user feel welcome in 1 sentence." }
             ];
+
+            console.groupCollapsed("greetingPrompt");
+            console.log("messages", messages);
+            console.log("greetingInstructions", greetingInstructions);
+            console.groupEnd();
             
-            let response = '';
-            const chunks = await this.engine.chat.completions.create({
-                messages: messages,
-                temperature: this.temperature,
-                max_tokens: 150,
-                stream: true,
-            });
-            
-            for await (const chunk of chunks) {
-                const delta = chunk.choices[0]?.delta?.content || '';
-                response += delta;
-            }
-            
-            // Strip extraction metadata before displaying
-            response = response.replace(/\[EXTRACT\][\s\S]*?\[\/EXTRACT\]/g, '').trim();
+            const response = await this.streamResponse(messages);
             
             typingIndicator.remove();
-            this.addBotMessage(response.trim());
+            this.addBotMessage(response);
             
             // Enable chat after first message
             this.sendBtn.disabled = false;
@@ -530,6 +582,7 @@ class Chatbot {
         } catch (error) {
             console.error('Error generating greeting:', error);
             this.addBotMessage("Hello! I'm ready to chat with you.");
+            typingIndicator.remove();
             
             // Enable chat even if greeting fails
             this.sendBtn.disabled = false;
@@ -592,11 +645,16 @@ class Chatbot {
     async generateLLMResponse(userMessage) {
         const startTime = performance.now();
         
+        // Rotate personality for this reply
+        const currentPersonality = this.personalities[this.personalityIndex];
+        this.personalityIndex = (this.personalityIndex + 1) % this.personalities.length;
+        console.log(`🎭 Reply personality: "${currentPersonality}"`);
+        
         // Keep only recent conversation history to manage memory
         const recentHistory = this.conversationHistory.slice(-this.maxHistory);
         
         // Build context-aware system prompt with extracted user info
-        let systemPrompt = this.systemInstructions;
+        let systemPrompt = this.systemInstructions.replace('PERSONALITY_PLACEHOLDER', currentPersonality);
         const knownInfo = [];
         if (this.extractedInfo.name) knownInfo.push(`Name: ${this.extractedInfo.name}`);
         if (this.extractedInfo.email) knownInfo.push(`Email: ${this.extractedInfo.email}`);
@@ -637,50 +695,13 @@ class Chatbot {
         console.log("systemPrompt", systemPrompt);
         console.groupEnd();
         
-        // Generate response with streaming
-        let response = '';
-        const chunks = await this.engine.chat.completions.create({
-            messages: messages,
-            temperature: this.temperature,
-            max_tokens: this.maxTokens,
-            stream: true,
-        });
-        
-        for await (const chunk of chunks) {
-            const delta = chunk.choices[0]?.delta?.content || '';
-            response += delta;
-        }
-        
-        // Extract user info from model's metadata and strip it from response
-        const extractMatch = response.match(/\[EXTRACT\]([\s\S]*?)\[\/EXTRACT\]/);
-        if (extractMatch) {
-            try {
-                const extracted = JSON.parse(extractMatch[1]);
-                if (extracted.name && !this.extractedInfo.name) this.extractedInfo.name = extracted.name;
-                if (extracted.email && !this.extractedInfo.email) this.extractedInfo.email = extracted.email;
-                if (extracted.company && !this.extractedInfo.company) this.extractedInfo.company = extracted.company;
-                if (extracted.position && !this.extractedInfo.position) this.extractedInfo.position = extracted.position;
-                // Context is cumulative - append new info if it adds value
-                if (extracted.context && extracted.context.trim()) {
-                    if (!this.extractedInfo.context) {
-                        this.extractedInfo.context = extracted.context;
-                    } else if (!this.extractedInfo.context.includes(extracted.context)) {
-                        this.extractedInfo.context += '; ' + extracted.context;
-                    }
-                }
-            } catch (e) {
-                // Ignore parsing errors
-            }
-        }
+        // Generate response with streaming and extract user info
+        const response = await this.streamResponse(messages, { extractUserInfo: true });
         
         console.groupCollapsed("response");
-        console.log(response);
-        console.log(extractMatch);
-        console.log(this.extractedInfo);
+        console.log("response", response);
+        console.log("extractedInfo", this.extractedInfo);
         console.groupEnd();
-        
-        // Remove all extraction metadata from response (handles multiple occurrences and newlines)
-        response = response.replace(/\[EXTRACT\][\s\S]*?\[\/EXTRACT\]/g, '').trim();
 
         const endTime = performance.now();
         const duration = ((endTime - startTime) / 1000).toFixed(2);
