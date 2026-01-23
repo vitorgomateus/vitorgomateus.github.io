@@ -19,7 +19,6 @@ class Chatbot {
         this.drawerOverlay = document.getElementById('drawerOverlay');
         this.closeDrawer = document.getElementById('closeDrawer');
         this.modelInfo = document.getElementById('modelInfo');
-        this.clearCacheBtn = document.getElementById('clearCache');
         this.clearModelBtn = document.getElementById('clearModelBtn');
         this.feedbackBtn = document.getElementById('feedbackBtn');
         this.accessibilityBtn = document.getElementById('accessibilityMode');
@@ -29,8 +28,8 @@ class Chatbot {
         this.suggestionsContainer = document.getElementById('suggestionsContainer');
         this.searchInput = document.getElementById('searchInput');
         this.searchBtn = document.getElementById('searchBtn');
-        this.searchResultsPanel = document.getElementById('searchResults');
-        this.closeSearchBtn = document.getElementById('closeSearch');
+        this.searchResultsPanel = document.getElementById('searchResultsPanel');
+        this.closeSearchBtn = document.getElementById('closeSearchBtn');
         this.searchResultsContent = document.getElementById('searchResultsContent');
         this.feedbackBubble = document.getElementById('feedbackBubble');
         this.dismissFeedbackBtn = document.getElementById('dismissFeedback');
@@ -219,7 +218,6 @@ class Chatbot {
         this.drawerOverlay.addEventListener('click', () => this.closeDrawerPanel());
         
         // Drawer buttons
-        this.clearCacheBtn.addEventListener('click', () => this.handleClearCache());
         this.clearModelBtn.addEventListener('click', () => this.clearModelCache());
         this.feedbackBtn.addEventListener('click', () => this.openFeedbackModal());
         this.accessibilityBtn.addEventListener('change', (e) => this.toggleAccessibility(e.target.checked));
@@ -555,11 +553,14 @@ class Chatbot {
         loadingBubbleDiv.className = 'message-bubble';
         const loadingText = document.createElement('div');
         loadingText.textContent = 'Loading model...';
-        loadingText.style.marginBottom = '8px';
-        const progressBar = this.createLoadingBar(120000); // 120s expected
         loadingBubbleDiv.appendChild(loadingText);
-        loadingBubbleDiv.appendChild(progressBar);
         loadingMessageDiv.appendChild(loadingBubbleDiv);
+        
+        // Add loading bar below bubble (100% width of message)
+        const progressBar = this.createLoadingBar(120000); // 120s expected
+        progressBar.style.marginTop = '4px';
+        loadingMessageDiv.appendChild(progressBar);
+        
         this.messagesContainer.appendChild(loadingMessageDiv);
         this.messageCount++;
         this.scrollToBottom();
@@ -598,8 +599,11 @@ class Chatbot {
             
             // Update model info in drawer (show model name + trash icon)
             if (this.modelInfo) {
-                this.modelInfo.textContent = this.getModelDisplayName();
-                this.clearModelBtn.style.display = 'inline-flex';
+                const modelNameSpan = document.getElementById('modelName');
+                if (modelNameSpan) {
+                    modelNameSpan.textContent = this.getModelDisplayName();
+                }
+                this.clearModelBtn.classList.remove('hidden');
             }
             
             // Remove loading message
@@ -857,13 +861,14 @@ class Chatbot {
         typingDiv.className = 'typing-indicator';
         typingDiv.innerHTML = '<span></span><span></span><span></span>';
         
-        // Add thin loading bar (50s animation)
-        const loadingBar = this.createLoadingBar(50000);
-        loadingBar.style.marginTop = '8px';
-        
         bubbleDiv.appendChild(typingDiv);
-        bubbleDiv.appendChild(loadingBar);
         messageDiv.appendChild(bubbleDiv);
+        
+        // Add loading bar below bubble (100% width of message)
+        const loadingBar = this.createLoadingBar(50000);
+        loadingBar.style.marginTop = '4px';
+        messageDiv.appendChild(loadingBar);
+        
         this.messagesContainer.appendChild(messageDiv);
         
         this.scrollToBottom();
@@ -1079,8 +1084,11 @@ class Chatbot {
                 // Update UI to show no model loaded
                 this.isModelLoaded = false;
                 this.permissionGranted = false;
-                this.modelInfo.textContent = 'No model loaded';
-                this.clearModelBtn.style.display = 'none';
+                const modelNameSpan = document.getElementById('modelName');
+                if (modelNameSpan) {
+                    modelNameSpan.textContent = 'No model loaded';
+                }
+                this.clearModelBtn.classList.add('hidden');
                 
                 // Reset model state
                 this.engine = null;
@@ -1415,11 +1423,12 @@ class Chatbot {
         
         // Disable search button during search
         this.searchBtn.disabled = true;
-        this.searchBtn.textContent = 'Searching...';
+        const originalHTML = this.searchBtn.innerHTML;
+        this.searchBtn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>';
         
         try {
             // Check if embeddings are loaded
-            if (!this.embeddings || this.embeddings.length === 0) {
+            if (!this.embeddings || !this.embeddings.chunks || this.embeddings.chunks.length === 0) {
                 this.showAlert('Search data not yet loaded. Please wait a moment and try again.', 'info');
                 return;
             }
@@ -1434,10 +1443,14 @@ class Chatbot {
             const queryVector = Array.from(queryEmbedding.data);
             
             // Calculate cosine similarity for each chunk
-            const results = this.embeddings.map(item => {
+            const results = this.embeddings.chunks.map(item => {
                 const similarity = this.cosineSimilarity(queryVector, item.embedding);
                 return {
-                    ...item,
+                    text: item.content || item.text,
+                    project: item.metadata?.project || item.project,
+                    section: item.metadata?.section || item.section,
+                    anchor: item.metadata?.anchor || item.anchor,
+                    embedding: item.embedding,
                     similarity
                 };
             });
@@ -1455,7 +1468,7 @@ class Chatbot {
             this.showAlert('Search failed. Please try again.', 'error');
         } finally {
             this.searchBtn.disabled = false;
-            this.searchBtn.textContent = 'Search';
+            this.searchBtn.innerHTML = originalHTML;
         }
     }
     
@@ -1545,6 +1558,117 @@ class Chatbot {
     openFeedbackModal() {
         this.feedbackModal.classList.remove('hidden');
         this.feedbackBubble.classList.add('hidden');
+        
+        // Populate feedback form in modal
+        const formContainer = document.getElementById('feedbackFormContainer');
+        if (!formContainer) return;
+        
+        const timeSpent = ((Date.now() - this.pageLoadTime) / 1000).toFixed(0);
+        const avgReplyTime = (this.performanceMetrics.avgResponseTime / 1000).toFixed(1);
+        const maxReplyTime = (this.performanceMetrics.maxResponseTime / 1000).toFixed(1);
+        const language = navigator.language;
+        const modelName = this.selectedModel;
+        const referrer = document.referrer || 'Direct';
+        
+        formContainer.innerHTML = `
+            <h3>Send Feedback</h3>
+            <p>Your feedback helps improve this portfolio!</p>
+            
+            <form id="feedbackForm">
+                <label for="fb-name">Name</label>
+                <input type="text" id="fb-name" value="${this.extractedInfo.name}" required>
+                
+                <label for="fb-email">Email</label>
+                <input type="email" id="fb-email" value="${this.extractedInfo.email}" required>
+                
+                <label for="fb-company">Company (optional)</label>
+                <input type="text" id="fb-company" value="${this.extractedInfo.company}">
+                
+                <label for="fb-message">Message (optional)</label>
+                <textarea id="fb-message" rows="3" placeholder="Share your thoughts..."></textarea>
+                
+                <div style="margin-top: 1rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Include in feedback:</label>
+                    
+                    <label style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; cursor: pointer;">
+                        <input type="checkbox" id="fb-personal" checked>
+                        <span>Personal Info (Name, Email, Company, Message)</span>
+                    </label>
+                    
+                    <label style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; cursor: pointer;">
+                        <input type="checkbox" id="fb-usage" checked>
+                        <span>Usage Stats (Time: ${timeSpent}s, Static: ${(this.staticModeTime / 1000).toFixed(0)}s, Chat: ${(this.chatModeTime / 1000).toFixed(0)}s, Messages: ${this.userMessages}${this.isModelLoaded ? `, Avg reply: ${avgReplyTime}s, Max: ${maxReplyTime}s` : ''})</span>
+                    </label>
+                    
+                    <label style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; cursor: pointer;">
+                        <input type="checkbox" id="fb-technical" checked>
+                        <span>Technical Info (Model: ${modelName}${this.modelLoadTime ? `, Load: ${this.modelLoadTime}s` : ''}, Lang: ${language}, Ref: ${referrer})</span>
+                    </label>
+                </div>
+                
+                <div class="feedback-modal-actions">
+                    <button type="button" onclick="document.getElementById('closeFeedbackModal').click()">Cancel</button>
+                    <button type="submit">Send Feedback</button>
+                </div>
+            </form>
+        `;
+        
+        // Handle form submission
+        document.getElementById('feedbackForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('fb-name').value;
+            const email = document.getElementById('fb-email').value;
+            const company = document.getElementById('fb-company').value;
+            const message = document.getElementById('fb-message').value;
+            
+            const parts = [];
+            
+            // Personal Info
+            if (document.getElementById('fb-personal').checked) {
+                parts.push('=== Personal Info ===');
+                parts.push(`Name: ${name}`);
+                parts.push(`Email: ${email}`);
+                if (company) parts.push(`Company: ${company}`);
+                if (message) {
+                    parts.push('');
+                    parts.push('Message:');
+                    parts.push(message);
+                }
+                parts.push('');
+            }
+            
+            // Usage Stats
+            if (document.getElementById('fb-usage').checked) {
+                parts.push('=== Usage Stats ===');
+                parts.push(`Total time: ${timeSpent}s`);
+                parts.push(`Static mode time: ${(this.staticModeTime / 1000).toFixed(0)}s`);
+                parts.push(`Chat mode time: ${(this.chatModeTime / 1000).toFixed(0)}s`);
+                parts.push(`Messages sent: ${this.userMessages}`);
+                if (this.isModelLoaded) {
+                    parts.push(`Avg reply time: ${avgReplyTime}s`);
+                    parts.push(`Max reply time: ${maxReplyTime}s`);
+                }
+                parts.push('');
+            }
+            
+            // Technical Info
+            if (document.getElementById('fb-technical').checked) {
+                parts.push('=== Technical Info ===');
+                parts.push(`Model: ${modelName}`);
+                if (this.modelLoadTime) parts.push(`Model load time: ${this.modelLoadTime}s`);
+                parts.push(`Language: ${language}`);
+                parts.push(`Referrer: ${referrer}`);
+            }
+            
+            const body = parts.join('%0D%0A');
+            const subject = 'Portfolio Feedback';
+            const mailtoLink = `mailto:vitor@goncalves.pt?subject=${encodeURIComponent(subject)}&body=${body}`;
+            
+            window.location.href = mailtoLink;
+            this.closeFeedbackModalPanel();
+            this.showAlert('Thank you for your feedback! 🙏', 'success');
+        });
     }
     
     closeFeedbackModalPanel() {

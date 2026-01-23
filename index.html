@@ -21,9 +21,8 @@
                 <label class="ai-toggle" title="Experimental AI chat">
                     <input type="checkbox" id="aiToggle">
                     <span class="toggle-slider">
-                        <svg class="toggle-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/>
-                            <rect x="7" y="7" width="10" height="10" rx="2"/>
+                        <svg class="toggle-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="currentColor">
+                            <path d="M288 0L128 0C110.3 0 96 14.3 96 32s14.3 32 32 32L128 215.5 7.5 426.3C2.6 435 0 444.7 0 454.7 0 486.4 25.6 512 57.3 512l333.4 0c31.6 0 57.3-25.6 57.3-57.3 0-10-2.6-19.8-7.5-28.4L320 215.5 320 64c17.7 0 32-14.3 32-32S337.7 0 320 0L288 0zM192 215.5l0-151.5 64 0 0 151.5c0 11.1 2.9 22.1 8.4 31.8l41.6 72.7-164 0 41.6-72.7c5.5-9.7 8.4-20.6 8.4-31.8z"/>
                         </svg>
                     </span>
                 </label>
@@ -43,11 +42,13 @@
                 <button id="closeDrawer" class="close-drawer" aria-label="Close">×</button>
                 
                 <h2>About</h2>
-                <p>This is a proof-of-concept chatbot running a local LLM entirely in your browser using WebLLM technology.</p>
+                <p>This is a portfolio with an experimental local chatbot feature.</p>
+                
+                <button id="feedbackBtn" class="drawer-btn" style="margin-bottom: 1.5rem;">Give Feedback</button>
                 
                 <h3>Credits</h3>
-                <p><strong>Built by:</strong> Vítor Gonçalves</p>
-                <p><strong>Technology:</strong></p>
+                <p><strong>Built by:</strong> Vítor Gonçalves using Claude (Anthropic)</p>
+                <p><strong>Technology used for the experimental chatbot:</strong></p>
                 <ul>
                     <li>WebLLM (MLC AI)</li>
                     <li id="modelInfo" class="model-status">
@@ -63,7 +64,6 @@
                 </ul>
                 
                 <h3>Settings</h3>
-                <button id="feedbackBtn" class="drawer-btn">Give Feedback</button>
                 <label class="drawer-toggle">
                     <input type="checkbox" id="accessibilityMode">
                     <span class="toggle-slider"></span>

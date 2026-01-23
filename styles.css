@@ -111,7 +111,6 @@ body {
 .ai-toggle {
     display: flex;
     align-items: center;
-    gap: 8px;
     cursor: pointer;
 }
 
@@ -121,31 +120,40 @@ body {
 
 .toggle-slider {
     position: relative;
-    width: 40px;
-    height: 22px;
-    background: rgba(255, 255, 255, 0.3);
-    border-radius: 11px;
+    width: 60px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 0 8px;
     transition: background 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.toggle-slider:hover {
+    background: rgba(255, 255, 255, 0.15);
 }
 
 .toggle-slider::before {
     content: '';
-    position: absolute;
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
     border-radius: 50%;
     background: white;
-    top: 2px;
-    left: 2px;
     transition: transform 0.2s ease;
+    z-index: 2;
+    flex-shrink: 0;
 }
 
 .ai-toggle input:checked + .toggle-slider {
-    background: rgba(255, 255, 255, 0.5);
+    background: transparent;
+    justify-content: flex-end;
 }
 
 .ai-toggle input:checked + .toggle-slider::before {
-    transform: translateX(18px);
+    /* No transform needed, flex handles positioning */
 }
 
 .toggle-label {
@@ -617,6 +625,7 @@ body {
     flex-direction: column;
     overflow-y: auto;
     padding: 16px;
+    padding-bottom: 80px; /* Space for fixed search bar */
 }
 
 .portfolio-section {
@@ -689,67 +698,80 @@ body {
 
 /* Toggle Icon Styling */
 .toggle-icon {
-    position: absolute;
-    left: 5px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
     z-index: 1;
     pointer-events: none;
     transition: opacity 0.3s ease;
-}
-
-.ai-toggle-checkbox:checked ~ .toggle-slider .toggle-icon {
+    color: white;
     opacity: 0.3;
+    flex-shrink: 0;
 }
 
-/* Search Bar */
-.search-bar {
-    display: flex;
-    gap: 0.5rem;
-    padding: 1rem;
-    background: var(--surface);
+.ai-toggle input:checked + .toggle-slider .toggle-icon {
+    opacity: 0.8;
+}
+
+/* Search Bar Container */
+.search-bar-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 12px 12px;
     border-top: 1px solid var(--border);
+    background: var(--surface);
+    display: flex;
+    gap: 8px;
+    align-items: flex-end;
+    z-index: 10;
 }
 
-.search-bar input {
+.search-input {
     flex: 1;
-    padding: 0.75rem 1rem;
+    min-height: 44px;
+    padding: 12px 16px;
     border: 1px solid var(--border);
-    border-radius: 24px;
-    font-family: 'Work Sans', sans-serif;
-    font-size: 0.9rem;
-    background: var(--bg);
-    color: var(--text);
-    transition: border-color 0.2s ease;
+    border-radius: 22px;
+    font-family: inherit;
+    font-size: 1.07rem;
+    line-height: 1.4;
+    resize: none;
+    outline: none;
+    transition: border-color 0.15s ease;
 }
 
-.search-bar input:focus {
-    outline: none;
+.search-input:focus {
     border-color: var(--primary);
 }
 
-.search-bar input::placeholder {
+.search-input::placeholder {
     color: var(--text-light);
 }
 
 .search-btn {
-    padding: 0.75rem 1.5rem;
-    border: none;
-    border-radius: 24px;
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: var(--primary);
     color: white;
-    font-family: 'Work Sans', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 500;
+    border: none;
+    border-radius: 50%;
     cursor: pointer;
-    transition: opacity 0.2s ease;
-    white-space: nowrap;
+    transition: background 0.15s ease, transform 0.1s ease;
+    will-change: transform;
+    transform: translateZ(0);
 }
 
 .search-btn:hover {
-    opacity: 0.9;
+    background: var(--primary-dark);
+}
+
+.search-btn:active {
+    transform: scale(0.95) translateZ(0);
 }
 
 .search-btn:disabled {
@@ -948,6 +970,31 @@ body {
 .feedback-modal h3 {
     margin: 0 0 1rem 0;
     font-size: 1.3rem;
+    color: var(--text);
+}
+
+.close-modal-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: var(--text-light);
+    cursor: pointer;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background 0.2s ease, color 0.2s ease;
+    line-height: 1;
+}
+
+.close-modal-btn:hover {
+    background: var(--border);
     color: var(--text);
 }
 
