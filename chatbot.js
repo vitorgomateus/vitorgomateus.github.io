@@ -20,11 +20,22 @@ class Chatbot {
         this.closeDrawer = document.getElementById('closeDrawer');
         this.modelInfo = document.getElementById('modelInfo');
         this.clearCacheBtn = document.getElementById('clearCache');
+        this.clearModelBtn = document.getElementById('clearModelBtn');
+        this.feedbackBtn = document.getElementById('feedbackBtn');
         this.accessibilityBtn = document.getElementById('accessibilityMode');
         this.chatContainer = document.getElementById('chatContainer');
         this.staticContent = document.getElementById('staticContent');
         this.alertContainer = document.getElementById('alertContainer');
         this.suggestionsContainer = document.getElementById('suggestionsContainer');
+        this.searchInput = document.getElementById('searchInput');
+        this.searchBtn = document.getElementById('searchBtn');
+        this.searchResultsPanel = document.getElementById('searchResults');
+        this.closeSearchBtn = document.getElementById('closeSearch');
+        this.searchResultsContent = document.getElementById('searchResultsContent');
+        this.feedbackBubble = document.getElementById('feedbackBubble');
+        this.dismissFeedbackBtn = document.getElementById('dismissFeedback');
+        this.feedbackModal = document.getElementById('feedbackModal');
+        this.closeFeedbackModal = document.getElementById('closeFeedbackModal');
         
         // WebLLM engine - Lightweight conversational models
         // Format: Model ID | Size | Company | Strengths >> Notes
@@ -97,6 +108,15 @@ class Chatbot {
         this.lastActivityTime = Date.now();
         this.inactivityTimer = null;
         this.inactivityThreshold = 300000; // 5 minutes
+        
+        // Time tracking for mode usage
+        this.staticModeTime = 0;
+        this.chatModeTime = 0;
+        this.currentModeStartTime = Date.now();
+        this.feedbackInteractionThreshold = 60000; // Show feedback after 1 minute
+        
+        // Performance warnings flag
+        this.performanceWarningsEnabled = false; // Disabled by default
         
         // Extracted user info from conversation
         this.extractedInfo = {
@@ -200,7 +220,33 @@ class Chatbot {
         
         // Drawer buttons
         this.clearCacheBtn.addEventListener('click', () => this.handleClearCache());
+        this.clearModelBtn.addEventListener('click', () => this.clearModelCache());
+        this.feedbackBtn.addEventListener('click', () => this.openFeedbackModal());
         this.accessibilityBtn.addEventListener('change', (e) => this.toggleAccessibility(e.target.checked));
+        
+        // Search functionality
+        this.searchBtn.addEventListener('click', () => this.performVectorSearch());
+        this.searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                this.performVectorSearch();
+            }
+        });
+        this.closeSearchBtn.addEventListener('click', () => this.closeSearchResults());
+        
+        // Feedback bubble and modal
+        this.dismissFeedbackBtn.addEventListener('click', () => this.dismissFeedbackBubble());
+        this.feedbackBubble.addEventListener('click', (e) => {
+            if (e.target !== this.dismissFeedbackBtn) {
+                this.openFeedbackModal();
+            }
+        });
+        this.closeFeedbackModal.addEventListener('click', () => this.closeFeedbackModalPanel());
+        this.feedbackModal.addEventListener('click', (e) => {
+            if (e.target === this.feedbackModal) {
+                this.closeFeedbackModalPanel();
+            }
+        });
         
         // Disable send until model loads
         this.sendBtn.disabled = true;
@@ -550,9 +596,10 @@ class Chatbot {
             
             this.isModelLoaded = true;
             
-            // Update model info in drawer
+            // Update model info in drawer (show model name + trash icon)
             if (this.modelInfo) {
                 this.modelInfo.textContent = this.getModelDisplayName();
+                this.clearModelBtn.style.display = 'inline-flex';
             }
             
             // Remove loading message
@@ -921,7 +968,10 @@ class Chatbot {
     }
     
     showPerformanceWarning() {
-        this.showAlert('⚠️ Performance issues detected. Consider switching to static mode using the AI toggle.', 'error');
+        // Only show if enabled (disabled by default to avoid user friction)
+        if (this.performanceWarningsEnabled) {
+            this.showAlert('⚠️ Performance issues detected. Consider switching to static mode using the AI toggle.', 'error');
+        }
     }
     
     // ===================================
@@ -929,7 +979,23 @@ class Chatbot {
     // ===================================
     
     toggleAI(enabled) {
+        // Track time in previous mode
+        const currentTime = Date.now();
+        const timeInMode = currentTime - this.currentModeStartTime;
+        
+        if (this.aiEnabled) {
+            this.chatModeTime += timeInMode;
+        } else {
+            this.staticModeTime += timeInMode;
+        }
+        
+        this.currentModeStartTime = currentTime;
         this.aiEnabled = enabled;
+        
+        // Check if feedback should be shown (after 1 minute total interaction)
+        if (!this.feedbackShown && (this.staticModeTime + this.chatModeTime) >= this.feedbackInteractionThreshold) {
+            this.showFeedbackBubble();
+        }
         
         if (!enabled) {
             // Switch to static content
@@ -1001,6 +1067,28 @@ class Chatbot {
                 this.showAlert('Cache cleared successfully! Please refresh the page.', 'success');
             } catch (error) {
                 this.showAlert('Failed to clear cache. Check console for details.', 'error');
+            }
+        }
+    }
+    
+    async clearModelCache() {
+        if (confirm('This will clear the loaded model (~1.9GB) and reset the interface. You will need to reload it to use AI chat again. Continue?')) {
+            try {
+                await this.clearCacheInternal();
+                
+                // Update UI to show no model loaded
+                this.isModelLoaded = false;
+                this.permissionGranted = false;
+                this.modelInfo.textContent = 'No model loaded';
+                this.clearModelBtn.style.display = 'none';
+                
+                // Reset model state
+                this.engine = null;
+                this.conversationHistory = [];
+                
+                this.showAlert('Model cache cleared! Refresh to load again.', 'success');
+            } catch (error) {
+                this.showAlert('Failed to clear model cache. Check console for details.', 'error');
             }
         }
     }
@@ -1311,6 +1399,156 @@ class Chatbot {
         });
         
         return container;
+    }
+    
+    // ===================================
+    // Vector Search
+    // ===================================
+    
+    async performVectorSearch() {
+        const query = this.searchInput.value.trim();
+        
+        if (!query || query.length < 3) {
+            this.showAlert('Please enter at least 3 characters to search', 'info');
+            return;
+        }
+        
+        // Disable search button during search
+        this.searchBtn.disabled = true;
+        this.searchBtn.textContent = 'Searching...';
+        
+        try {
+            // Check if embeddings are loaded
+            if (!this.embeddings || this.embeddings.length === 0) {
+                this.showAlert('Search data not yet loaded. Please wait a moment and try again.', 'info');
+                return;
+            }
+            
+            // Generate query embedding
+            if (!this.embeddingModel) {
+                this.showAlert('Search model not loaded. Please wait a moment and try again.', 'info');
+                return;
+            }
+            
+            const queryEmbedding = await this.embeddingModel(query, { pooling: 'mean', normalize: true });
+            const queryVector = Array.from(queryEmbedding.data);
+            
+            // Calculate cosine similarity for each chunk
+            const results = this.embeddings.map(item => {
+                const similarity = this.cosineSimilarity(queryVector, item.embedding);
+                return {
+                    ...item,
+                    similarity
+                };
+            });
+            
+            // Filter by threshold and sort by similarity
+            const filteredResults = results
+                .filter(item => item.similarity >= this.ragConfidenceThreshold)
+                .sort((a, b) => b.similarity - a.similarity);
+            
+            // Display results
+            this.displaySearchResults(filteredResults, query);
+            
+        } catch (error) {
+            console.error('Search error:', error);
+            this.showAlert('Search failed. Please try again.', 'error');
+        } finally {
+            this.searchBtn.disabled = false;
+            this.searchBtn.textContent = 'Search';
+        }
+    }
+    
+    displaySearchResults(results, query) {
+        // Show results panel
+        this.searchResultsPanel.classList.remove('hidden');
+        
+        // Clear previous results
+        this.searchResultsContent.innerHTML = '';
+        
+        if (results.length === 0) {
+            this.searchResultsContent.innerHTML = `
+                <div class="search-no-results">
+                    <p>No results found for "${query}"</p>
+                    <p>Try different keywords or browse the portfolio above.</p>
+                </div>
+            `;
+            return;
+        }
+        
+        // Group results by project/section
+        const grouped = {};
+        results.forEach(result => {
+            const group = result.project || result.section || 'General';
+            if (!grouped[group]) {
+                grouped[group] = [];
+            }
+            grouped[group].push(result);
+        });
+        
+        // Display grouped results
+        Object.entries(grouped).forEach(([groupName, items]) => {
+            const groupDiv = document.createElement('div');
+            groupDiv.className = 'search-result-group';
+            
+            const heading = document.createElement('h4');
+            heading.textContent = groupName;
+            groupDiv.appendChild(heading);
+            
+            items.forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'search-result-item';
+                
+                const text = document.createElement('p');
+                text.textContent = item.text;
+                itemDiv.appendChild(text);
+                
+                // Add click handler to scroll to section if available
+                if (item.anchor) {
+                    itemDiv.style.cursor = 'pointer';
+                    itemDiv.addEventListener('click', () => {
+                        this.closeSearchResults();
+                        const element = document.getElementById(item.anchor);
+                        if (element) {
+                            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                    });
+                }
+                
+                groupDiv.appendChild(itemDiv);
+            });
+            
+            this.searchResultsContent.appendChild(groupDiv);
+        });
+    }
+    
+    closeSearchResults() {
+        this.searchResultsPanel.classList.add('hidden');
+        this.searchInput.value = '';
+    }
+    
+    // ===================================
+    // Feedback System
+    // ===================================
+    
+    showFeedbackBubble() {
+        if (this.feedbackShown) return;
+        
+        this.feedbackBubble.classList.remove('hidden');
+        this.feedbackShown = true;
+    }
+    
+    dismissFeedbackBubble() {
+        this.feedbackBubble.classList.add('hidden');
+    }
+    
+    openFeedbackModal() {
+        this.feedbackModal.classList.remove('hidden');
+        this.feedbackBubble.classList.add('hidden');
+    }
+    
+    closeFeedbackModalPanel() {
+        this.feedbackModal.classList.add('hidden');
     }
 }
 

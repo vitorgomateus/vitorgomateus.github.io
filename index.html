@@ -18,10 +18,14 @@
         <header class="header">
             <h1>Vítor Gonçalves</h1>
             <div class="header-actions">
-                <label class="ai-toggle" title="Toggle AI on/off">
-                    <input type="checkbox" id="aiToggle" checked>
-                    <span class="toggle-slider"></span>
-                    <span class="toggle-label">AI</span>
+                <label class="ai-toggle" title="Experimental AI chat">
+                    <input type="checkbox" id="aiToggle">
+                    <span class="toggle-slider">
+                        <svg class="toggle-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/>
+                            <rect x="7" y="7" width="10" height="10" rx="2"/>
+                        </svg>
+                    </span>
                 </label>
                 <button id="menuBtn" class="menu-btn" aria-label="Menu">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -46,12 +50,20 @@
                 <p><strong>Technology:</strong></p>
                 <ul>
                     <li>WebLLM (MLC AI)</li>
-                    <li id="modelInfo">Loading model info...</li>
+                    <li id="modelInfo" class="model-status">
+                        <span id="modelName">No model loaded</span>
+                        <button id="clearModelBtn" class="icon-btn hidden" aria-label="Clear model cache" title="Clear model from cache">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                            </svg>
+                        </button>
+                    </li>
                     <li>WebGPU</li>
                 </ul>
                 
                 <h3>Settings</h3>
-                <button id="clearCache" class="drawer-btn">Clear Model Cache</button>
+                <button id="feedbackBtn" class="drawer-btn">Give Feedback</button>
                 <label class="drawer-toggle">
                     <input type="checkbox" id="accessibilityMode">
                     <span class="toggle-slider"></span>
@@ -61,8 +73,8 @@
         </div>
         <div id="drawerOverlay" class="drawer-overlay"></div>
 
-        <!-- Static Content (shown when AI is off) -->
-        <div id="staticContent" class="static-content hidden">
+        <!-- Static Content (primary view) -->
+        <div id="staticContent" class="static-content">
             <section class="portfolio-section executive-summary">
                 <h2>About</h2>
                 <div id="summary-container"></div>
@@ -92,10 +104,30 @@
                 <h2>Projects</h2>
                 <div id="projects-container" class="portfolio-grid"></div>
             </section>
+
+            <!-- Search Bar -->
+            <div class="search-bar-container">
+                <input type="search" id="searchInput" class="search-input" placeholder="Search or ask anything" maxlength="200">
+                <button id="searchBtn" class="search-btn" aria-label="Search">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                </button>
+            </div>
         </div>
 
-        <!-- Chat Container -->
-        <div id="chatContainer" class="chat-container">
+        <!-- Search Results Panel -->
+        <div id="searchResultsPanel" class="search-results-panel hidden">
+            <div class="search-results-header">
+                <h2>Search Results</h2>
+                <button id="closeSearchBtn" class="close-search-btn" aria-label="Close search">Close search</button>
+            </div>
+            <div id="searchResultsContent" class="search-results-content"></div>
+        </div>
+
+        <!-- Chat Container (secondary view) -->
+        <div id="chatContainer" class="chat-container hidden">
             <!-- Messages Area -->
             <div class="messages-wrapper">
                 <div id="messages" class="messages"></div>
@@ -122,6 +154,20 @@
                         <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
                     </svg>
                 </button>
+            </div>
+        </div>
+
+        <!-- Feedback Popup Bubble -->
+        <div id="feedbackBubble" class="feedback-bubble hidden">
+            <button id="dismissFeedback" class="dismiss-feedback" aria-label="Dismiss">×</button>
+            <p>Your feedback is invaluable!</p>
+        </div>
+
+        <!-- Feedback Modal -->
+        <div id="feedbackModal" class="feedback-modal hidden">
+            <div class="feedback-modal-content">
+                <button id="closeFeedbackModal" class="close-modal-btn" aria-label="Close">×</button>
+                <div id="feedbackFormContainer"></div>
             </div>
         </div>
     </div>
