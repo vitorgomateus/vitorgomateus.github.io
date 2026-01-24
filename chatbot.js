@@ -1614,6 +1614,8 @@ class Chatbot {
             return;
         }
         
+        console.log(`Displaying ${results.length} search results for "${query}"`);
+        
         // Group results by project/section
         const grouped = {};
         results.forEach(result => {
@@ -1624,12 +1626,14 @@ class Chatbot {
             grouped[group].push(result);
         });
         
+        console.log('Grouped results:', Object.keys(grouped));
+        
         // Display grouped results
         Object.entries(grouped).forEach(([groupName, items]) => {
             const groupDiv = document.createElement('div');
             groupDiv.className = 'search-result-group';
             
-            const heading = document.createElement('h4');
+            const heading = document.createElement('h3');
             heading.textContent = groupName;
             groupDiv.appendChild(heading);
             
@@ -1637,16 +1641,34 @@ class Chatbot {
                 const itemDiv = document.createElement('div');
                 itemDiv.className = 'search-result-item';
                 
-                const text = document.createElement('p');
-                // Safely set text content and handle any HTML escaping
-                const cleanText = (item.text || '')
+                const content = document.createElement('div');
+                // Decode HTML entities and render as HTML
+                let htmlContent = item.text || 'No content';
+                
+                // Decode HTML entities to proper HTML
+                htmlContent = htmlContent
                     .replace(/&lt;/g, '<')
                     .replace(/&gt;/g, '>')
                     .replace(/&amp;/g, '&')
                     .replace(/&quot;/g, '"')
-                    .replace(/&#039;/g, "'");
-                text.textContent = cleanText;
-                itemDiv.appendChild(text);
+                    .replace(/&#039;/g, "'")
+                    .replace(/&nbsp;/g, ' ');
+                
+                // Fix heading hierarchy: h6 -> h4
+                htmlContent = htmlContent.replace(/<h6>/gi, '<h4>').replace(/<\/h6>/gi, '</h4>');
+                
+                // Render HTML with structure preserved
+                content.innerHTML = htmlContent;
+                itemDiv.appendChild(content);
+                
+                const score = document.createElement('div');
+                score.style.fontSize = '0.75rem';
+                score.style.color = 'var(--text-light)';
+                score.style.marginTop = '0.5rem';
+                score.style.paddingTop = '0.5rem';
+                score.style.borderTop = '1px solid var(--border)';
+                score.textContent = `Relevance: ${(item.similarity * 100).toFixed(1)}%`;
+                itemDiv.appendChild(score);
                 
                 // Add click handler to scroll to section if available
                 if (item.anchor) {
