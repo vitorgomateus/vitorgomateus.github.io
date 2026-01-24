@@ -635,14 +635,7 @@ class Chatbot {
         }
     }
     
-    async generateGreeting() {
-        // Only generate greeting if no messages exist yet (avoid duplicates)
-        if (this.messagesContainer.children.length > 0) {
-            this.sendBtn.disabled = false;
-            this.userInput.focus();
-            return;
-        }
-        
+    async generateGreeting() {        
         // Pick random greeting from pre-made list
         const randomIndex = Math.floor(Math.random() * this.greetings.length);
         const greeting = this.greetings[randomIndex];
@@ -1404,7 +1397,7 @@ class Chatbot {
     createLoadingBar(duration) {
         // Create animated loading bar
         const container = document.createElement('div');
-        container.style.width = '100%';
+        container.style.width = '75%';
         container.style.height = '3px';
         container.style.backgroundColor = 'var(--border)';
         container.style.borderRadius = '2px';
