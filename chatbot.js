@@ -167,6 +167,7 @@ class Chatbot {
         
         // Permission granted flag
         this.permissionGranted = false;
+        this.permissionPromptShown = false; // Track if we've shown the prompt
         
         // System instructions (edit here to control model behavior)
         // Your purpose is to showcase what's possible with local AI while engaging visitors in conversation about Vítor's work and interests.
@@ -534,7 +535,7 @@ class Chatbot {
     
     async checkWebGPUSupport() {
         if (!navigator.gpu) {
-            this.addBotMessage("⚠️ WebGPU is not supported in your browser. Please use Chrome 113+ or Edge 113+ with WebGPU enabled.");
+            this.addBotMessage("⚠️ WebGPU is not supported in your browser. Please use Chrome 113+ or Edge 113+ with WebGPU enabled. You can browse the static portfolio using the toggle switch.");
             return false;
         }
         return true;
@@ -545,6 +546,12 @@ class Chatbot {
         let totalBytes = 0;
         let fetchStartTime = null;
         let fetchEndTime = null;
+        
+        // Update model name in drawer to show loading status
+        const modelNameSpan = document.getElementById('modelName');
+        if (modelNameSpan) {
+            modelNameSpan.textContent = 'Loading model...';
+        }
         
         // Show loading message in chat with animated progress bar
         const loadingMessageDiv = document.createElement('div');
@@ -629,6 +636,13 @@ class Chatbot {
     }
     
     async generateGreeting() {
+        // Only generate greeting if no messages exist yet (avoid duplicates)
+        if (this.messagesContainer.children.length > 0) {
+            this.sendBtn.disabled = false;
+            this.userInput.focus();
+            return;
+        }
+        
         // Pick random greeting from pre-made list
         const randomIndex = Math.floor(Math.random() * this.greetings.length);
         const greeting = this.greetings[randomIndex];
@@ -1008,6 +1022,7 @@ class Chatbot {
             this.staticContent.classList.remove('hidden');
         } else {
             // Switch to chat UI
+            this.closeSearchResults();
             this.chatContainer.classList.remove('hidden');
             this.staticContent.classList.add('hidden');
             
@@ -1335,6 +1350,13 @@ class Chatbot {
     }
     
     showPermissionPrompt() {
+        // Don't show if already shown
+        if (this.permissionPromptShown) {
+            return;
+        }
+        
+        this.permissionPromptShown = true;
+        
         // Add permission message
         const messageDiv = document.createElement('div');
         messageDiv.className = 'message bot';
@@ -1513,7 +1535,14 @@ class Chatbot {
                 itemDiv.className = 'search-result-item';
                 
                 const text = document.createElement('p');
-                text.textContent = item.text;
+                // Safely set text content and handle any HTML escaping
+                const cleanText = (item.text || '')
+                    .replace(/&lt;/g, '<')
+                    .replace(/&gt;/g, '>')
+                    .replace(/&amp;/g, '&')
+                    .replace(/&quot;/g, '"')
+                    .replace(/&#039;/g, "'");
+                text.textContent = cleanText;
                 itemDiv.appendChild(text);
                 
                 // Add click handler to scroll to section if available
@@ -1590,19 +1619,28 @@ class Chatbot {
                 <div style="margin-top: 1rem;">
                     <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Include in feedback:</label>
                     
-                    <label style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; cursor: pointer;">
-                        <input type="checkbox" id="fb-personal" checked>
-                        <span>Personal Info (Name, Email, Company, Message)</span>
+                    <label style="display: block; margin-bottom: 0.75rem; cursor: pointer;">
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <input type="checkbox" id="fb-personal" checked>
+                            <span style="font-weight: 500;">Personal Info</span>
+                        </div>
+                        <div style="font-size: 0.75rem; color: var(--text-light); margin-left: 1.75rem; margin-top: 0.25rem;">Name, Email, Company, Message</div>
                     </label>
                     
-                    <label style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; cursor: pointer;">
-                        <input type="checkbox" id="fb-usage" checked>
-                        <span>Usage Stats (Time: ${timeSpent}s, Static: ${(this.staticModeTime / 1000).toFixed(0)}s, Chat: ${(this.chatModeTime / 1000).toFixed(0)}s, Messages: ${this.userMessages}${this.isModelLoaded ? `, Avg reply: ${avgReplyTime}s, Max: ${maxReplyTime}s` : ''})</span>
+                    <label style="display: block; margin-bottom: 0.75rem; cursor: pointer;">
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <input type="checkbox" id="fb-usage" checked>
+                            <span style="font-weight: 500;">Usage Stats</span>
+                        </div>
+                        <div style="font-size: 0.75rem; color: var(--text-light); margin-left: 1.75rem; margin-top: 0.25rem;">Time: ${timeSpent}s, Static: ${(this.staticModeTime / 1000).toFixed(0)}s, Chat: ${(this.chatModeTime / 1000).toFixed(0)}s, Messages: ${this.userMessages}${this.isModelLoaded ? `, Avg reply: ${avgReplyTime}s, Max: ${maxReplyTime}s` : ''}</div>
                     </label>
                     
-                    <label style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; cursor: pointer;">
-                        <input type="checkbox" id="fb-technical" checked>
-                        <span>Technical Info (Model: ${modelName}${this.modelLoadTime ? `, Load: ${this.modelLoadTime}s` : ''}, Lang: ${language}, Ref: ${referrer})</span>
+                    <label style="display: block; margin-bottom: 0.75rem; cursor: pointer;">
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <input type="checkbox" id="fb-technical" checked>
+                            <span style="font-weight: 500;">Technical Info</span>
+                        </div>
+                        <div style="font-size: 0.75rem; color: var(--text-light); margin-left: 1.75rem; margin-top: 0.25rem;">Model: ${modelName}${this.modelLoadTime ? `, Load: ${this.modelLoadTime}s` : ''}, Lang: ${language}, Ref: ${referrer}</div>
                     </label>
                 </div>
                 
