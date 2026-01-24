@@ -65,6 +65,10 @@ class Chatbot {
         this.isModelLoaded = false;
         this.conversationHistory = [];
         
+        // Model states: 'none', 'downloading', 'downloaded', 'loading', 'loaded'
+        this.modelState = 'none';
+        this.loadingAborted = false;
+        
         // RAG system
         this.embeddings = null; // Loaded from embeddings.json
         this.ragEnabled = false; // Set to true if embeddings load successfully
@@ -250,6 +254,9 @@ class Chatbot {
         // Disable send until model loads
         this.sendBtn.disabled = true;
         
+        // Initialize model info display
+        this.updateModelInfo();
+        
         // Show privacy message immediately
         this.addPrivacyMessage();
         
@@ -257,7 +264,10 @@ class Chatbot {
         this.loadEmbeddings();
         
         // Check for model changes (async to allow cache clearing)
-        this.checkModelVersion().then(() => {
+        this.checkModelVersion().then(async () => {
+            // Check if model is already cached
+            await this.checkModelCache();
+            
             // Check WebGPU support then ask permission
             this.checkWebGPUSupport().then(supported => {
                 if (supported) {
@@ -317,6 +327,34 @@ class Chatbot {
             document.head.appendChild(link);
         }
         link.href = faviconUrl;
+    }
+    
+    updateModelInfo() {
+        const modelNameSpan = document.getElementById('modelName');
+        if (!modelNameSpan) return;
+        
+        switch (this.modelState) {
+            case 'none':
+                modelNameSpan.textContent = 'No model loaded';
+                this.clearModelBtn.classList.add('hidden');
+                break;
+            case 'downloading':
+                modelNameSpan.textContent = 'Downloading model...';
+                this.clearModelBtn.classList.remove('hidden');
+                break;
+            case 'downloaded':
+                modelNameSpan.textContent = this.getModelDisplayName();
+                this.clearModelBtn.classList.remove('hidden');
+                break;
+            case 'loading':
+                modelNameSpan.textContent = 'Loading model...';
+                this.clearModelBtn.classList.remove('hidden');
+                break;
+            case 'loaded':
+                modelNameSpan.textContent = this.getModelDisplayName();
+                this.clearModelBtn.classList.remove('hidden');
+                break;
+        }
     }
     
     async handleSend() {
@@ -430,6 +468,51 @@ class Chatbot {
             console.log('Cache cleared. New model will be downloaded.');
         }
         localStorage.setItem('selectedModel', this.selectedModel);
+    }
+    
+    async checkModelCache() {
+        try {
+            let hasCache = false;
+            
+            // Method 1: Check if database exists in database list (Chrome 71+)
+            if ('databases' in indexedDB) {
+                const databases = await indexedDB.databases();
+                const webllmDb = databases.find(db => db.name === 'webllm');
+                hasCache = webllmDb !== undefined && webllmDb.version > 0;
+                console.log('Database list check:', databases.map(db => db.name), 'webllm found:', !!webllmDb);
+            } else {
+                // Method 2: Open database and check version/stores (fallback)
+                hasCache = await new Promise((resolve) => {
+                    const req = indexedDB.open('webllm');
+                    
+                    req.onsuccess = () => {
+                        const db = req.result;
+                        const hasData = db.version > 1 || (db.version === 1 && db.objectStoreNames.length > 0);
+                        console.log('Database version:', db.version, 'object stores:', db.objectStoreNames.length);
+                        db.close();
+                        
+                        // Clean up if we accidentally created an empty database
+                        if (db.version === 1 && db.objectStoreNames.length === 0) {
+                            indexedDB.deleteDatabase('webllm');
+                        }
+                        
+                        resolve(hasData);
+                    };
+                    
+                    req.onerror = () => resolve(false);
+                });
+            }
+            
+            if (hasCache) {
+                console.log('✓ Model found in cache');
+                this.modelState = 'downloaded';
+                this.updateModelInfo();
+            } else {
+                console.log('✗ No cached model found');
+            }
+        } catch (error) {
+            console.log('Error checking model cache:', error);
+        }
     }
      
     async loadEmbeddings() {
@@ -547,11 +630,13 @@ class Chatbot {
         let fetchStartTime = null;
         let fetchEndTime = null;
         
-        // Update model name in drawer to show loading status
-        const modelNameSpan = document.getElementById('modelName');
-        if (modelNameSpan) {
-            modelNameSpan.textContent = 'Loading model...';
-        }
+        // Reset abort flag
+        this.loadingAborted = false;
+        
+        // Set initial state based on whether model is already cached
+        // If already downloaded, skip to loading state; otherwise start with downloading
+        this.modelState = this.modelState === 'downloaded' ? 'loading' : 'downloading';
+        this.updateModelInfo();
         
         // Show loading message in chat with animated progress bar
         const loadingMessageDiv = document.createElement('div');
@@ -576,6 +661,11 @@ class Chatbot {
             // Initialize engine with progress callback
             this.engine = await webllm.CreateMLCEngine(this.selectedModel, {
                 initProgressCallback: (progress) => {
+                    // Check if loading was aborted
+                    if (this.loadingAborted) {
+                        throw new Error('Loading interrupted by user');
+                    }
+                    
                     // Track fetch timing
                     if (progress.text && progress.text.includes('Fetching') && !fetchStartTime) {
                         fetchStartTime = performance.now();
@@ -584,6 +674,9 @@ class Chatbot {
                         fetchEndTime = performance.now();
                         const fetchTime = ((fetchEndTime - fetchStartTime) / 1000).toFixed(1);
                         console.log(`Model fetched in ${fetchTime}s`);
+                        // Update state to loading (downloaded, now loading into memory)
+                        this.modelState = 'loading';
+                        this.updateModelInfo();
                     }
                     
                     // Track total bytes if available
@@ -603,15 +696,8 @@ class Chatbot {
             this.modelLoadTime = loadTime;
             
             this.isModelLoaded = true;
-            
-            // Update model info in drawer (show model name + trash icon)
-            if (this.modelInfo) {
-                const modelNameSpan = document.getElementById('modelName');
-                if (modelNameSpan) {
-                    modelNameSpan.textContent = this.getModelDisplayName();
-                }
-                this.clearModelBtn.classList.remove('hidden');
-            }
+            this.modelState = 'loaded';
+            this.updateModelInfo();
             
             // Remove loading message
             loadingMessageDiv.remove();
@@ -631,7 +717,20 @@ class Chatbot {
             console.error('Error loading model:', error);
             loadingMessageDiv.remove();
             this.messageCount--;
-            this.addBotMessage(`❌ Failed to load AI model: ${error.message}. Please ensure you're using Chrome 113+ or Edge 113+ with WebGPU enabled.`, false);
+            
+            // Check if it was interrupted
+            if (this.loadingAborted) {
+                this.modelState = 'none';
+                this.updateModelInfo();
+                this.addBotMessage('Model loading interrupted.', false);
+            } else {
+                // Check if model is in cache (downloaded state)
+                // If download completed but loading failed, set to 'downloaded'
+                // Otherwise set to 'none'
+                this.modelState = 'none';
+                this.updateModelInfo();
+                this.addBotMessage(`❌ Failed to load AI model: ${error.message}. Please ensure you're using Chrome 113+ or Edge 113+ with WebGPU enabled.`, false);
+            }
         }
     }
     
@@ -1085,18 +1184,27 @@ class Chatbot {
     }
     
     async clearModelCache() {
-        if (confirm('This will clear the loaded model (~1.9GB) and reset the interface. You will need to reload it to use AI chat again. Continue?')) {
+        const stateMessage = this.modelState === 'downloading' || this.modelState === 'loading' 
+            ? 'This will interrupt the current operation and clear the model cache (~1.9GB). Continue?'
+            : 'This will clear the loaded model (~1.9GB) and reset the interface. You will need to reload it to use AI chat again. Continue?';
+            
+        if (confirm(stateMessage)) {
             try {
+                // If currently loading, abort it
+                if (this.modelState === 'downloading' || this.modelState === 'loading') {
+                    this.loadingAborted = true;
+                    this.showAlert('Interrupting model loading...', 'info');
+                    // Give it a moment to abort
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                }
+                
                 await this.clearCacheInternal();
                 
                 // Update UI to show no model loaded
                 this.isModelLoaded = false;
                 this.permissionGranted = false;
-                const modelNameSpan = document.getElementById('modelName');
-                if (modelNameSpan) {
-                    modelNameSpan.textContent = 'No model loaded';
-                }
-                this.clearModelBtn.classList.add('hidden');
+                this.modelState = 'none';
+                this.updateModelInfo();
                 
                 // Reset model state
                 this.engine = null;
