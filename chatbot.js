@@ -1321,21 +1321,23 @@ class Chatbot {
         // Clear existing suggestions
         this.suggestionsContainer.innerHTML = '';
         
-        // Pick 1 random suggestion
+        // Pick 2 random suggestions
         const shuffled = [...this.suggestionMessages].sort(() => Math.random() - 0.5);
-        const selected = shuffled[0];
+        const selected = shuffled.slice(0, 2);
         
-        const button = document.createElement('button');
-        button.textContent = selected;
-        button.className = 'suggestion-btn';
-        
-        button.addEventListener('click', () => {
-            this.userInput.value = selected;
-            this.handleSend();
-            this.hideSuggestions();
+        selected.forEach(suggestion => {
+            const button = document.createElement('button');
+            button.textContent = suggestion;
+            button.className = 'suggestion-btn';
+            
+            button.addEventListener('click', () => {
+                this.userInput.value = suggestion;
+                this.handleSend();
+                this.hideSuggestions();
+            });
+            
+            this.suggestionsContainer.appendChild(button);
         });
-        
-        this.suggestionsContainer.appendChild(button);
     }
     
     hideSuggestions() {
