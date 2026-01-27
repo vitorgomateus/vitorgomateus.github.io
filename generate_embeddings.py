@@ -8,8 +8,8 @@ from sentence_transformers import SentenceTransformer
 import numpy as np
 
 def load_data():
-    """Load data.json"""
-    with open('data.json', 'r', encoding='utf-8') as f:
+    """Load data-002.json"""
+    with open('data-002.json', 'r', encoding='utf-8') as f:
         return json.load(f)
 
 def extract_chunks(data):
@@ -146,7 +146,7 @@ def main():
     print("=== Embedding Generator for RAG System ===\n")
     
     # Load data
-    print("Loading data.json...")
+    print("Loading data-002.json...")
     data = load_data()
     
     # Extract chunks

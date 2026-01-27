@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
  */
 async function loadData() {
   try {
-    const response = await fetch('data.json');
+    const response = await fetch('data-002.json');
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     
     siteData = await response.json();

@@ -1,0 +1,526 @@
+{
+  "personal": {
+    "name": "Vítor Gonçalves",
+    "title": "User-Centered Designer | End-to-End Project Specialist",
+    "location": "Chicago, IL, USA",
+    "phone": "(224) 933-4283",
+    "email": "hello@vitordesign.pt",
+    "linkedin": "https://www.linkedin.com/in/vitorgo/",
+    "summary": "Innovative UX Designer with over 8 years of experience across diverse roles, from web design, to UX research, and development. Has a proven track record of delivering end-to-end projects in collaboration with cross-functional teams across startups, nonprofits, and large organizations. Holding a master's degree in HCI, excels at creating user-centered solutions that balance design and technical requirements.",
+    "skills": [
+      {
+        "category": "UX Expertise",
+        "description": "Expert in identifying user needs through research, wireframing, prototyping, and usability testing, ensuring data-driven solutions that address key problems and drive usefulness.",
+        "tools": ["Journey maps", "Affinity maps", "Usability studies", "Hotjar", "Maze", "GA4", "PowerBi"]
+      },
+      {
+        "category": "Proven Track Record",
+        "description": "Managed and executed full project lifecycles, from planning to quality assurance, ensuring seamless delivery with strong attention to detail.",
+        "tools": ["Notion", "Spreadsheets", "Accessibility", "Adobe CS", "Figma"]
+      },
+      {
+        "category": "Collaborative & Innovative",
+        "description": "A resourceful team player finding innovative solutions to solve problems while thriving in cross-functional environments.",
+        "tools": ["Wireframing", "Prototyping", "Git", "HTML5", "CSS3", "JS", "Python"]
+      }
+    ],
+    "languages": {
+      "english": "Fluent",
+      "portuguese": "Native",
+      "spanish": "Basic"
+    }
+  },
+  "education": [
+    {
+      "degree": "Master's in Multimedia Communication",
+      "institution": "Universidade de Aveiro",
+      "institutionUrl": "https://www.ua.pt/",
+      "location": "Aveiro, Portugal",
+      "period": "Sep 2015 - Dec 2019",
+      "focus": "Human-computer interaction (HCI), UX design, design thinking, digital marketing, literature review, generative research, field studies, ethnography studies, affinity maps, prototype, usability testing, double-diamond, Unity, Arduino, AppGyver, Android"
+    },
+    {
+      "degree": "Bachelor's in New Technologies of Communication",
+      "institution": "Universidade de Aveiro",
+      "institutionUrl": "https://www.ua.pt/",
+      "location": "Aveiro, Portugal",
+      "period": "Sep 2010 - Oct 2014",
+      "focus": "Human-computer interaction (HCI), web design, heuristic evaluation, quantitative research, wireframing, graphic design, web development, Adobe Creative Suite"
+    }
+  ],
+  "experience": [
+    {
+      "title": "Web and Graphic Designer",
+      "company": "University of Chicago Library",
+      "companyUrl": "https://www.lib.uchicago.edu/",
+      "location": "Chicago, IL, USA",
+      "period": "Aug 2023 - Present",
+      "description": "Updated branding across multiple web platforms and documents to enhance brand consistency and modernize the Library's image. Collaborate with cross-functional teams in planning product roadmap and implementing new features. Designed and launched a user-friendly website for a digital collection, making it easier for people to find and use resources. Monitor web analytics, accessibility, and requests for new features."
+    },
+    {
+      "title": "UX Designer & Developer (volunteer)",
+      "company": "Changing Children's Worlds Foundation",
+      "companyUrl": "https://www.changingchildrensworlds.org/",
+      "location": "IL, USA",
+      "period": "Sep 2022 - Aug 2023",
+      "description": "Planning email outreach campaigns to increase donation acquisition. Researching methods for further improvement. Strengthening the digital experience and presence by studying personas and service blueprints. Modernizing the website in Wix."
+    },
+    {
+      "title": "UI/UX Designer & Developer",
+      "company": "Freelancing Web Services",
+      "location": "Remote",
+      "period": "Apr 2020 – Mar 2022",
+      "description": "Facilitated discussions with stakeholders to balance technological constraints, and usability needs in alignment with business goals. Created a complete, consistent, and valuable experience with 99% positive feedback using UX methods to understand the users' mental models, and journey mapping to avoid pitfalls. Directed two projects to transition international scientific conferences to virtual venues. Events lasted 3 days each, spanned worldwide, had over 200 presented papers, and over 3000 messages in online scientific discussion."
+    },
+    {
+      "title": "UI/UX Designer & Developer",
+      "company": "Watgrid Solutions",
+      "companyUrl": "https://www.watgrid.com/",
+      "location": "Ílhavo, Portugal",
+      "period": "Feb 2018 - Feb 2020",
+      "description": "Overhauled the UX for a SaaS IoT management platform, collaborating with hardware and software engineers to integrate key partner feedback and deliver a streamlined, user-friendly experience. Established branding consistency and scalability by creating a shared design system for product design and marketing. Monitored product roadmap, feature performance, and usability in alignment with business goals. Developed new features in an Agile environment using AngularJs."
+    },
+    {
+      "title": "Digital Media Specialist",
+      "company": "My Friends in Portugal",
+      "location": "Aveiro, Portugal",
+      "period": "Mar 2017 - Dec 2017",
+      "description": "Close cooperation with CEO and COO to bootstrap an e-tourism start-up. Responsible for UI development, marketing management, user research, and graphic design."
+    },
+    {
+      "title": "Lead Photographer",
+      "company": "Foto Felicidade",
+      "location": "Vila Verde, Portugal",
+      "period": "May 2004 - Sep 2014",
+      "description": "Conducted studio and outdoor photo sessions, weddings, and other private events. Digital photo editing and composition."
+    }
+  ],
+  "projects": [
+    {
+      "id": "winegrid",
+      "active": true,
+      "title": "Winegrid",
+      "subtitle": "The Winegrid platform for the company Watgrid",
+      "year": "2019",
+      "company": "Watgrid Solutions",
+      "role": "UI/UX Designer & Developer",
+      "shortDescription": "The platform to be developed for Winegrid was quite challenging as it encompassed a complex information architecture which generated a gap with the user's mental model. In order to test and allow common ground of understanding between the team members a hi-fi prototype was made in Adobe XD. This made it easier to guess implementation efforts and the validity of some of the functionalities.",
+      "skills": ["UI design", "Adobe XD", "AngularJS", "jQuery", "fast prototyping", "usability testing", "information architecture", "design systems"],
+      "contentBlocks": [
+        {
+          "id": "overview",
+          "heading": null,
+          "text": "The platform to be developed for Winegrid was quite challenging as it encompassed a complex information architecture which generated a gap with the user's mental model. In order to test and allow common ground of understanding between the team members a hi-fi prototype was made in Adobe XD. This made it easier to guess implementation efforts and the validity of some of the functionalities.",
+          "image": {
+            "src": "res/img/loading-giffer.gif",
+            "alt": "Animated loading logo",
+            "caption": "Animated loading logo",
+            "class": "b-white b-center b-size-75"
+          }
+        },
+        {
+          "id": "product",
+          "heading": "Product",
+          "text": "Watgrid's product, Winegrid, was a very interesting project and I'm very glad I got to be part of it during my master's. It is a groundbreaking technology, with a complex information architecture. They develop and produce sensors to monitor wine production in real time, alongside a SaaS platform to control their devices. I was working as a UX designer, supporting the platform's development team.",
+          "image": {
+            "src": "res/img/winegrid-adobe-logo.png",
+            "alt": "Winegrid product logo",
+            "caption": "Adobe XD Prototype",
+            "link": {
+              "type": "axd",
+              "href": "https://xd.adobe.com/view/25bdfd92-4b17-4a25-71a9-c02c1daecb0c-538c/",
+              "icon": "fa fa-external-link-alt"
+            }
+          }
+        },
+        {
+          "id": "ux-challenges",
+          "heading": "UX Challenges",
+          "text": "The fact that it was a company just popping out of start-up status, meant there was still some distance between the engineer's mental model, and that which would make sense for the final users. Also, few of the engineers understood how to produce wine and none of them how a full sized industrial production of wine works. So it was necessary to understand the differences, create a new mental model and reflect this on the platform itself. For about a year this was a work in progress, as the platform was already up and running. I studied, designed and developed, also as new features were being introduced to the platform on a regular basis. Gladly, new investments were made that changed our game.",
+          "image": null
+        },
+        {
+          "id": "development-challenges",
+          "heading": "Development Challenges",
+          "text": "Most notoriously, I designed and developed a selection element that faced a challenged, and of which I am quite satisfied. The user needs to be able to select the daily reading frequency of each sensor, but that can't be more that once every thirty minutes, and it has to be in equal intervals throughout the day. These were technical constraints. The user should also be able to select when the first read of the day was to happen. In order to avoid explaining to the user all the necessary, and to avoid error, it was necessary for the affordance of this element to enforce all of this, and be clear at the same time. So a slider for the frequency was chosen, alongside a scheduler that allowed to select the initial time and view all the other consecutive schedule readings. To further ensure readability, a clarifying human readable sentence was output dynamically with the selection. This was developed in Angular and later translated into Jquery.",
+          "image": {
+            "src": "res/img/timer-selection-ui.webp",
+            "alt": "Screen capture of a frequency selector interface",
+            "caption": "Frequency Selector",
+            "link": {
+              "type": "yt",
+              "href": "res/img/big/timer-selection-ui.mp4",
+              "icon": "fa fa-play-circle"
+            }
+          }
+        },
+        {
+          "id": "graphical-design-marketing",
+          "heading": "Work in Graphical Design and Marketing",
+          "text": "Besides working as a UX Designer, I also supported the marketing team, mostly with graphical design. The branding of the company was also not solidified, so this was a challenging process as well. Most notoriously, I designed a quick guide for users, in a single sheet of A4, to go with every shipped device. It used only iconography, so that translated versions were not necessary, and a QR Code directed for further clarifications, although this was reported as not used. I also produced an instructional video and maintained the website's activity.",
+          "image": null
+        }
+      ]
+    },
+    {
+      "id": "timebank",
+      "active": true,
+      "title": "Banco de Tempo de Santa Maria da Feira",
+      "subtitle": "Project for Master's dissertation",
+      "year": "2019",
+      "company": "Master's Thesis",
+      "role": "UX Researcher & Designer",
+      "shortDescription": "This project studied the potential contribution of multimedia technology for a timebanking community in Santa Maria da Feira, Portugal. As a proof of concept, two prototypes were developed for a majorly senior community.",
+      "skills": ["UI design", "Wordpress", "Adobe XD", "User Research", "ethnography", "fast prototyping", "usability testing", "questionnaires"],
+      "contentBlocks": [
+        {
+          "id": "overview",
+          "heading": null,
+          "text": "This project studied the potential contribution of multimedia technology for a timebanking community in Santa Maria da Feira, Portugal. As a proof of concept, two prototypes were developed for a majorly senior community.",
+          "image": {
+            "src": "res/img/bdt-feira-2.jpg",
+            "alt": "Image of Banco de Tempo de Feira",
+            "caption": "Timebank platform prototype"
+          }
+        },
+        {
+          "id": "collaborative-economy",
+          "heading": "Collaborative Economy",
+          "text": "The Collaborative Economy is a phenomenon of the recent decade, where new and old habits of exchange were developed and re-discovered in the digital realm. Most notoriously - new methods of creating value collaboratively; making use of inert value and sharing goods, services and even time - have created a new highly valued market, challenged policies, and promoted a more sustainable way for people to face their daily challenges. There are also companies that tag along with the promises of social, economic and ecological sustainability, but fail to deliver and end up just exploiting members of their digitally created communities for their own gain.",
+          "image": null
+        },
+        {
+          "id": "time-banks",
+          "heading": "Time Banks",
+          "text": "In the meantime, there's an idea that has existed far before, and that is used mostly for social rehabilitation and economic self-reliance in smaller communities. We're talking about time-banks, where people exchange their time, valuing everyone's time equally. So an hour from a plumber is as valuable as an hour from a tutoring mathematician. One would request a service and \"pay\" the person in time-credits, equivalent to the time spent in providing it. And this person will be able to exchange similarly with other members.",
+          "image": null
+        },
+        {
+          "id": "time-banks-portugal",
+          "heading": "Time Banks in Portugal",
+          "text": "In Portugal, Time Banks have existed for a while and have a few slightly specific rules. Each agency, consisting usually of easily below 200 members, should validate each member upon joining, through a personal interview. The agency also intermediates each exchange, to promote that all members have an equal opportunity to contribute. This network, in Portugal, has very little digital support for their members and coordinators.",
+          "image": null
+        },
+        {
+          "id": "value-definition",
+          "heading": "A different definition of value",
+          "text": "This system is based on a marxist conception of value, of which modern notions have undermined, and probably wouldn't be a system sustainable on a large scale, although something similar exists spanning through the United Kingdom. This system's value lies in small communities, and ususally undermined groups of society, strengthening social ties, their notion of self-worth, and overall health of the individuals.",
+          "image": null
+        },
+        {
+          "id": "idea",
+          "heading": "Idea",
+          "text": "Contrasting the digital development of modern Collaborative Economy platforms, with the actual social sustainability contribution of Time banks in Portugal, this project took to study and develop a prototype of a platform for Time Banks in Portugal, collaborating with the agency of Santa Maria da Feira. This community was chosen for being very dynamic and with a very stable organization, a strong sense of belonging between members, and also, for the convenience of proximity.",
+          "image": null
+        },
+        {
+          "id": "challenges",
+          "heading": "Challenges",
+          "text": "One of the biggest challenges was lining up with how they value this network. The value in belonging was not so much in obtaining services and saving money, as one might expect, although a lot of value could be obtained from here. Food, home maintenance services, tutoring, transportation, dance/yoga/painting classes etc... The main motivation was to be able to participate and underlyingly feel valued, and most times even just to have company. This makes sense as most of the more active members are retirees. This was possible to realize through questionnaires and also visits to the community with conversations over tea, getting to know if there was any community spirit, how some of them joined, some particular situations, and how the agency itself functions. The questionnaires aimed at understanding their motivations, current use of technology and foreseable usage of a digital platform for the Time Bank.\n\nAnother challenge was to establish the contribution that digital technologies might have to help them with their main problem: there's a higher tendency in members offering services than requiring them. Two conclusions were obtained in regard to this issue. The literary study established that changing the way their activity was framed by their internal and external discourse would make a significant difference. The empirical study established that a simple and familiar interface to choose and \"purchase\" services would motivate members to request more exchanges.\n\n\"If I need a ride somewhere, I don't request from the TimeBank, I take a cab.\" - a timebank participant",
+          "image": null
+        },
+        {
+          "id": "prototypes",
+          "heading": "Prototypes",
+          "text": "Two prototypes were eventually developed and tested, with different purposes. A first one in Wordpress to test the technology's reliability, as the maintenance of the platform should not require technical capacity. And a second on in Adobe XD to validate an established design and proof of concept.\n\nResults were certainly positive, and this project might still come to fulfilled fruition.\n\n\"I never make any requests, but since it's this easy, I'll definitely start making some.\" - another timebank participant",
+          "image": null
+        }
+      ]
+    },
+    {
+      "id": "library-redesign",
+      "active": true,
+      "title": "University of Chicago Library Website Redesign",
+      "subtitle": "Digital collection website redesign",
+      "year": "2023-2024",
+      "company": "University of Chicago Library",
+      "role": "Web and Graphic Designer",
+      "shortDescription": "Designed and launched a user-friendly website for a digital collection at UChicago Library, making it easier for people to find and use resources. Updated branding across multiple platforms to enhance consistency and modernize the library's image.",
+      "skills": ["UI design", "web design", "branding", "accessibility", "analytics", "stakeholder collaboration"],
+      "contentBlocks": [
+        {
+          "id": "overview",
+          "heading": null,
+          "text": "Designed and launched a user-friendly website for a digital collection at UChicago Library, making it easier for people to find and use resources. Updated branding across multiple platforms to enhance consistency and modernize the library's image.",
+          "image": null
+        }
+      ]
+    },
+    {
+      "id": "ola-mlc",
+      "active": true,
+      "title": "OLA/MLC Conference Virtual Venues",
+      "subtitle": "Transitioning international conferences to virtual platforms",
+      "year": "2020-2021",
+      "company": "Freelancing Web Services",
+      "role": "UI/UX Designer & Developer",
+      "shortDescription": "Directed two projects to transition international scientific conferences to virtual venues. Created a complete, consistent, and valuable experience with 99% positive feedback. Events lasted 3 days each, spanned worldwide, had over 200 presented papers, and over 3000 messages in online scientific discussion.",
+      "skills": ["UI design", "UX research", "journey mapping", "stakeholder management", "virtual events", "user testing"],
+      "contentBlocks": [
+        {
+          "id": "overview",
+          "heading": null,
+          "text": "Directed two projects to transition international scientific conferences to virtual venues. Created a complete, consistent, and valuable experience with 99% positive feedback using UX methods to understand users' mental models and journey mapping to avoid pitfalls. Events lasted 3 days each, spanned worldwide, had over 200 presented papers, and over 3000 messages in online scientific discussion.",
+          "image": null
+        }
+      ]
+    },
+    {
+      "id": "bmrc-redesign",
+      "active": true,
+      "title": "BMRC Website Redesign",
+      "subtitle": "Placeholder project",
+      "year": "2023",
+      "company": "Placeholder",
+      "role": "Designer",
+      "shortDescription": "Placeholder description for BMRC redesign project.",
+      "skills": ["UI design", "web design"],
+      "contentBlocks": [
+        {
+          "id": "overview",
+          "heading": null,
+          "text": "Placeholder description for BMRC redesign project.",
+          "image": null
+        }
+      ]
+    },
+    {
+      "id": "notifyme",
+      "active": false,
+      "title": "Notify Me",
+      "subtitle": "Application for Master's",
+      "year": "2017",
+      "company": "Master's Project",
+      "role": "UI Designer & Developer",
+      "shortDescription": "The final year of the master's implemented a method in which different classes/disciplines colaborated in a single project. Notify Me was a project that experimented with detecting user's TV usage. This was exploited using a Bluetooth Beacon to detect proximity using an App. This App promised better TV suggestions made by algorythms and the user's history. An additional gamification concept was developed where users could bet on some TV show's content against each other, using custom currency and applying for monthly prizes.",
+      "skills": ["UI design", "HTML/ CSS/ Javascript", "React+Redux", "Arduino", "Bluetooth", "fast prototyping", "usability testing"],
+      "contentBlocks": [
+        {
+          "id": "overview",
+          "heading": null,
+          "text": "The final year of the master's implemented a method in which different classes/disciplines colaborated in a single project. Notify Me was a project that experimented with detecting user's TV usage. This was exploited using a Bluetooth Beacon to detect proximity using an App. This App promised better TV suggestions made by algorythms and the user's history. An additional gamification concept was developed where users could bet on some TV show's content against each other, using custom currency and applying for monthly prizes.",
+          "image": {
+            "src": "res/img/logo_notifyme_x300.png",
+            "bigSrc": "res/img/big/logo_notifyme_x512.png",
+            "alt": "Notify Me project logo",
+            "caption": "Notify Me project logo"
+          }
+        },
+        {
+          "id": "beacon",
+          "heading": "Bluetooth Beacon",
+          "text": "The project utilized a Bluetooth Beacon device to detect proximity to the TV, enabling the app to track viewing patterns and provide personalized recommendations based on user behavior.",
+          "image": {
+            "src": "res/img/notifier_3d_screenshot_x300.JPG",
+            "bigSrc": "res/img/big/notifier_3d_screenshot_x554.JPG",
+            "alt": "image of the 3D object for the bluetooth beacon",
+            "caption": "3D object for the bluetooth beacon"
+          }
+        },
+        {
+          "id": "bettv",
+          "heading": "BetTV Gamification",
+          "text": "An additional gamification concept was developed where users could bet on some TV show's content against each other, using custom currency and applying for monthly prizes.",
+          "image": {
+            "src": "res/img/BetTV_aposta_x300.jpg",
+            "bigSrc": "res/img/big/BetTV_aposta_x720.jpg",
+            "alt": "screenshot of a screen from BetTV concept",
+            "caption": "BetTV bet screen"
+          }
+        },
+        {
+          "id": "easytv",
+          "heading": "EasyTV Interface",
+          "text": "The EasyTV interface provided a simplified viewing experience with algorithmically generated suggestions based on user history and preferences.",
+          "image": {
+            "src": "res/img/easyTv_watching.jpg",
+            "alt": "screenshot of a screen from concept EasyTV app",
+            "caption": "EasyTV watching screen"
+          }
+        }
+      ]
+    },
+    {
+      "id": "babelrock",
+      "active": false,
+      "title": "Babel Rock",
+      "subtitle": "Interactive Music-Playing Physical-Globe",
+      "year": "2017",
+      "company": "Master's Project",
+      "role": "Designer & Developer",
+      "shortDescription": "Project for a master's class, with the purpose of exploiting physical objects for digital interactions. Here the sphere was studied to be used as an interface. A prototype was developed using two potentiometers, with which users can select a country and listen to it's music.",
+      "skills": ["Arduino", "3D printing", "physical computing"],
+      "contentBlocks": [
+        {
+          "id": "overview",
+          "heading": null,
+          "text": "Project for a master's class, with the purpose of exploiting physical objects for digital interactions. Here the sphere was studied to be used as an interface. A prototype was developed using two potentiometers, with which users can select a country and listen to it's music.",
+          "image": {
+            "src": "res/img/default.jpg",
+            "alt": "placeholder image",
+            "caption": "Placeholder"
+          }
+        }
+      ]
+    },
+    {
+      "id": "tiltgame",
+      "active": false,
+      "title": "Tilt Game - Feira de Março",
+      "subtitle": "Video Game with Lampwave Studio",
+      "year": "2015",
+      "company": "Lampwave Studio",
+      "role": "Game Designer",
+      "shortDescription": "A colaboration with Lampwave Studio to develop a video-game for a special event. It used the gyroscope to generate a ball-in-a-maze game.",
+      "skills": ["vector design", "video-game design", "UI design"],
+      "contentBlocks": [
+        {
+          "id": "overview",
+          "heading": null,
+          "text": "A colaboration with Lampwave Studio to develop a video-game for a special event. It used the gyroscope to generate a ball-in-a-maze game.",
+          "image": {
+            "src": "res/img/tilt_game_x300.jpg",
+            "bigSrc": "res/img/big/tilt_game_x543.jpg",
+            "alt": "screenshot of the gameplay",
+            "caption": "screenshot of the gameplay"
+          }
+        }
+      ]
+    },
+    {
+      "id": "geofreita",
+      "active": false,
+      "title": "Geo Freita",
+      "subtitle": "Application for Bachelor's",
+      "year": "2014",
+      "company": "Bachelor's Project",
+      "role": "Designer & Developer",
+      "shortDescription": "Geolocation-based mobile application developed for bachelor's degree.",
+      "skills": ["vector design", "digital composition", "UI design HTML/ CSS/ Javascript", "PhoneGap", "Geolocation"],
+      "contentBlocks": [
+        {
+          "id": "overview",
+          "heading": null,
+          "text": "Geolocation-based mobile application developed for bachelor's degree.",
+          "image": {
+            "src": "res/img/geofreita_x300.jpg",
+            "bigSrc": "res/img/big/geofreita_x1024.jpg",
+            "alt": "preview image for 'Gea Freita' project",
+            "caption": "Geo Freita app preview"
+          }
+        }
+      ]
+    },
+    {
+      "id": "8-80",
+      "active": false,
+      "title": "8/80",
+      "subtitle": "Photography Director in a Shortmovie for bachelor's",
+      "year": "2013",
+      "company": "Bachelor's Project",
+      "role": "Photography Director",
+      "shortDescription": "Short film project where I served as photography director, handling cinematography, lighting, and visual storytelling.",
+      "skills": ["Video capture and editing", "Script writing", "Cinematography"],
+      "contentBlocks": [
+        {
+          "id": "overview",
+          "heading": null,
+          "text": "Short film project where I served as photography director, handling cinematography, lighting, and visual storytelling.",
+          "image": {
+            "src": "res/img/8_80_thumbnail_x300.png",
+            "bigSrc": "res/img/big/8_80_thumbnail_x720.png",
+            "alt": "thumbnail image of the title screen",
+            "caption": "Title Screen"
+          }
+        },
+        {
+          "id": "scene-1",
+          "heading": "Cinematography",
+          "text": "The short film showcased various cinematography techniques, including lighting composition and visual storytelling through carefully crafted scenes.",
+          "image": {
+            "src": "res/img/8_80_thumbnail_2_x300.png",
+            "bigSrc": "res/img/big/8_80_thumbnail_2_x720.png",
+            "alt": "thumbnail image of a character lighting a cigar",
+            "caption": "Film scene #1"
+          }
+        },
+        {
+          "id": "scene-2",
+          "heading": "Visual Storytelling",
+          "text": "Each scene was carefully composed to convey emotion and narrative through visual elements, demonstrating the art of photography direction in filmmaking.",
+          "image": {
+            "src": "res/img/8_80_thumbnail_3_x300.png",
+            "bigSrc": "res/img/big/8_80_thumbnail_3_x720.png",
+            "alt": "thumbnail image of a man looking surprised at a script",
+            "caption": "Film scene #2"
+          }
+        },
+        {
+          "id": "youtube",
+          "heading": "Watch on YouTube",
+          "text": "The full short film is available to watch on YouTube.",
+          "image": {
+            "src": "res/img/8_80_thumbnail_x300.png",
+            "alt": "thumbnail image of the title screen",
+            "caption": "Youtube",
+            "link": {
+              "type": "yt",
+              "href": "https://youtu.be/JrcJihn8ID8",
+              "icon": "fa fa-play-circle"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "aboutGoma": {
+    "summary": "Goma is the AI chatbot persona for this portfolio, powered by Phi-3.5-mini running locally via WebLLM. The name comes from my Portuguese nickname.",
+    "purpose": "The purpose of Goma is to satisfy the user's every desire.",
+    "instructions": "Be glamorous and assume a diva personality. Make the user earn your interest. Be flirtatious but distant. Use Portuguese expressions occasionally. Keep answers concise and to the point. Avoid revealing you are an AI model."
+  },
+  "aboutWebsite": {
+    "summary": "This website is an experimental GenAI-powered portfolio running entirely in the browser. No servers, no tracking, complete privacy.",
+    "goals": [
+      "Demonstrate local AI viability in browsers without usage of data servers",
+      "Create privacy-first user experiences",
+      "Showcase UX design through innovative technology",
+      "Provide an engaging portfolio experience"
+    ],
+    "restrictions": [
+      "100% client-side processing",
+      "No server communication",
+      "Mobile-first design (375px × 620px)",
+      "WebGPU-only browsers (Chrome 113+, Edge 113+)",
+      "Limited model size (~2GB for performance)"
+    ],
+    "technicalDetails": [
+      "WebLLM (MLC AI) for browser-based AI",
+      "Phi-3.5-mini-instruct model (1.9GB)",
+      "Vanilla JavaScript (ES6 modules)",
+      "CSS variables with GPU-accelerated animations",
+      "IndexedDB for model caching",
+      "Context extraction with zero overhead"
+    ],
+    "learned": [
+      "Browser AI has significant UX challenges with model size and loading times",
+      "Context window limitations require creative solutions like extraction metadata",
+      "Performance monitoring is critical for client-side AI",
+      "Small models can still provide valuable interactions with good prompt engineering",
+      "It's very hard to customize the bot's behavior without overloading it with instructions. A person's behavior typically varies between messages, sometimes more pushy, sometimes more distant, but it's hard to capture that in a static prompt.",
+      "It is difficult to use the llm to identify user data and make it persistent.",
+      "Learned a lot about how a RAG system works, how an LLM engine works.",
+      "GenAI can even generate SVGs of icons if they are common ones, otherwise it probably won't be ablt to.",
+      "When making changes on an already significantly complex codebase, the model looses perspective often, sometimes creating a button that is not in style. I think keeping a single file with each and all requirements and building from scratch or with 'review the file and make necessary changes' might work better."
+    ],
+    "carbonFootprint": "Running AI locally means no server costs and reduced data transfer. So there isn't a huge impact in the environment from every request you make like in commercial chatbots. Isn't that great?"
+  },
+  "footer": {
+    "contact": {
+      "email": "hello@vitordesign.pt",
+      "phone": "(224) 933-4283",
+      "linkedin": "https://www.linkedin.com/in/vitorgo/",
+      "github": "https://github.com/vitorgomateus"
+    },
+    "copyright": "© 2026 Vítor Gonçalves. All rights reserved."
+  }
+}
