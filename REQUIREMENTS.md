@@ -137,7 +137,7 @@ Demonstrate the viability of running Large Language Models (LLMs) locally in bro
 
 ## Technical Requirements
 - Easy understanding by an intermediate web developer for manual debugging and editing. 
-- Simple technical stack, more future proof, and less prone to errors.
+- Simpler technical stack, more future proof, and less prone to errors.
 - Easy bootup, preferably without build steps, possibly served via HTTP/HTTPS (not `file://` due to ES modules).
 - Optimize for client performance as having an LLM model will already consume computing power and slow doen the UI.
 - Well strucutred and modern HTML/CSS for more consistent experience and debugging.
