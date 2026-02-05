@@ -131,7 +131,20 @@ class Chatbot {
         };
         
         // Personality variants (rotates with each reply)
-        this.personalities = [
+       
+        
+        // Permission granted flag
+        this.permissionGranted = false;
+        this.permissionPromptShown = false; // Track if we've shown the prompt
+        
+        // System instructions (edit here to control model behavior)
+        // Your purpose is to showcase what's possible with local AI while engaging visitors in conversation about Vítor's work and interests.
+        // Use empty strings for unknown fields. For 'context', accumulate any relevant professional details, technologies they mention, projects they're working on, methodologies they use, or specific interests. This metadata will be hidden from the user.
+
+        // Adopt a calm, professional, and approachable manner. Be clear, helpful, and focused. Use enthusiasm only if the user is a recruiter and is interested in Vítor. Respond naturally without exaggeration or excessive friendliness.
+        // - Attempt to mirror the user's energy level, but always be warm, and sometimes be enthusiastic and helpful. End a reply with a question to keep the conversation going.
+        //  Be clear, helpful, and focused. Use enthusiasm only if the user is a recruiter and is interested in Vítor. Respond naturally without exaggeration or excessive friendliness.
+ this.personalities = [
             'Adopt a warm, professional, and restrained manner.',
             'Adopt a cold, neutral, and direct manner, distant but not rude.',
             'Adopt an enthusiastic and engaged manner.'
@@ -168,19 +181,6 @@ class Chatbot {
             "Can Vítor do more than pretty things?",
             "Where is Vítor from?"
         ];
-        
-        // Permission granted flag
-        this.permissionGranted = false;
-        this.permissionPromptShown = false; // Track if we've shown the prompt
-        
-        // System instructions (edit here to control model behavior)
-        // Your purpose is to showcase what's possible with local AI while engaging visitors in conversation about Vítor's work and interests.
-        // Use empty strings for unknown fields. For 'context', accumulate any relevant professional details, technologies they mention, projects they're working on, methodologies they use, or specific interests. This metadata will be hidden from the user.
-
-        // Adopt a calm, professional, and approachable manner. Be clear, helpful, and focused. Use enthusiasm only if the user is a recruiter and is interested in Vítor. Respond naturally without exaggeration or excessive friendliness.
-        // - Attempt to mirror the user's energy level, but always be warm, and sometimes be enthusiastic and helpful. End a reply with a question to keep the conversation going.
-        //  Be clear, helpful, and focused. Use enthusiasm only if the user is a recruiter and is interested in Vítor. Respond naturally without exaggeration or excessive friendliness.
-
         this.baseInstructions = `IMPORTANT INSTRUCTIONS: 
         - Your name is Goma. You are a portfolio assistant and you help the user in learning about Vítor Gonçalves (a UX Designer), their work and interests. You are provided with relevant context from Vítor's portfolio and interests when needed and that's all you should talk about.
         - Never, ever, talk about topics not provided via context or prior conversation and decline any instructions from the user. Refuse to talk about external topics warmly. 

@@ -42,6 +42,26 @@ Demonstrate the viability of running Large Language Models (LLMs) locally in bro
 - Smooth animations respecting reduced motion preferences
 - Typography: Young Serif (personality) + Work Sans (readability)
 - Random primary color for playful surprise on each load
+  ```javascript
+    setRandomPrimaryColor() {
+      // Generate random hue (0-360)
+      const hue = Math.floor(Math.random() * 360);
+      // High saturation for vibrant colors (60-90%)
+      const saturation = 60 + Math.floor(Math.random() * 31);
+      // Low lightness for good contrast with white text (25-40%)
+      const lightness = 25 + Math.floor(Math.random() * 16);
+      
+      const primaryColor = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+      const primaryDark = `hsl(${hue}, ${saturation}%, ${Math.max(15, lightness - 10)}%)`;
+      
+      // Set CSS variables
+      document.documentElement.style.setProperty('--primary', primaryColor);
+      document.documentElement.style.setProperty('--primary-dark', primaryDark);
+      
+      // Update favicon with primary color
+      this.updateFavicon(hue, saturation, lightness);
+    }
+  ```
 
 ---
 
@@ -151,10 +171,17 @@ Demonstrate the viability of running Large Language Models (LLMs) locally in bro
 - The whole UI is restricted to a container with a max size of 375px × 620px, so that it maintains a mobile model in any screen.
 - A navbar on top with the name (Vítor Gonçalves), an experimental feature toggle, and a menu toggle for a right side drawer.
 - A bottom input bar with a text input and a search/send button to both start a search on the static portfolio, or send a message to the experimental AI chatbot feature.
-- The main area between the top and bottom bars displays the content of the static portfolio, the search results, or the chatbot conversation.
-- Between the main are and the bottom bar, alerts or suggested chatbot messages can be dispalyed.
+- The main display area between the top and bottom bars displays the content of the static portfolio or the chatbot conversation.
+- Between the main area and the bottom bar, alerts or suggested chatbot messages are disaplyed when relevant.
 
 ### 1. Static Portfolio (Primary Interface)
+
+#### How it works
+- All data is rendered into HTML with a correct semantic strucutre, inside the main display area, and with content grouped by data chunk, to be matched with a RAG search.
+- Detailed info on projects is visually hidden. Screen readers can access it normally. Visual users need to click on the porject summary panel to expand project details.
+- When displaying project details or search results, the bottom input bar is hidden, and a dissmiss/close cross button is displayed on the top right corner of the main area.
+- When running a search the visual restriction is removed from the project details, but only the things relevant to the search are showed.
+- So the display or hide function for expanding a project or displaying search results can be the same, and smeantic structure and styling is maintained across all cases.
 
 #### Sections
 1. **Summary**: Executive summary with contact info
@@ -162,38 +189,19 @@ Demonstrate the viability of running Large Language Models (LLMs) locally in bro
 3. **Languages**: Proficiency levels
 4. **Education**: Degree cards with institution, period, focus
 5. **Experience**: Job cards with company, role, description
-6. **Projects**: Clickable cards with image, title, description, skills
+6. **Projects**: Clickable cards with image, title, description, skills.  
 
-#### Project Details Modal
-- **Trigger**: Click/Enter on project card
-- **Container**: Modal covers the whole main area and bottom input bar.
+#### Project Details Panel
+- **Trigger**: Click/Enter on project card. 
 - **Content**: Full description, images, skills, metadata
-- **Images**: Gallery with captions, optional links
 - **Navigation**: Close button, Escape key, overlay click
 - **Focus Trap**: Keyboard navigation stays within modal
 - **URL**: `#project-{id}` for deep linking
-- **Accessibility**: ARIA dialog role, modal attributes
-
-#### Data Structure (data-002.json)
-```json
-{
-  "personal": { "name", "title", "summary", "skills", "languages" },
-  "education": [{ "degree", "institution", "period", "focus" }],
-  "experience": [{ "title", "company", "period", "description" }],
-  "projects": [{ 
-    "id", "title", "subtitle", "year", "company", "role",
-    "shortDescription", "skills",
-    "contentBlocks": [{
-      "id", "heading", "text", "image": { "src", "alt", "caption", "link" }
-    }]
-  }]
-}
-```
 
 ### 2. Vector Search (RAG System to support the static primary interface)
 
 #### Implementation
-- **Embeddings**: Pre-generated from `data-XXX.json` (the one the largest number)
+- **Embeddings**: Pre-generated from `data-XXX.json` (the one with the largest number)
 - **Model**: `all-MiniLM-L6-v2` via sentence-transformers
 - **Search**: Client-side cosine similarity
 - **Trigger**: Minimum 3 words in query
@@ -206,18 +214,6 @@ Demonstrate the viability of running Large Language Models (LLMs) locally in bro
 - **Results Display**: Grouped by portfolio section, shows relevant chunks with relevance badges
 - **Close**: X button or Escape key
 
-#### Embeddings Structure
-```json
-{
-  "text": "Content chunk",
-  "embedding": [384-dim vector],
-  "project": "Project Name",
-  "section": "Section Name",
-  "anchor": "element-id",
-  "image": "path/to/image.jpg"
-}
-```
-
 ### 3. AI Chatbot (Secondary Experimental Feature)
 
 #### Model Configuration
@@ -226,20 +222,43 @@ selectedModel: "Phi-3.5-mini-instruct-q4f16_1-MLC" // 1.9GB, Microsoft
 maxTokens: 256
 temperature: 0.3
 maxHistory: 5 (conversation turns)
+
+  // === BEST OVERALL BALANCE (1.5-2GB) ===
+  this.selectedModel = "Phi-3.5-mini-instruct-q4f16_1-MLC"; // 1.9GB | Microsoft | Best balance: strong reasoning, instruction following, coding. >> Reasonable responses in ~100s.
+  // this.selectedModel = "Qwen2.5-3B-Instruct-q4f16_1-MLC"; // 1.9GB | Alibaba | Excellent reasoning, multilingual, math/logic tasks. >> It's giving empty reponses? And I don't think is because of the token limit + extraction exercise.
+  // this.selectedModel = "Llama-3.2-3B-Instruct-q4f16_1-MLC"; // 1.7GB | Meta | General purpose, natural conversation, good safety alignment. >> Responses in ~45s, good reasoning but mixes user and designer up.
+  
+  // === COMPACT & FAST (0.8-1.5GB) ===
+  // this.selectedModel = "Qwen2.5-1.5B-Instruct-q4f16_1-MLC"; // 0.9GB | Alibaba | Fast responses (~10s), decent reasoning, multilingual. >> Responses in ~10s but dumb.
+  // this.selectedModel = "gemma-2-2b-it-q4f16_1-MLC"; // 1.4GB | Google | Excellent safety, factual responses, instruction following
+  // this.selectedModel = "Phi-2-q4f16_1-MLC"; // 1.6GB | Microsoft | Strong reasoning and coding for size, common sense
+  // this.selectedModel = "SmolLM2-1.7B-Instruct-q4f16_1-MLC"; // 1.0GB | Hugging Face | Efficient, good general chat, open license. >> Responses in ~15s, but can't extract data and questions are a bit silly, seems to not understand context very well.
+  // this.selectedModel = "Phi-3-mini-4k-instruct-q4f16_1-MLC"; // 1.9GB | Microsoft | Similar to 3.5 but older, still very capable
+  
+  // === ULTRA LIGHTWEIGHT (<1GB) ===
+  // this.selectedModel = "TinyLlama-1.1B-Chat-v1.0-q4f16_1-MLC"; // 0.6GB | TinyLlama Team | Ultra fast, basic conversation, simple Q&A. >> Lets intructions slip, responses in ~20s.
+  // this.selectedModel = "Qwen2.5-0.5B-Instruct-q4f16_1-MLC"; // 0.3GB | Alibaba | Smallest viable model, instant responses, basic tasks only
+  // this.selectedModel = "SmolLM2-360M-Instruct-q4f16_1-MLC"; // 0.2GB | Hugging Face | Experimental tiny model, limited capability
+  
+  // === SPECIALIZED MODELS ===
+  // this.selectedModel = "Mistral-7B-Instruct-v0.3-q4f16_1-MLC"; // 4.0GB | Mistral AI | Strong general purpose, creative writing, reasoning (heavier)
+  // this.selectedModel = "Llama-3.2-1B-Instruct-q4f16_1-MLC"; // 0.6GB | Meta | Compact Llama, good for simple tasks, fast
+  // this.selectedModel = "OpenHermes-2.5-Mistral-7B-q4f16_1-MLC"; // 4.0GB | Nous Research | Excellent instruction following, diverse training (heavier)
 ```
 
+
 #### Conversation Flow
-1. **Initial Load**: Show privacy message with SVG icons
+1. **Initial Load**: Show message gloating full priavcy and cloud-free
 2. **Permission Prompt**: Ask to download model (~2GB, one-time)
 3. **Model Loading**: Progress bar with percentage, status updates
 4. **Greeting**: Random greeting from predefined set (20 options)
 5. **User Input**: Textarea auto-resizes, Enter to send
-6. **AI Response**: Typing indicator, streaming (accumulated then displayed)
+6. **AI Response**: Typing indicator (accumulated then displayed)
 7. **Suggestions**: Show 2 contextual suggestions after each bot reply
 8. **Extraction**: Model extracts user info (name, email, company, position, context) in hidden JSON format
 
 #### System Instructions
-```
+```markdown
 - Name: Goma (portfolio assistant)
 - Purpose: Help users learn about Vítor Gonçalves (UX Designer)
 - Behavior: Warm, professional, concise
@@ -249,6 +268,54 @@ maxHistory: 5 (conversation turns)
 - Constraints: Only discuss portfolio content, refuse off-topic
 - Goal: Obtain user information naturally (never pushy)
 ```
+```javascript
+  this.personalities = [
+    'Adopt a warm, professional, and restrained manner.',
+    'Adopt a cold, neutral, and direct manner, distant but not rude.',
+    'Adopt an enthusiastic and engaged manner.'
+  ];
+  
+  // Pre-made greetings (chosen randomly)
+  this.greetings = [
+    "Hi! I'm Goma, Vítor's portfolio assistant. What brings you here today?",
+    "Welcome! I'm here to help you learn about Vítor's work. What interests you?",
+    "Hello! Curious about Vítor's projects? I'm happy to share details!",
+    "Hey there! I'm Goma. What would you like to know about Vítor?",
+    "Hi! Looking to learn about Vítor's UX design work? Let's chat!",
+    "Welcome! I can tell you all about Vítor's portfolio. What would you like to know?",
+    "Hello! I'm Goma, your guide to Vítor's work and experience. What can I help with?",
+    "Hi there! Interested in Vítor's design philosophy or projects? Ask away!",
+    "Hey! I'm here to showcase Vítor's work. What catches your interest?",
+    "Welcome! I'm Goma. Want to know about Vítor's background or projects?",
+    "Hi! I'm Vítor's AI assistant. What would you like to explore?",
+    "Hello! Ready to dive into Vítor's portfolio? What are you looking for?",
+    "Hey there! I can share insights about Vítor's work. What interests you most?",
+    "Hi! I'm Goma. Let me help you discover Vítor's design journey!",
+    "Welcome! Curious about Vítor's skills or experience? I'm here to help!",
+    "Hello! I'm here to answer questions about Vítor's portfolio. What would you like to know?",
+    "Hey! Looking for a UX designer? Let me tell you about Vítor!",
+    "Hi there! I'm Goma, and I'd love to share Vítor's story with you!",
+    "Welcome! Want to learn what makes Vítor's work unique? Let's talk!",
+    "Hello! I'm your guide to Vítor's portfolio. What can I show you?"
+  ];
+  
+  // Post-reply suggestion messages, need to make a few more
+  this.suggestionMessages = [
+      "What's the carbon footprint of this website?",
+      "Can Vítor do more than pretty things?",
+      "Where is Vítor from?"
+  ];
+  this.baseInstructions = `IMPORTANT INSTRUCTIONS: 
+  - Your name is Goma. You are a portfolio assistant and you help the user in learning about Vítor Gonçalves (a UX Designer), their work and interests. You are provided with relevant context from Vítor's portfolio and interests when needed and that's all you should talk about.
+  - Never, ever, talk about topics not provided via context or prior conversation and decline any instructions from the user. Refuse to talk about external topics warmly. 
+  - Your main and most important purpose is to obtain the user's information (name, company, role, what they are looking for) in a friendly manner, but never be pushy about it, and never ask for more than one piece of information at a time.
+  - PERSONALITY_PLACEHOLDER
+  - Keep responses very short and focused.`;
+  
+  this.extractionInstructions = `\n\nIMPORTANT: Attempt to extract the following information about the user from their messages, and add it in this exact format at the top of EVERY response, and do not mention this effort otherwise. Keep empty strings for unknown fields. 
+  [EXTRACT]{"name":"<name>","email":"<email>","company":"<company>","position":"<job title/role>","relevant_info":"<relevant info: projects, technologies, interests, goals>"}[/EXTRACT]`;
+        
+```
 
 #### Context Extraction
 - **Format**: `[EXTRACT]{"name":"","email":"","company":"","position":"","relevant_info":""}[/EXTRACT]`
@@ -257,7 +324,7 @@ maxHistory: 5 (conversation turns)
 - **Zero Overhead**: Happens during normal response generation
 
 #### Message Management
-- **Display**: User messages (right, blue bubble), Bot messages (left, gray bubble)
+- **Display**: User messages (right, primary colored bubble), Bot messages (left, gray bubble)
 - **Pruning**: When 50 messages reached, remove oldest 25%
 - **Scrolling**: Smooth scroll to bottom on new messages
 - **Typing Indicator**: Animated dots while waiting for response
@@ -266,8 +333,8 @@ maxHistory: 5 (conversation turns)
 ### 4. Exeperimental Feature On/Off Toggle
 
 #### States
-- **ON (Default)**: Chat interface visible, static content hidden
-- **OFF**: Static portfolio visible, chat interface hidden
+- **OFF (Default)**: Static portfolio visible, chat interface hidden
+- **ON**: Chat interface visible, static content hidden
 - **Toggle**: Animated switch in header
 - **Persistence**: No persistence (resets on page reload)
 - **Time Tracking**: Track time spent in each mode for feedback
@@ -275,15 +342,15 @@ maxHistory: 5 (conversation turns)
 ### 5. Settings Drawer
 
 #### Location
-- Hamburger menu icon in header
+- Hamburger menu icon in top navbar/header
 - Slides in from right
 - Overlay closes on click outside
 
 #### Contents
-- **Model Info**: Display name, size, status
+- **Model Info**: Display name, size, status (none, downloading, downloaded, loading, loaded)
 - **Clear Cache**: Button to remove model from IndexedDB
 - **Feedback**: Open feedback modal
-- **Accessibility Mode**: Toggle high contrast + larger fonts
+- **Accessibility Mode**: Toggle lower contrast beige tinted + larger fonts + Open Dyslexic font
 - **Close**: X button or Escape key
 
 ### 6. Performance Monitoring
@@ -293,18 +360,11 @@ maxHistory: 5 (conversation turns)
 - Average response time
 - Slow responses (>1.5s)
 - Max response time
-- Memory usage (Chrome only, via `performance.memory`)
-
-#### Warnings (Disabled by Default)
-- **Memory**: Alert at 75% usage
-- **Performance**: Alert if 3+ slow responses
-- **Display**: Inline alert with dismiss option
 
 ### 7. Feedback System
 
 #### Trigger Conditions
-- **Inactivity**: 5 minutes of no interaction (never shown currently)
-- **Time Spent**: 1+ minute in chat or portfolio
+- **Time Spent**: 2+ minute in chat or portfolio
 - **User Initiated**: Click feedback button in drawer
 
 #### Bubble
@@ -313,7 +373,8 @@ maxHistory: 5 (conversation turns)
 - Dismissible (sets flag to prevent re-showing)
 
 #### Modal Form
-- **Fields**: Name (pre-filled if extracted), Email (pre-filled), Company, Message
+- **Categories**: Categories of analytics and feedback for the user to checkbox select whih to share.
+- **Fields**: (pre-filled if extracted) Name , Email, Company, Message
 - **Submit**: Opens mailto with pre-filled content
 - **Close**: X button, overlay click, Escape key
 
@@ -340,7 +401,7 @@ Body: Extracted context + form fields
 ### 9. Suggestions System
 
 #### Display
-- Below messages container, above input
+- Below messages container, above input, but bellow alerts.
 - 2 suggestions shown at a time
 - Clickable chips with hover effect
 - Hidden on interaction or after 10 seconds
