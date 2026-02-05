@@ -37,7 +37,7 @@ Demonstrate the viability of running Large Language Models (LLMs) locally in bro
 - Simplified interface for small screens
 - Touch-friendly targets (minimum 44×44px)
 
-#### Aesthetic Excellence
+#### Aesthetic Playfulness 
 - Clean, modern, engaging visual design
 - Smooth animations respecting reduced motion preferences
 - Typography: Young Serif (personality) + Work Sans (readability)
@@ -619,69 +619,7 @@ filter: brightness(1.1)
 
 ---
 
-## Testing Checklist
-
-### Functionality
-- [ ] Model downloads and loads successfully
-- [ ] Chat conversation flows naturally
-- [ ] Message extraction works (check console logs)
-- [ ] Vector search returns relevant results
-- [ ] Project modals open and close properly
-- [ ] AI toggle switches between modes
-- [ ] Settings drawer opens/closes
-- [ ] Feedback form submits via mailto
-- [ ] Alert system displays and dismisses
-- [ ] Suggestions appear and work on click
-
-### Accessibility
-- [ ] All images have alt text
-- [ ] Color contrast passes WCAG AA
-- [ ] Keyboard navigation works everywhere
-- [ ] Focus indicators visible
-- [ ] Screen reader announces content correctly
-- [ ] Modals trap focus properly
-- [ ] Skip links function
-- [ ] ARIA roles and labels present
-- [ ] No keyboard traps
-- [ ] Reduced motion respected
-
-### Performance
-- [ ] Initial load time acceptable
-- [ ] Model loads from cache on return visit
-- [ ] Memory usage stays under threshold
-- [ ] Response times < 2 seconds
-- [ ] Message pruning prevents bloat
-- [ ] Animations smooth (60fps)
-- [ ] No layout shifts
-- [ ] Images lazy load
-
-### Cross-Browser
-- [ ] Chrome 113+ works
-- [ ] Edge 113+ works
-- [ ] Unsupported browsers show error
-- [ ] WebGPU detection works
-- [ ] IndexedDB caching works
-
-### Responsive (Mobile Only)
-- [ ] 375px width displays correctly
-- [ ] Touch targets minimum 44×44px
-- [ ] Scrolling smooth
-- [ ] No horizontal overflow
-- [ ] Text readable without zoom
-
----
-
 ## Deployment Requirements
-
-### Hosting
-- **Requirements**: HTTP/HTTPS server (static hosting)
-- **Examples**: GitHub Pages, Netlify, Vercel, nginx
-- **Not Supported**: file:// protocol (ES modules don't work)
-
-### Build Process
-- **None Required**: No compilation, bundling, or transpilation
-- **Development**: `python -m http.server 8000`
-- **Production**: Deploy files as-is to static host
 
 ### Environment
 - No environment variables needed
@@ -689,27 +627,9 @@ filter: brightness(1.1)
 - No API keys or secrets
 - All configuration in code (model selection, tuning variables)
 
-### Pre-Launch
-1. Generate embeddings: `python generate_embeddings.py`
-2. Test in Chrome 113+ and Edge 113+
-3. Verify all links work (contact email, LinkedIn, etc.)
-4. Check all images load correctly
-5. Test model download and caching
-6. Verify data-002.json content accuracy
-
 ---
 
 ## Future Enhancements (Not Required)
-
-### Potential Features
-- Conversation history persistence (localStorage or IndexedDB)
-- Multiple language support (i18n)
-- Dark mode toggle
-- Model selection dropdown (let user choose)
-- RAG integration with chat (currently search-only)
-- Export conversation as PDF
-- Voice input/output
-- Progressive Web App (PWA) features
 
 ### Known Limitations
 - WebGPU support limited to Chrome/Edge

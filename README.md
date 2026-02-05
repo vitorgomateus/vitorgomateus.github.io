@@ -18,12 +18,6 @@ Demonstrate the viability of running LLMs locally in the browser with complete p
 - No external API calls
 - No conversation persistence
 
-## Quick Start
-```bash
-python -m http.server 8000
-# Open http://localhost:8000
-```
-
 First load will download the model (~1.9GB). Subsequent loads are instant.
 
 ## Technology
@@ -124,7 +118,7 @@ This creates a new `embeddings.json` with updated vector representations.
 
 ## Features
 - 100% local AI processing
-- Performance monitoring with warnings
+- Performance monitoring
 - Experimental feature on/off toggle
 - Accessibility mode
 - Cache management
@@ -133,9 +127,6 @@ This creates a new `embeddings.json` with updated vector representations.
 - WebGPU support limited (Chrome/Edge only)
 - Large initial download (1.9GB)
 - No conversation history persistence
-
-## Development
-See `logs/` folder for detailed development notes, abandoned ideas, and changelog.
 
 ## Credits
 - **Built by:** Vítor Gonçalves
