@@ -125,7 +125,7 @@ This creates a new `embeddings.json` with updated vector representations.
 ## Features
 - 100% local AI processing
 - Performance monitoring with warnings
-- AI on/off toggle
+- Experimental feature on/off toggle
 - Accessibility mode
 - Cache management
 

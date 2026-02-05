@@ -402,24 +402,18 @@ Body: Extracted context + form fields
 
 #### Display
 - Below messages container, above input, but bellow alerts.
-- 2 suggestions shown at a time
-- Clickable chips with hover effect
-- Hidden on interaction or after 10 seconds
-
-#### Content
-- Pre-defined messages (3 rotating options)
-- "What's the carbon footprint of this website?"
-- "Can Vítor do more than pretty things?"
-- "Where is Vítor from?"
+- 2 suggestions shown at most at a time
+- Clickable buttons identical but smaller than sent messages.
+- Also where the reply to the permission request is offered.
 
 ---
 
 ## Visual Design Specifications
 
 ### Color System
-```css
---primary: hsl(random, 60-90%, 25-40%) /* Generated on load */
---primary-dark: hsl(random, 60-90%, 15-30%)
+```
+--primary: hsl(random, 60-90%, 25-40%); /* Generated on load */
+--primary-dark: hsl(random, 60-90%, 15-30%);
 --background: #ffffff
 --surface: #f8f9fa
 --text: #1a1a1a
@@ -434,64 +428,11 @@ Body: Extracted context + form fields
 ```css
 --font-primary: 'Young Serif', serif /* Headers, personality */
 --font-body: 'Work Sans', sans-serif /* Body, readability */
-
-/* Scale */
-h1: 2rem / 2.5rem (mobile / desktop)
-h2: 1.5rem
-h3: 1.25rem
-h4: 1.1rem
-body: 1rem
-small: 0.875rem
-```
-
-### Spacing System
-```css
-/* 8px base unit */
---space-xs: 0.5rem  /* 8px */
---space-sm: 0.75rem /* 12px */
---space-md: 1rem    /* 16px */
---space-lg: 1.5rem  /* 24px */
---space-xl: 2rem    /* 32px */
---space-2xl: 3rem   /* 48px */
-```
-
-### Layout
-```css
-/* Container */
-max-width: 375px (mobile-first, fixed)
-height: 620px (chat view)
-height: auto (portfolio view)
-
-/* Chat bubbles */
-max-width: 80%
-padding: 0.75rem 1rem
-border-radius: 1rem
-
-/* Cards */
-border-radius: 0.75rem
-padding: 1.5rem
-box-shadow: 0 1px 3px rgba(0,0,0,0.1)
-```
-
-### Animations
-```css
-/* All transitions respect prefers-reduced-motion */
-transition-duration: 0.2s (standard)
-transition-duration: 0.3s (modals, drawers)
-transition-timing-function: ease (default)
-
-/* GPU-accelerated only */
-transform: translateX() translateY()
-opacity: 0-1
-
-/* No animations */
-width, height, margin, padding (use transform instead)
 ```
 
 ### Icons
 - **Source**: Font Awesome 5 (via CDN or local)
 - **Alternative**: Inline SVG for custom icons
-- **Size**: 20-24px (standard), 16px (small), 32px (large)
 
 ### Buttons
 ```css
