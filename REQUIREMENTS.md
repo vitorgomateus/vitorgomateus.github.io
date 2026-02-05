@@ -1,4 +1,4 @@
-# Project Requirements: Local AI Portfolio Website
+# Project Requirements: Portfolio Website with Local AI experimental feautre
 
 ## Project Overview
 
@@ -16,6 +16,34 @@ Demonstrate the viability of running Large Language Models (LLMs) locally in bro
 ---
 
 ## Design Principles
+
+### Main Design Principles
+
+#### Privacy First
+- No analytics, tracking, or external API calls
+- All data processing happens locally
+- No conversation persistence beyond session
+- Clear communication about privacy benefits
+
+#### Performance Critical
+- Aggressive message pruning to prevent memory bloat
+- Performance monitoring with warnings
+- Graceful degradation on slower devices
+- GPU-accelerated animations only
+
+#### Mobile Only
+- Fixed dimensions (375px × 620px)
+- No responsive breakpoints
+- Simplified interface for small screens
+- Touch-friendly targets (minimum 44×44px)
+
+#### Aesthetic Excellence
+- Clean, modern, engaging visual design
+- Smooth animations respecting reduced motion preferences
+- Typography: Young Serif (personality) + Work Sans (readability)
+- Random primary color for playful surprise on each load
+
+---
 
 ### Usability Heuristics (Nielsen's 10)
 
@@ -107,34 +135,6 @@ Demonstrate the viability of running Large Language Models (LLMs) locally in bro
 - **Name, Role, Value**: All custom controls have proper ARIA
 - **Status Messages**: ARIA live regions for dynamic content updates
 
-### Additional Design Principles
-
-#### Privacy First
-- No analytics, tracking, or external API calls
-- All data processing happens locally
-- No conversation persistence beyond session
-- Clear communication about privacy benefits
-
-#### Performance Critical
-- Aggressive message pruning to prevent memory bloat
-- Performance monitoring with warnings
-- Graceful degradation on slower devices
-- GPU-accelerated animations only
-
-#### Mobile Only
-- Fixed dimensions (375px × 620px)
-- No responsive breakpoints
-- Simplified interface for small screens
-- Touch-friendly targets (minimum 44×44px)
-
-#### Aesthetic Excellence
-- Clean, modern, engaging visual design
-- Smooth animations respecting reduced motion preferences
-- Typography: Young Serif (personality) + Work Sans (readability)
-- Random primary color for playful surprise on each load
-
----
-
 ## Technical Requirements
 - Easy understanding by an intermediate web developer for manual debugging and editing. 
 - Simpler technical stack, more future proof, and less prone to errors.
@@ -147,7 +147,78 @@ Demonstrate the viability of running Large Language Models (LLMs) locally in bro
 
 ## Feature Specifications
 
-### 1. AI Chatbot (Secondary Experimental Feature)
+### 0. UI
+- The whole UI is restricted to a container with a max size of 375px × 620px, so that it maintains a mobile model in any screen.
+- A navbar on top with the name (Vítor Gonçalves), an experimental feature toggle, and a menu toggle for a right side drawer.
+- A bottom input bar with a text input and a search/send button to both start a search on the static portfolio, or send a message to the experimental AI chatbot feature.
+- The main area between the top and bottom bars displays the content of the static portfolio, the search results, or the chatbot conversation.
+- Between the main are and the bottom bar, alerts or suggested chatbot messages can be dispalyed.
+
+### 1. Static Portfolio (Primary Interface)
+
+#### Sections
+1. **Summary**: Executive summary with contact info
+2. **Skills**: 3 skill categories with tools/technologies
+3. **Languages**: Proficiency levels
+4. **Education**: Degree cards with institution, period, focus
+5. **Experience**: Job cards with company, role, description
+6. **Projects**: Clickable cards with image, title, description, skills
+
+#### Project Details Modal
+- **Trigger**: Click/Enter on project card
+- **Container**: Modal covers the whole main area and bottom input bar.
+- **Content**: Full description, images, skills, metadata
+- **Images**: Gallery with captions, optional links
+- **Navigation**: Close button, Escape key, overlay click
+- **Focus Trap**: Keyboard navigation stays within modal
+- **URL**: `#project-{id}` for deep linking
+- **Accessibility**: ARIA dialog role, modal attributes
+
+#### Data Structure (data-002.json)
+```json
+{
+  "personal": { "name", "title", "summary", "skills", "languages" },
+  "education": [{ "degree", "institution", "period", "focus" }],
+  "experience": [{ "title", "company", "period", "description" }],
+  "projects": [{ 
+    "id", "title", "subtitle", "year", "company", "role",
+    "shortDescription", "skills",
+    "contentBlocks": [{
+      "id", "heading", "text", "image": { "src", "alt", "caption", "link" }
+    }]
+  }]
+}
+```
+
+### 2. Vector Search (RAG System to support the static primary interface)
+
+#### Implementation
+- **Embeddings**: Pre-generated from `data-XXX.json` (the one the largest number)
+- **Model**: `all-MiniLM-L6-v2` via sentence-transformers
+- **Search**: Client-side cosine similarity
+- **Trigger**: Minimum 3 words in query
+- **Top-K**: 3 most relevant chunks
+- **Threshold**: 0.3 minimum similarity score
+
+#### Search UI
+- **Input**: Bottom input bar
+- **Button**: Magnifying glass icon, title="search"
+- **Results Display**: Grouped by portfolio section, shows relevant chunks with relevance badges
+- **Close**: X button or Escape key
+
+#### Embeddings Structure
+```json
+{
+  "text": "Content chunk",
+  "embedding": [384-dim vector],
+  "project": "Project Name",
+  "section": "Section Name",
+  "anchor": "element-id",
+  "image": "path/to/image.jpg"
+}
+```
+
+### 3. AI Chatbot (Secondary Experimental Feature)
 
 #### Model Configuration
 ```javascript
@@ -191,71 +262,8 @@ maxHistory: 5 (conversation turns)
 - **Scrolling**: Smooth scroll to bottom on new messages
 - **Typing Indicator**: Animated dots while waiting for response
 
-### 2. Vector Search (RAG System)
 
-#### Implementation
-- **Embeddings**: Pre-generated from `data-002.json` (384-dim vectors)
-- **Model**: `all-MiniLM-L6-v2` via sentence-transformers
-- **Search**: Client-side cosine similarity
-- **Trigger**: Minimum 3 words in query
-- **Top-K**: 3 most relevant chunks
-- **Threshold**: 0.3 minimum similarity score
-
-#### Search UI
-- **Input**: Search bar at top of static content
-- **Button**: Magnifying glass icon
-- **Results Display**: Grouped by project, shows relevant chunks with relevance badges
-- **Close**: X button or Escape key
-- **Integration**: Uses same inline display system as project details
-
-#### Embeddings Structure
-```json
-{
-  "text": "Content chunk",
-  "embedding": [384-dim vector],
-  "project": "Project Name",
-  "section": "Section Name",
-  "anchor": "element-id",
-  "image": "path/to/image.jpg"
-}
-```
-
-### 3. Static Portfolio (Primary Interface)
-
-#### Sections
-1. **Summary**: Executive summary with contact info
-2. **Skills**: 3 skill categories with tools/technologies
-3. **Languages**: Proficiency levels
-4. **Education**: Degree cards with institution, period, focus
-5. **Experience**: Job cards with company, role, description
-6. **Projects**: Clickable cards with image, title, description, skills
-
-#### Project Details Modal
-- **Trigger**: Click/Enter on project card
-- **Content**: Full description, images, skills, metadata
-- **Images**: Gallery with captions, optional links
-- **Navigation**: Close button, Escape key, overlay click
-- **Focus Trap**: Keyboard navigation stays within modal
-- **URL**: `#project-{id}` for deep linking
-- **Accessibility**: ARIA dialog role, modal attributes
-
-#### Data Structure (data-002.json)
-```json
-{
-  "personal": { "name", "title", "summary", "skills", "languages" },
-  "education": [{ "degree", "institution", "period", "focus" }],
-  "experience": [{ "title", "company", "period", "description" }],
-  "projects": [{ 
-    "id", "title", "subtitle", "year", "company", "role",
-    "shortDescription", "skills",
-    "contentBlocks": [{
-      "id", "heading", "text", "image": { "src", "alt", "caption", "link" }
-    }]
-  }]
-}
-```
-
-### 4. AI On/Off Toggle
+### 4. Exeperimental Feature On/Off Toggle
 
 #### States
 - **ON (Default)**: Chat interface visible, static content hidden
@@ -441,30 +449,6 @@ color: var(--text)
 /* Hover */
 transform: scale(0.98)
 filter: brightness(1.1)
-```
-
----
-
-## File Structure
-
-```
-/
-├── index.html              # Main HTML structure
-├── styles.css              # All CSS (no preprocessor)
-├── chatbot.js              # Main chatbot logic
-├── portfolio.js            # Portfolio rendering
-├── data-002.json           # Portfolio data (structured with contentBlocks)
-├── embeddings.json         # Pre-generated embeddings (not in repo)
-├── generate_embeddings.py  # Python script to generate embeddings
-├── README.md               # User-facing documentation
-├── REQUIREMENTS.md         # This file (project requirements)
-├── .github/
-│   └── copilot-instructions.md  # AI agent workflow instructions
-└── res/
-    ├── img/                # Images
-    ├── ico/                # Favicons
-    ├── fa/                 # Font Awesome
-    └── ...                 # Other assets
 ```
 
 ---
@@ -724,7 +708,6 @@ filter: brightness(1.1)
 - Export conversation as PDF
 - Voice input/output
 - Progressive Web App (PWA) features
-- Analytics (privacy-preserving, local only)
 
 ### Known Limitations
 - WebGPU support limited to Chrome/Edge

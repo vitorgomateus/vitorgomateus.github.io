@@ -1,9 +1,9 @@
-# Vítor Gonçalves - Local LLM Chatbot
+# Vítor Gonçalves - Portofolio and Local LLM Chatbot
 
 ## Status
 **🚧 Proof of Concept - Active Development**
 
-A fully client-side chatbot running WebLLM (Phi-3.5-mini) entirely in the browser using WebGPU.
+A fully client-side chatbot running WebLLM (Phi-3.5-mini) entirely in the browser using WebGPU. I would like for the Internet to be more conversational, more NLP, more chats, less screen, more audio or text. So I tried to make this website so that the data is better consumable by multiple types of clients.
 
 ## Goal
 Demonstrate the viability of running LLMs locally in the browser with complete privacy - zero server communication, all processing happens client-side.
@@ -11,12 +11,10 @@ Demonstrate the viability of running LLMs locally in the browser with complete p
 ## Requirements
 
 ### Technical
-- **Browser:** Chrome 113+ or Edge 113+ (WebGPU required)
-- **Server:** Must be served via HTTP (not `file://` due to ES modules)
-- **Resources:** ~2-4GB RAM, 1.9GB storage for cached model
+- Website must run from Github Pages
 
 ### Design Constraints
-- Mobile-only interface (375px × 620px)
+- Mobile-only interface (max 375px × 620px)
 - No external API calls
 - No conversation persistence
 
@@ -33,7 +31,7 @@ First load will download the model (~1.9GB). Subsequent loads are instant.
 - **Acceleration:** WebGPU
 - **Fonts:** Young Serif, Work Sans
 
-## How It Works
+## How the local chatbot Works
 
 ### Query Flow
 1. **User Input** → User sends a message through the chat interface
@@ -67,9 +65,10 @@ python generate_embeddings.py
 
 ### Data Structure: embeddings.json
 
-The `embeddings.json` file serves dual purposes:
-1. **LLM Context** - Provides relevant portfolio information to the chatbot during conversations
+The `embeddings.json` file serves these purposes:
+1. **Portfolio generation** - It powers a JS to generate the DOM for the main portfolio display.
 2. **Vector Search** - Powers the static portfolio search functionality using semantic similarity
+3. **LLM Context** - Provides relevant portfolio information to the chatbot during conversations
 
 **Structure**:
 ```json
