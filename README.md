@@ -1,12 +1,14 @@
-# Vítor Gonçalves - Portofolio and Local LLM Chatbot
+# Vítor Gonçalves - Portfolio
 
 ## Status
-**🚧 Proof of Concept - Active Development**
+**🚧 Active Development**
 
-A fully client-side chatbot running WebLLM (Phi-3.5-mini) entirely in the browser using WebGPU. I would like for the Internet to be more conversational, more NLP, more chats, less screen, more audio or text. So I tried to make this website so that the data is better consumable by multiple types of clients.
+A portfolio website showcasing UX design work, with an experimental AI chatbot feature that runs entirely in your browser. The chatbot (Goma) uses WebLLM (Phi-3.5-mini) and WebGPU for 100% client-side processing - zero server communication, complete privacy.
 
-## Goal
-Demonstrate the viability of running LLMs locally in the browser with complete privacy - zero server communication, all processing happens client-side.
+## Goals
+- **Primary**: Professional portfolio showcasing UX design expertise and projects
+- **Experimental**: Demonstrate viability of browser-based LLMs with local processing
+- **Innovation**: Conversational interface as alternative way to explore portfolio content
 
 ## Requirements
 
@@ -25,96 +27,25 @@ First load will download the model (~1.9GB). Subsequent loads are instant.
 - **Acceleration:** WebGPU
 - **Fonts:** Young Serif, Work Sans
 
-## How the local chatbot Works
+## How It Works
 
-### Query Flow
-1. **User Input** → User sends a message through the chat interface
-2. **Context Extraction** → Previous conversation messages are limited to last 10 turns to manage memory
-3. **User Info Injection** → Extracted user details (name, email, company, context) from earlier messages are added to system prompt for persistent context
-4. **RAG Augmentation** _(Future)_ → Semantic search against `embeddings.json` to find relevant portfolio data chunks
-5. **Model Query** → Conversation history + system instructions sent to local LLM via WebLLM
-6. **Streaming Response** → Model generates response with streaming enabled for better UX
-7. **Metadata Extraction** → Model appends `[EXTRACT]{...}[/EXTRACT]` JSON with user info (stripped before display)
-8. **Response Display** → Clean response shown to user, extracted info stored for future context
+### The Chatbot
+The AI assistant (named Goma) runs entirely in your browser using WebLLM and WebGPU:
+1. **First Visit**: Downloads the Phi-3.5-mini model (~1.9GB, one-time, cached locally)
+2. **Chat**: Your messages stay on your device - no server communication
+3. **Context**: The bot remembers the last 5 conversation turns and user details you share
+4. **Responses**: Generated locally, typically taking a few seconds
 
-### Context Management
-- **System Instructions**: Define model personality (Goma), behavior guidelines, and extraction format
-- **Conversation History**: Rolling window of last 10 messages to prevent memory bloat
-- **User Context**: Name, email, company, position, and interests persist across entire session
-- **Extraction Format**: Model embeds structured JSON in every response for zero-overhead data capture
+### Portfolio Search _(Coming Soon)_
+Semantic search will let you query portfolio content using natural language. Currently in development - data file needs updating before implementation.
 
-### RAG System _(In Development)_
-- **Embeddings**: 19 pre-generated chunks (summary, skills, education, experience, projects) with 384-dim vectors
-- **Model**: `all-MiniLM-L6-v2` via sentence-transformers
-- **Search**: Client-side cosine similarity to find top-k relevant chunks
-- **Injection**: Relevant context prepended to system prompt before model query
+### Privacy & Performance
+- **Zero Server Calls**: All processing happens in your browser
+- **Local Storage**: Model cached in IndexedDB for instant future loads
+- **Memory Management**: Old messages automatically pruned to prevent slowdown
+- **Browser Support**: Requires WebGPU (Chrome/Edge on desktop)
 
-Generate embeddings:
-```bash
-python -m venv venv
-.\venv\Scripts\Activate.ps1
-pip install sentence-transformers
-python generate_embeddings.py
-```
-
-### Data Structure: embeddings.json
-
-The `embeddings.json` file serves these purposes:
-1. **Portfolio generation** - It powers a JS to generate the DOM for the main portfolio display.
-2. **Vector Search** - Powers the static portfolio search functionality using semantic similarity
-3. **LLM Context** - Provides relevant portfolio information to the chatbot during conversations
-
-**Structure**:
-```json
-[
-  {
-    "text": "Chunk of text content (summary, skill, project description, etc.)",
-    "embedding": [0.123, -0.456, ...],  // 384-dimensional vector from all-MiniLM-L6-v2
-    "project": "Project Name",           // Groups results in search (optional)
-    "section": "Section Name",           // Alternative grouping (optional)
-    "anchor": "element-id",              // HTML element ID to scroll to (optional)
-    "image": "path/to/image.jpg"         // Associated image for visual display (optional)
-  }
-]
-```
-
-**Field Guidelines**:
-- **text** (required): The actual content chunk. Keep chunks focused and self-contained (1-3 sentences ideal).
-- **embedding** (required): Generated by `generate_embeddings.py`. 384-dimensional vector for semantic matching.
-- **project/section** (recommended): Used to group related results in search UI. Use `project` for project-specific chunks, `section` for general info (Skills, Experience, Education).
-- **anchor** (optional): HTML element ID for smooth scrolling from search results to specific content.
-- **image** (optional): Path to image associated with this chunk. Useful for project screenshots, skill icons, etc.
-
-**Chunking Strategy**:
-- **Profile/Summary**: 1-2 chunks covering who you are and what you do
-- **Skills**: 1 chunk per skill category (Technical, Design, Languages)
-- **Experience**: 1-2 chunks per job/role highlighting key achievements
-- **Education**: 1 chunk per degree/certification
-- **Projects**: 2-4 chunks per project covering different aspects:
-  - Overview (problem statement, your role)
-  - Key features or methodologies
-  - Technologies used
-  - Results/impact
-
-**Example Chunk**:
-```json
-{
-  "text": "Designed and implemented a mobile-first UX system for a fintech startup, resulting in 40% increase in user engagement and 25% reduction in support tickets.",
-  "embedding": [...],
-  "project": "Fintech Mobile App",
-  "anchor": "project-fintech",
-  "image": "res/img/fintech-dashboard.png"
-}
-```
-
-**Regenerating Embeddings**:
-When you update `data.json` with new chunks, regenerate embeddings:
-```bash
-.\venv\Scripts\Activate.ps1
-python generate_embeddings.py
-```
-
-This creates a new `embeddings.json` with updated vector representations.
+For technical details, see [REQUIREMENTS.md](REQUIREMENTS.md).
 
 ## Features
 - 100% local AI processing
@@ -127,6 +58,28 @@ This creates a new `embeddings.json` with updated vector representations.
 - WebGPU support limited (Chrome/Edge only)
 - Large initial download (1.9GB)
 - No conversation history persistence
+
+## For Developers
+
+### Generating Embeddings
+The project uses vector embeddings for semantic search (not yet implemented).
+
+After updating `data-002.json`:
+```bash
+python -m venv venv
+.\venv\Scripts\Activate.ps1
+pip install sentence-transformers
+python generate_embeddings.py
+```
+
+See [REQUIREMENTS.md](REQUIREMENTS.md#embeddings-json-structure) for schema details.
+
+### Local Development
+```bash
+# Start HTTP server (required for ES modules)
+python -m http.server 8000
+# Open http://localhost:8000
+```
 
 ## Credits
 - **Built by:** Vítor Gonçalves

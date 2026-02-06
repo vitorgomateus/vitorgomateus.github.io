@@ -1,4 +1,4 @@
-# Project Requirements: Portfolio Website with Local AI experimental feautre
+# Project Requirements: Portfolio Website with Local AI Experimental Feature
 
 ## Project Overview
 
@@ -6,10 +6,15 @@
 A fully client-side portfolio website with an AI experimental chatbot running entirely in the browser with complete privacy. Zero server communication, all AI processing happens locally using WebGPU.
 
 ### Core Value Proposition
-Demonstrate the viability of running Large Language Models (LLMs) locally in browsers while providing an engaging, privacy-first portfolio experience that showcases UX design expertise through innovative technology.
+Showcase UX design expertise and project work through a professional portfolio website, while demonstrating innovative use of browser-based AI technology as an experimental conversational interface.
+
+### Project Priorities
+1. **Portfolio Content** - Primary focus: professional presentation of work and skills
+2. **User Experience** - Clean, accessible, performant interface across all modes
+3. **AI Experimentation** - Secondary feature: demonstrate local LLM viability
 
 ### Target Audience
-- **Primary**: Recruiters, hiring managers, potential collaborators
+- **Primary**: Recruiters, hiring managers, potential collaborators seeking UX expertise
 - **Secondary**: UX/AI enthusiasts, developers interested in browser-based AI
 - **Technical Level**: Mixed (non-technical recruiters to technical developers)
 
@@ -159,8 +164,8 @@ Demonstrate the viability of running Large Language Models (LLMs) locally in bro
 - Easy understanding by an intermediate web developer for manual debugging and editing. 
 - Simpler technical stack, more future proof, and less prone to errors.
 - Easy bootup, preferably without build steps, possibly served via HTTP/HTTPS (not `file://` due to ES modules).
-- Optimize for client performance as having an LLM model will already consume computing power and slow doen the UI.
-- Well strucutred and modern HTML/CSS for more consistent experience and debugging.
+- Optimize for client performance as having an LLM model will already consume computing power and slow down the UI.
+- Well structured and modern HTML/CSS for more consistent experience and debugging.
 - Must run in Github Pages.
 
 ---
@@ -178,10 +183,10 @@ Demonstrate the viability of running Large Language Models (LLMs) locally in bro
 
 #### How it works
 - All data is rendered into HTML with a correct semantic strucutre, inside the main display area, and with content grouped by data chunk, to be matched with a RAG search.
-- Detailed info on projects is visually hidden. Screen readers can access it normally. Visual users need to click on the porject summary panel to expand project details.
-- When displaying project details or search results, the bottom input bar is hidden, and a dissmiss/close cross button is displayed on the top right corner of the main area.
-- When running a search the visual restriction is removed from the project details, but only the things relevant to the search are showed.
-- So the display or hide function for expanding a project or displaying search results can be the same, and smeantic structure and styling is maintained across all cases.
+- Detailed info on projects is visually hidden. Screen readers can access it normally. Visual users need to click on the project summary panel to expand project details.
+- When displaying project details or search results, the bottom input bar is hidden, and a dismiss/close cross button is displayed on the top right corner of the main area.
+- When running a search the visual restriction is removed from the project details, but only the things relevant to the search are shown.
+- So the display or hide function for expanding a project or displaying search results can be the same, and semantic structure and styling is maintained across all cases.
 
 #### Sections
 1. **Summary**: Executive summary with contact info
@@ -201,7 +206,7 @@ Demonstrate the viability of running Large Language Models (LLMs) locally in bro
 ### 2. Vector Search (RAG System to support the static primary interface)
 
 #### Implementation
-- **Embeddings**: Pre-generated from `data-XXX.json` (the one with the largest number)
+- **Embeddings**: Pre-generated from `data-002.json` (current data file)
 - **Model**: `all-MiniLM-L6-v2` via sentence-transformers
 - **Search**: Client-side cosine similarity
 - **Trigger**: Minimum 3 words in query
@@ -318,10 +323,25 @@ maxHistory: 5 (conversation turns)
 ```
 
 #### Context Extraction
+
+**Purpose**: Capture user information (name, email, company, position, interests) naturally during conversation for context persistence and feedback form pre-filling.
+
+**Implementation Details**:
 - **Format**: `[EXTRACT]{"name":"","email":"","company":"","position":"","relevant_info":""}[/EXTRACT]`
-- **Persistence**: Injected into system prompt for all future messages
-- **Stripping**: Regex removes extraction from displayed response
-- **Zero Overhead**: Happens during normal response generation
+- **Location**: Model appends to every response, stripped before display
+- **Internal Storage**: `relevant_info` field is stored as `this.extractedInfo.context` property in code
+- **Persistence**: Extracted info injected into system prompt for all future messages
+- **Stripping Regex**: `/\[EXTRACT\][\s\S]*?\[\/EXTRACT\]/g` removes extraction from displayed response
+- **Zero Overhead**: Happens during normal response generation (no extra API calls)
+- **Context Survival**: Persists across conversation despite limited `maxHistory: 5`
+- **Cumulative**: `relevant_info` field accumulates user's projects, technologies, methodologies, interests
+
+**⚠️ CRITICAL**: The `[EXTRACT]{...}[/EXTRACT]` directive must remain at the end of system instructions. If removed:
+- Context persistence breaks
+- Feedback form won't pre-fill
+- User info won't carry forward in conversation
+
+**Testing**: After modifying system instructions, verify extraction still outputs valid JSON and gets stripped correctly.
 
 #### Message Management
 - **Display**: User messages (right, primary colored bubble), Bot messages (left, gray bubble)
@@ -559,11 +579,17 @@ filter: brightness(1.1)
 
 ### embeddings.json Structure
 
+The `embeddings.json` file serves three purposes:
+1. **Portfolio Generation**: Powers DOM generation for static portfolio display
+2. **Vector Search**: Enables semantic similarity search across portfolio content
+3. **LLM Context**: Provides relevant information to chatbot (RAG system)
+
+**Schema**:
 ```json
 [
   {
-    "text": "Content chunk text",
-    "embedding": [/* 384 floats */],
+    "text": "Content chunk text (1-3 sentences, focused and self-contained)",
+    "embedding": [/* 384 floats from all-MiniLM-L6-v2 */],
     "project": "Project Name (optional)",
     "section": "Section Name (optional)",
     "anchor": "html-element-id (optional)",
@@ -572,7 +598,37 @@ filter: brightness(1.1)
 ]
 ```
 
-**Generation**: Run `python generate_embeddings.py` after updating data-002.json
+**Field Specifications**:
+- **text** (required): Actual content chunk for semantic matching and display
+- **embedding** (required): 384-dimensional vector generated by `generate_embeddings.py`
+- **project** (optional): Groups results by project in search UI
+- **section** (optional): Groups results by portfolio section (Skills, Experience, Education)
+- **anchor** (optional): HTML element ID for smooth scrolling from search results
+- **image** (optional): Associated image path for visual display
+
+**Chunking Strategy**:
+- **Profile/Summary**: 1-2 chunks covering identity and core value proposition
+- **Skills**: 1 chunk per skill category (UX Expertise, Track Record, Collaboration)
+- **Experience**: 1-2 chunks per role highlighting key achievements
+- **Education**: 1 chunk per degree/certification with focus areas
+- **Projects**: 2-4 chunks per project:
+  - Overview (problem statement, role)
+  - Key features or methodologies
+  - Technologies and tools used
+  - Results and impact metrics
+
+**Example**:
+```json
+{
+  "text": "Designed and implemented a mobile-first UX system for a fintech startup, resulting in 40% increase in user engagement and 25% reduction in support tickets.",
+  "embedding": [0.023, -0.156, 0.089, ...],
+  "project": "Fintech Mobile App",
+  "anchor": "project-fintech",
+  "image": "res/img/fintech-dashboard.png"
+}
+```
+
+**Generation**: Run `python generate_embeddings.py` after updating data-002.json to regenerate vectors
 
 ---
 
