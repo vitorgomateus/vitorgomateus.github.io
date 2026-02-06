@@ -3,7 +3,7 @@
 ## Status
 **🚧 Active Development**
 
-A portfolio website showcasing UX design work, with an experimental AI chatbot feature that runs entirely in your browser. The chatbot (Goma) uses WebLLM (Phi-3.5-mini) and WebGPU for 100% client-side processing - zero server communication, complete privacy.
+A portfolio website showcasing UX design work, with an experimental AI chatbot feature that runs entirely in the client's browser. The chatbot (Goma) uses WebLLM (Phi-3.5-mini) and WebGPU for 100% client-side processing - zero server communication, complete privacy.
 
 ## Goals
 - **Primary**: Professional portfolio showcasing UX design expertise and projects

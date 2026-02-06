@@ -179,7 +179,7 @@ Showcase UX design expertise and project work through a professional portfolio w
 - The main display area between the top and bottom bars displays the content of the static portfolio or the chatbot conversation.
 - Between the main area and the bottom bar, alerts or suggested chatbot messages are disaplyed when relevant.
 
-### 1. Static Portfolio (Primary Interface)
+### 1. Static Portfolio (Primary Feature)
 
 #### How it works
 - All data is rendered into HTML with a correct semantic strucutre, inside the main display area, and with content grouped by data chunk, to be matched with a RAG search.
@@ -203,7 +203,7 @@ Showcase UX design expertise and project work through a professional portfolio w
 - **Focus Trap**: Keyboard navigation stays within modal
 - **URL**: `#project-{id}` for deep linking
 
-### 2. Vector Search (RAG System to support the static primary interface)
+### 2. Vector Search (RAG System to support the static primary feature)
 
 #### Implementation
 - **Embeddings**: Pre-generated from `data-002.json` (current data file)
