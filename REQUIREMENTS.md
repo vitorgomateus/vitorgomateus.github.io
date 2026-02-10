@@ -20,146 +20,6 @@ Showcase UX design expertise and project work through a professional portfolio w
 
 ---
 
-## Design Principles
-
-### Main Design Principles
-
-#### Privacy First
-- No analytics, tracking, or external API calls
-- All data processing happens locally
-- No conversation persistence beyond session
-- Clear communication about privacy benefits
-
-#### Performance Critical
-- Aggressive message pruning to prevent memory bloat
-- Performance monitoring with warnings
-- Graceful degradation on slower devices
-- GPU-accelerated animations only
-
-#### Mobile Only
-- Fixed dimensions (375px × 620px)
-- No responsive breakpoints
-- Simplified interface for small screens
-- Touch-friendly targets (minimum 44×44px)
-
-#### Aesthetic Playfulness 
-- Clean, modern, engaging visual design
-- Smooth animations respecting reduced motion preferences
-- Typography: Young Serif (personality) + Work Sans (readability)
-- Random primary color for playful surprise on each load
-  ```javascript
-    setRandomPrimaryColor() {
-      // Generate random hue (0-360)
-      const hue = Math.floor(Math.random() * 360);
-      // High saturation for vibrant colors (60-90%)
-      const saturation = 60 + Math.floor(Math.random() * 31);
-      // Low lightness for good contrast with white text (25-40%)
-      const lightness = 25 + Math.floor(Math.random() * 16);
-      
-      const primaryColor = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
-      const primaryDark = `hsl(${hue}, ${saturation}%, ${Math.max(15, lightness - 10)}%)`;
-      
-      // Set CSS variables
-      document.documentElement.style.setProperty('--primary', primaryColor);
-      document.documentElement.style.setProperty('--primary-dark', primaryDark);
-      
-      // Update favicon with primary color
-      this.updateFavicon(hue, saturation, lightness);
-    }
-  ```
-
----
-
-### Usability Heuristics (Nielsen's 10)
-
-1. **Visibility of System Status**
-   - Always show model loading progress with percentage and visual indicators
-   - Display typing indicators during AI response generation
-   - Show clear status messages for all actions (cache clearing, search, etc.)
-   - Provide real-time feedback for button clicks and interactions
-
-2. **Match Between System and Real World**
-   - Use familiar chat interface patterns
-   - Natural language conversation flow
-   - Portfolio sections follow standard conventions (Experience, Education, Projects)
-   - Clear, jargon-free language in UI labels
-
-3. **User Control and Freedom**
-   - AI on/off toggle to switch between chat and static portfolio
-   - Clear close buttons on all modals and panels
-   - Escape key to close overlays
-   - Browser back/forward buttons work correctly
-   - Ability to clear model cache and start fresh
-
-4. **Consistency and Standards**
-   - Consistent button styles and interactions
-   - Uniform card layouts across all portfolio sections
-   - Standardized color scheme with CSS variables
-   - Consistent spacing rhythm (8px base unit)
-
-5. **Error Prevention**
-   - Permission prompts before model download
-   - Confirmation dialogs for destructive actions (cache clearing)
-   - Disable input during processing to prevent duplicate submissions
-   - WebGPU support check before attempting model load
-
-6. **Recognition Rather Than Recall**
-   - Suggestion chips after bot responses
-   - Pre-written example queries visible
-   - Search results show relevant context
-   - Persistent extracted user information across conversation
-
-7. **Flexibility and Efficiency of Use**
-   - Keyboard shortcuts (Enter to send, Escape to close)
-   - Textarea auto-resize as user types
-   - Search functionality with vector similarity
-   - Quick access drawer for settings
-
-8. **Aesthetic and Minimalist Design**
-   - Clean, modern interface with generous white space
-   - Random primary color on load (playful but not overwhelming)
-   - Remove unnecessary elements
-   - Focus on content over decoration
-
-9. **Help Users Recognize, Diagnose, and Recover from Errors**
-   - Clear error messages in natural language
-   - Specific guidance on how to resolve issues
-   - Graceful degradation when features unavailable
-   - Alert system with different types (info, success, error)
-
-10. **Help and Documentation**
-    - Privacy message explains how the system works
-    - Feedback form for questions/issues
-    - Model information in settings drawer
-    - Inline explanations for technical concepts
-
-### Accessibility Standards (WCAG 2.1 Level AA)
-
-#### Perceivable
-- **Text Alternatives**: All images have descriptive alt text
-- **Color Contrast**: Minimum 4.5:1 for normal text, 3:1 for large text
-- **Adaptable Layout**: Semantic HTML (header, main, article, nav, etc.)
-- **Distinguishable**: Text is resizable, no information conveyed by color alone
-- **Accessibility Mode**: Optional high-contrast mode with larger fonts
-
-#### Operable
-- **Keyboard Accessible**: All functionality available via keyboard
-- **Focus Visible**: Clear focus indicators on all interactive elements
-- **Skip Links**: Allow bypassing repeated content blocks
-- **Timing**: No time limits on interactions
-- **Seizures**: No flashing content, respect `prefers-reduced-motion`
-
-#### Understandable
-- **Readable**: Language attribute set on HTML element
-- **Predictable**: Consistent navigation and component behavior
-- **Input Assistance**: Clear labels, error identification, and suggestions
-- **Form Labels**: All inputs have associated labels
-
-#### Robust
-- **Compatible**: Valid HTML5, ARIA roles and attributes where appropriate
-- **Name, Role, Value**: All custom controls have proper ARIA
-- **Status Messages**: ARIA live regions for dynamic content updates
-
 ## Technical Requirements
 - Easy understanding by an intermediate web developer for manual debugging and editing. 
 - Simpler technical stack, more future proof, and less prone to errors.
@@ -167,43 +27,39 @@ Showcase UX design expertise and project work through a professional portfolio w
 - Optimize for client performance as having an LLM model will already consume computing power and slow down the UI.
 - Well structured and modern HTML/CSS for more consistent experience and debugging.
 - Must run in Github Pages.
+- The static portofolio feature with vector search and project expansion is unconventional so it needs to be planned carefully.
 
 ---
 
 ## Feature Specifications
 
-### 0. UI
-- The whole UI is restricted to a container with a max size of 375px × 620px, so that it maintains a mobile model in any screen.
-- A navbar on top with the name (Vítor Gonçalves), an experimental feature toggle, and a menu toggle for a right side drawer.
-- A bottom input bar with a text input and a search/send button to both start a search on the static portfolio, or send a message to the experimental AI chatbot feature.
-- The main display area between the top and bottom bars displays the content of the static portfolio or the chatbot conversation.
-- Between the main area and the bottom bar, alerts or suggested chatbot messages are disaplyed when relevant.
+- The website has two main features:
+  1. a static portofolio;
+  2. an experimental chatbot portfolio. 
+- Both allow to interact with the same professional portfolio data, but using different methods.
+- The static portofolio displays the portfolio data as HTML and makes certains parts of it visible or hidden depending on user actions. One user action is to run a vector search that uses embeddings, so the the portfolio data needs to be grouped in chunks to be matched to the embeddings.
+  1. At page load all data chunks are loaded as html, but the details of all projects are hidden, though readeable by screen readers.
+  2. When clicking on a project summary, it makes that project's data visible, but hiddes all other data chunks. This interaction is not required for screen readers.
+  3. Searching hides all data chunks except for those that have matches on the search results.
+
+
+### 0. UI main sections
+- **Container** - The whole UI is restricted to a container with a max size of 460px × 720px, so that it maintains a mobile model in any screen. These values should be established as variables to be reused where necessary, namely on elements with position fixed or absolute, to ensure they follow the same constrain. Everything happens inside this container; fixed or absolute containers need to be positioned so that they stay inside.
+- **Navbar Header** - A navbar on top with the name (Vítor Gonçalves), an experimental feature toggle, and a menu toggle for a right side drawer. This uses the primary color as background and the decorative font for the name.
+- **Input bar** - A bottom input bar with a text input and a search/send button to both start a search on the static portfolio, or send a message to the experimental AI chatbot feature.
+- **Main area** - The main display area between the top and bottom bars displays the content of the static portfolio or the chatbot conversation, depending on which feature is active. 
+- Between the main area and the bottom bar, alerts or suggested chatbot messages are displayed when relevant.
 
 ### 1. Static Portfolio (Primary Feature)
 
 #### How it works
-- All data is rendered into HTML with a correct semantic strucutre, inside the main display area, and with content grouped by data chunk, to be matched with a RAG search.
-- Detailed info on projects is visually hidden. Screen readers can access it normally. Visual users need to click on the project summary panel to expand project details.
+- All data is rendered into HTML with a correct semantic structure on page load, inside the main display area, and with content grouped by data chunk, to be matched with a vector search.
+- Detailed info on projects is visually hidden. Screen readers can still read it. Visual users need to click on the project summary panel to expand project details.
 - When displaying project details or search results, the bottom input bar is hidden, and a dismiss/close cross button is displayed on the top right corner of the main area.
-- When running a search the visual restriction is removed from the project details, but only the things relevant to the search are shown.
-- So the display or hide function for expanding a project or displaying search results can be the same, and semantic structure and styling is maintained across all cases.
+- Searching hides all data chunks except for those that have matches on the search results. 
+- So the display or hide function for expanding a project or displaying search results can be the same, in order to maintain semantic structure and styling at all times.
 
-#### Sections
-1. **Summary**: Executive summary with contact info
-2. **Skills**: 3 skill categories with tools/technologies
-3. **Languages**: Proficiency levels
-4. **Education**: Degree cards with institution, period, focus
-5. **Experience**: Job cards with company, role, description
-6. **Projects**: Clickable cards with image, title, description, skills.  
-
-#### Project Details Panel
-- **Trigger**: Click/Enter on project card. 
-- **Content**: Full description, images, skills, metadata
-- **Navigation**: Close button, Escape key, overlay click
-- **Focus Trap**: Keyboard navigation stays within modal
-- **URL**: `#project-{id}` for deep linking
-
-### 2. Vector Search (RAG System to support the static primary feature)
+### 2. Vector Search (part of the static primary feature)
 
 #### Implementation
 - **Embeddings**: Pre-generated from `data-002.json` (current data file)
@@ -216,7 +72,6 @@ Showcase UX design expertise and project work through a professional portfolio w
 #### Search UI
 - **Input**: Bottom input bar
 - **Button**: Magnifying glass icon, title="search"
-- **Results Display**: Grouped by portfolio section, shows relevant chunks with relevance badges
 - **Close**: X button or Escape key
 
 ### 3. AI Chatbot (Secondary Experimental Feature)
@@ -446,8 +301,8 @@ Body: Extracted context + form fields
 
 ### Typography
 ```css
---font-primary: 'Young Serif', serif /* Headers, personality */
---font-body: 'Work Sans', sans-serif /* Body, readability */
+--font-primary: 'Young Serif', serif /* Header's title */
+--font-body: 'Work Sans', sans-serif /* Body */
 ```
 
 ### Icons
@@ -472,6 +327,9 @@ color: var(--text)
 transform: scale(0.98)
 filter: brightness(1.1)
 ```
+
+### Header
+The header should use the primary color as background. It should contain the only h1 in the website with the more decorative font and in white. 
 
 ---
 
@@ -672,6 +530,148 @@ The `embeddings.json` file serves three purposes:
 - **Screen Reader**: Test with NVDA/JAWS, ensure logical reading order
 - **Color Contrast**: Verify all text meets WCAG AA (4.5:1 normal, 3:1 large)
 - **Focus Indicators**: Visible outline on all focusable elements
+
+---
+
+## Design Principles
+
+### Main Design Principles
+
+#### Privacy First
+- No analytics, tracking, or external API calls
+- All data processing happens locally
+- No conversation persistence beyond session
+- Clear communication about privacy benefits
+
+#### Performance Critical
+- Aggressive message pruning to prevent memory bloat
+- Performance monitoring with warnings
+- Graceful degradation on slower devices
+- GPU-accelerated animations only
+
+#### Mobile Only
+- Fixed dimensions (375px × 620px)
+- No responsive breakpoints
+- Simplified interface for small screens
+- Touch-friendly targets (minimum 44×44px)
+
+#### Aesthetic Playfulness 
+- Clean, modern, engaging visual design
+- Smooth animations respecting reduced motion preferences
+- Typography: Young Serif (personality) + Work Sans (readability)
+- Random primary color for playful surprise on each load
+  ```javascript
+    setRandomPrimaryColor() {
+      // Generate random hue (0-360)
+      const hue = Math.floor(Math.random() * 360);
+      // High saturation for vibrant colors (60-90%)
+      const saturation = 60 + Math.floor(Math.random() * 31);
+      // Low lightness for good contrast with white text (25-40%)
+      const lightness = 25 + Math.floor(Math.random() * 16);
+      
+      const primaryColor = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+      const primaryDark = `hsl(${hue}, ${saturation}%, ${Math.max(15, lightness - 10)}%)`;
+      
+      // Set CSS variables
+      document.documentElement.style.setProperty('--primary', primaryColor);
+      document.documentElement.style.setProperty('--primary-dark', primaryDark);
+      
+      // Update favicon with primary color
+      this.updateFavicon(hue, saturation, lightness);
+    }
+  ```
+
+---
+
+### Usability Heuristics (Nielsen's 10)
+
+1. **Visibility of System Status**
+   - Always show model loading progress with percentage and visual indicators
+   - Display typing indicators during AI response generation
+   - Show clear status messages for all actions (cache clearing, search, etc.)
+   - Provide real-time feedback for button clicks and interactions
+
+2. **Match Between System and Real World**
+   - Use familiar chat interface patterns
+   - Natural language conversation flow
+   - Portfolio sections follow standard conventions (Experience, Education, Projects)
+   - Clear, jargon-free language in UI labels
+
+3. **User Control and Freedom**
+   - AI on/off toggle to switch between chat and static portfolio
+   - Clear close buttons on all modals and panels
+   - Escape key to close overlays
+   - Browser back/forward buttons work correctly
+   - Ability to clear model cache and start fresh
+
+4. **Consistency and Standards**
+   - Consistent button styles and interactions
+   - Uniform card layouts across all portfolio sections
+   - Standardized color scheme with CSS variables
+   - Consistent spacing rhythm (8px base unit)
+
+5. **Error Prevention**
+   - Permission prompts before model download
+   - Confirmation dialogs for destructive actions (cache clearing)
+   - Disable input during processing to prevent duplicate submissions
+   - WebGPU support check before attempting model load
+
+6. **Recognition Rather Than Recall**
+   - Suggestion chips after bot responses
+   - Pre-written example queries visible
+   - Search results show relevant context
+   - Persistent extracted user information across conversation
+
+7. **Flexibility and Efficiency of Use**
+   - Keyboard shortcuts (Enter to send, Escape to close)
+   - Textarea auto-resize as user types
+   - Search functionality with vector similarity
+   - Quick access drawer for settings
+
+8. **Aesthetic and Minimalist Design**
+   - Clean, modern interface with generous white space
+   - Random primary color on load (playful but not overwhelming)
+   - Remove unnecessary elements
+   - Focus on content over decoration
+
+9. **Help Users Recognize, Diagnose, and Recover from Errors**
+   - Clear error messages in natural language
+   - Specific guidance on how to resolve issues
+   - Graceful degradation when features unavailable
+   - Alert system with different types (info, success, error)
+
+10. **Help and Documentation**
+    - Privacy message explains how the system works
+    - Feedback form for questions/issues
+    - Model information in settings drawer
+    - Inline explanations for technical concepts
+
+### Accessibility Standards (WCAG 2.1 Level AA)
+
+#### Perceivable
+- **Text Alternatives**: All images have descriptive alt text
+- **Color Contrast**: Minimum 4.5:1 for normal text, 3:1 for large text
+- **Adaptable Layout**: Semantic HTML (header, main, article, nav, etc.)
+- **Distinguishable**: Text is resizable, no information conveyed by color alone
+- **Accessibility Mode**: Optional high-contrast mode with larger fonts
+
+#### Operable
+- **Keyboard Accessible**: All functionality available via keyboard
+- **Focus Visible**: Clear focus indicators on all interactive elements
+- **Skip Links**: Allow bypassing repeated content blocks
+- **Timing**: No time limits on interactions
+- **Seizures**: No flashing content, respect `prefers-reduced-motion`
+
+#### Understandable
+- **Readable**: Language attribute set on HTML element
+- **Predictable**: Consistent navigation and component behavior
+- **Input Assistance**: Clear labels, error identification, and suggestions
+- **Form Labels**: All inputs have associated labels
+
+#### Robust
+- **Compatible**: Valid HTML5, ARIA roles and attributes where appropriate
+- **Name, Role, Value**: All custom controls have proper ARIA
+- **Status Messages**: ARIA live regions for dynamic content updates
 
 ---
 
