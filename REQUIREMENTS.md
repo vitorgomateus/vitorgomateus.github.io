@@ -40,7 +40,7 @@ Showcase UX design expertise and project work through a professional portfolio w
 - The static portofolio displays the portfolio data as HTML and makes certains parts of it visible or hidden depending on user actions. One user action is to run a vector search that uses embeddings, so the the portfolio data needs to be grouped in chunks to be matched to the embeddings.
   1. At page load all data chunks are loaded as html, but the details of all projects are hidden, though readeable by screen readers.
   2. When clicking on a project summary, it makes that project's data visible, but hiddes all other data chunks. This interaction is not required for screen readers.
-  3. Searching hides all data chunks except for those that have matches on the search results.
+  3. Searching hides all data chunks except for those that have matches on the search results. Searching uses vector searching. The same searching mechanism that feeds context to model replies.
 
 
 ### 0. UI main sections
@@ -48,7 +48,8 @@ Showcase UX design expertise and project work through a professional portfolio w
 - **Navbar Header** - A navbar on top with the name (Vítor Gonçalves), an experimental feature toggle, and a menu toggle for a right side drawer. This uses the primary color as background and the decorative font for the name.
 - **Input bar** - A bottom input bar with a text input and a search/send button to both start a search on the static portfolio, or send a message to the experimental AI chatbot feature.
 - **Main area** - The main display area between the top and bottom bars displays the content of the static portfolio or the chatbot conversation, depending on which feature is active. 
-- Between the main area and the bottom bar, alerts or suggested chatbot messages are displayed when relevant.
+- **Alerts** - Between the main area and the bottom bar, displayed as required.
+- **Suggestions** - Between the main area and the bottom bar, but below the alerts, suggestions of messages to send to the chat.
 
 ### 1. Static Portfolio (Primary Feature)
 
@@ -108,14 +109,18 @@ maxHistory: 5 (conversation turns)
 
 
 #### Conversation Flow
-1. **Initial Load**: Show message gloating full priavcy and cloud-free
-2. **Permission Prompt**: Ask to download model (~2GB, one-time)
-3. **Model Loading**: Progress bar with percentage, status updates
-4. **Greeting**: Random greeting from predefined set (20 options)
-5. **User Input**: Textarea auto-resizes, Enter to send
-6. **AI Response**: Typing indicator (accumulated then displayed)
-7. **Suggestions**: Show 2 contextual suggestions after each bot reply
-8. **Extraction**: Model extracts user info (name, email, company, position, context) in hidden JSON format
+1. **Disclaimer**: Show message gloating full privacy and cloud-free, using large icons when relevant. Hard coded message.
+2. **Permission Request**: Ask to download model (~2GB, one-time). Hard coded message.
+3. **Model Loading**: Progress bar with percentage, status updates. Dynamic WebLLM message.
+4. **Greeting**: Random greeting from predefined, hardcoded set (20 options). 
+6. **AI Response**: Typing indicator (accumulated then displayed).
+
+#### Functionalities
+- **User Input**: Textarea auto-resizes, Enter to send
+- **Suggestions**: Show two suggestions from a pre-generate, hardcoded set of 20 questions to ask the bot. Suggestions change after each bot reply. Only shown after the bot outputs its greeting. When the system asks the user for permission to download the model, the option "Yes!" is made available. Suggestions' buttons have a similar styling to the user messages, but slightly smaller font-size and padding.
+- **Extraction**: Model extracts user info (name, email, company, position, context) in hidden JSON format, to add as context when getting a model reply.
+- **Dynamic personality** - The instructions added for each model request will rotate between 3 personalities: warm, cold, and enthusiastic.
+- **Portfolio RAG** - Each request to the model gets as context any portfolio data chunks that match a vector search.
 
 #### System Instructions
 ```markdown
