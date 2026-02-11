@@ -16,7 +16,7 @@ A portfolio website showcasing UX design work, with an experimental AI chatbot f
 - Website must run from Github Pages
 
 ### Design Constraints
-- Mobile-only interface (max 375px × 620px)
+- Mobile-only interface
 - No external API calls
 - No conversation persistence
 
@@ -57,7 +57,10 @@ For technical details, see [REQUIREMENTS.md](REQUIREMENTS.md).
 ## Limitations
 - WebGPU support limited (Chrome/Edge only)
 - Large initial download (1.9GB)
-- No conversation history persistence
+- Fixed mobile dimensions (no responsive design)
+- Single model
+- Limited context window (256 tokens)
+- No streaming display (accumulated then shown)
 
 ## For Developers
 

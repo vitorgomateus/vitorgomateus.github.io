@@ -34,13 +34,14 @@ Showcase UX design expertise and project work through a professional portfolio w
 ## Feature Specifications
 
 - The website has two main features:
-  1. a static portofolio;
+  1. a static portfolio;
   2. an experimental chatbot portfolio. 
-- Both allow to interact with the same professional portfolio data, but using different methods.
-- The static portofolio displays the portfolio data as HTML and makes certains parts of it visible or hidden depending on user actions. One user action is to run a vector search that uses embeddings, so the the portfolio data needs to be grouped in chunks to be matched to the embeddings.
-  1. At page load all data chunks are loaded as html, but the details of all projects are hidden, though readeable by screen readers.
-  2. When clicking on a project summary, it makes that project's data visible, but hiddes all other data chunks. This interaction is not required for screen readers.
-  3. Searching hides all data chunks except for those that have matches on the search results. Searching uses vector searching. The same searching mechanism that feeds context to model replies.
+- Both allow to interact with the same professional portfolio data, each using a different method. This data exists as a JSON file (data-002.json) and will be converted to an embeddings file via a Python script. The embeddings file needs to maintain the nesting logic present in the JSON so that a Javascript may generate well structured HTML.
+- The static portfolio displays the portfolio data from the embeddings file as HTML and makes certain parts of it visible or hidden on different occasions. One user action is to run an embeddings search which filters the portfolio display according to the results, so the HTML elements need to be grouped in chunks which can be matched against the embeddings results.
+- Situations that change the data displayed in the static portfolio:
+  1. At page load all data chunks are loaded as html, and the details of all projects are hidden except for the summary, though still readable by screen readers.
+  2. When clicking on a project summary, it makes all that project's data visible, and hides all other data chunks. This interaction is not required for screen readers.
+  3. Searching hides all data chunks except for those that have matches on the search results. Searching uses embedding searching. (The same searching mechanism that feeds context to the chatbot model replies).
 
 
 ### 0. UI main sections
@@ -49,7 +50,7 @@ Showcase UX design expertise and project work through a professional portfolio w
 - **Input bar** - A bottom input bar with a text input and a search/send button to both start a search on the static portfolio, or send a message to the experimental AI chatbot feature.
 - **Main area** - The main display area between the top and bottom bars displays the content of the static portfolio or the chatbot conversation, depending on which feature is active. 
 - **Alerts** - Between the main area and the bottom bar, displayed as required.
-- **Suggestions** - Between the main area and the bottom bar, but below the alerts, suggestions of messages to send to the chat.
+- **Suggestions** - Between the main area and the bottom bar, below the alerts, suggestions of messages to send to the chat.
 
 ### 1. Static Portfolio (Primary Feature)
 
@@ -63,7 +64,7 @@ Showcase UX design expertise and project work through a professional portfolio w
 ### 2. Vector Search (part of the static primary feature)
 
 #### Implementation
-- **Embeddings**: Pre-generated from `data-002.json` (current data file)
+- **Embeddings**: Pre-generated from `data-002.json` (or the one with the largest number/version)
 - **Model**: `all-MiniLM-L6-v2` via sentence-transformers
 - **Search**: Client-side cosine similarity
 - **Trigger**: Minimum 3 words in query
@@ -506,7 +507,7 @@ The `embeddings.json` file serves three purposes:
 
 ### CSS Best Practices
 - **CSS Variables**: Define all colors, fonts, spacing in `:root`
-- **Mobile First**: Base styles for 375px, no media queries needed
+- **Mobile First**: Base styles for a restrained container, no media queries needed
 - **Flexbox Only**: No CSS Grid (simpler for small layouts)
 - **GPU Acceleration**: Use `transform` and `opacity` for animations
 - **Reduced Motion**: Wrap animations in `@media (prefers-reduced-motion: no-preference)`
@@ -555,7 +556,7 @@ The `embeddings.json` file serves three purposes:
 - GPU-accelerated animations only
 
 #### Mobile Only
-- Fixed dimensions (375px × 620px)
+- Fixed dimensions (max 460px × 720px)
 - No responsive breakpoints
 - Simplified interface for small screens
 - Touch-friendly targets (minimum 44×44px)
@@ -681,50 +682,10 @@ The `embeddings.json` file serves three purposes:
 ---
 
 ## Deployment Requirements
-
-### Environment
 - No environment variables needed
 - No server-side processing
 - No API keys or secrets
 - All configuration in code (model selection, tuning variables)
-
----
-
-## Future Enhancements (Not Required)
-
-### Known Limitations
-- WebGPU support limited to Chrome/Edge
-- Large initial model download (1.9GB)
-- No conversation persistence across sessions
-- Fixed mobile dimensions (no responsive design)
-- Single model (no switching without reload)
-- Limited context window (256 tokens)
-- No streaming display (accumulated then shown)
-
----
-
-## Success Metrics
-
-### User Experience
-- First-time users can load and interact with AI within 2 minutes
-- Returning users access AI instantly (cached model)
-- Portfolio content readable and navigable without AI
-- Feedback form easy to find and use
-- No errors or broken functionality
-
-### Technical
-- WebGPU detection: 100% accurate
-- Model caching: 100% success rate
-- Response generation: >95% success rate
-- Memory warnings: Only when truly needed (<5% false positives)
-- Accessibility: WCAG 2.1 Level AA compliance
-
-### Business
-- Demonstrates UX expertise through execution
-- Showcases technical breadth (design + development)
-- Memorable experience (random colors, AI interaction)
-- Contact information easily accessible
-- Projects well-documented and visually appealing
 
 ---
 

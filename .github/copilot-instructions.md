@@ -12,7 +12,7 @@ Portfolio website with experimental local AI chatbot feature. Primary focus: sho
 - **Portfolio First:** Static portfolio is the primary interface, chatbot is experimental
 - **Privacy First:** No server communication, 100% client-side processing
 - **Performance Critical:** Aggressive monitoring to prevent browser slowdown
-- **Mobile Only:** 375px × 620px, no responsive breakpoints
+- **Mobile Only:** no responsive breakpoints
 - **Accessibility:** Correct aria roles, HTML semantics, focus management
 
 ---
