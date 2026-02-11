@@ -36,13 +36,8 @@ Showcase UX design expertise and project work through a professional portfolio w
 - The website has two main features:
   1. a static portfolio;
   2. an experimental chatbot portfolio. 
-- Both allow to interact with the same professional portfolio data, each using a different method. This data exists as a JSON file (data-002.json) and will be converted to an embeddings file via a Python script. The embeddings file needs to maintain the nesting logic present in the JSON so that a Javascript may generate well structured HTML.
-- The static portfolio displays the portfolio data from the embeddings file as HTML and makes certain parts of it visible or hidden on different occasions. One user action is to run an embeddings search which filters the portfolio display according to the results, so the HTML elements need to be grouped in chunks which can be matched against the embeddings results.
-- Situations that change the data displayed in the static portfolio:
-  1. At page load all data chunks are loaded as html, and the details of all projects are hidden except for the summary, though still readable by screen readers.
-  2. When clicking on a project summary, it makes all that project's data visible, and hides all other data chunks. This interaction is not required for screen readers.
-  3. Searching hides all data chunks except for those that have matches on the search results. Searching uses embedding searching. (The same searching mechanism that feeds context to the chatbot model replies).
-
+- Both allow to interact with the same professional portfolio data, each using a different method. This data exists as a JSON file (data-002.json) and will be converted to an embeddings file via a Python script.
+- The static portfolio displays the portfolio data from the embeddings file as HTML and makes certain parts of it visible or hidden on different occasions. One user action is to run an embeddings search which filters the portfolio display according to the results, so the HTML elements need to be grouped in chunks which can be matched against the embeddings results and the embeddings file needs to maintain the nesting logic present in the JSON so that a Javascript may generate well structured, semantic HTML.
 
 ### 0. UI main sections
 - **Container** - The whole UI is restricted to a container with a max size of 460px × 720px, so that it maintains a mobile model in any screen. These values should be established as variables to be reused where necessary, namely on elements with position fixed or absolute, to ensure they follow the same constrain. Everything happens inside this container; fixed or absolute containers need to be positioned so that they stay inside.
@@ -55,13 +50,17 @@ Showcase UX design expertise and project work through a professional portfolio w
 ### 1. Static Portfolio (Primary Feature)
 
 #### How it works
-- All data is rendered into HTML with a correct semantic structure on page load, inside the main display area, and with content grouped by data chunk, to be matched with a vector search.
+- All data is rendered into HTML inside the main display area with a correct semantic structure on page load, and with content grouped by data chunks.
 - Detailed info on projects is visually hidden. Screen readers can still read it. Visual users need to click on the project summary panel to expand project details.
+- Searching filters the portfolio display instead of displaying results above or separate from it, effectively hidding all data chunks except for those that have matches on the search results. (no modal, new screen, or side pannel)
 - When displaying project details or search results, the bottom input bar is hidden, and a dismiss/close cross button is displayed on the top right corner of the main area.
-- Searching hides all data chunks except for those that have matches on the search results. 
-- So the display or hide function for expanding a project or displaying search results can be the same, in order to maintain semantic structure and styling at all times.
+- The function that changes visibility on html chunks can be the same for expanding a project or displaying(filtering) search results, in order to maintain semantic structure and styling at all times.
+- Situations that change the data displayed in the static portfolio:
+  1. At page load all data chunks are loaded as html, and the details of all projects are hidden except for the summary, though still readable by screen readers.
+  2. When clicking on a project summary, it makes all that project's data visible, and hides all other data chunks. This interaction is not required for screen readers.
+  3. Searching hides all data chunks except for those that have matches on the search results. Searching uses embedding searching. (The same searching mechanism that feeds context to the chatbot model replies).
 
-### 2. Vector Search (part of the static primary feature)
+### 2. Vector Search via embeddings (part of the static primary feature)
 
 #### Implementation
 - **Embeddings**: Pre-generated from `data-002.json` (or the one with the largest number/version)
@@ -119,7 +118,7 @@ maxHistory: 5 (conversation turns)
 #### Functionalities
 - **User Input**: Textarea auto-resizes, Enter to send
 - **Suggestions**: Show two suggestions from a pre-generate, hardcoded set of 20 questions to ask the bot. Suggestions change after each bot reply. Only shown after the bot outputs its greeting. When the system asks the user for permission to download the model, the option "Yes!" is made available. Suggestions' buttons have a similar styling to the user messages, but slightly smaller font-size and padding.
-- **Extraction**: Model extracts user info (name, email, company, position, context) in hidden JSON format, to add as context when getting a model reply.
+- **Extraction**: The chatbot needs to maintain performance in less efficient clients. Maintaing user awaresness is very difficult with samller, less capable models. So user awareness is done via an extration meethod. The model receives instructions to extract user info (name, email, company, position, context) and return it in it's reply as a JSON object that gets removed before displaying the answer to the user. This data is kept in a varaiable that is added again in future requests to the model.
 - **Dynamic personality** - The instructions added for each model request will rotate between 3 personalities: warm, cold, and enthusiastic.
 - **Portfolio RAG** - Each request to the model gets as context any portfolio data chunks that match a vector search.
 
