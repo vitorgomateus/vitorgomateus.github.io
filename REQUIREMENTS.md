@@ -125,9 +125,11 @@ maxHistory: 5 (conversation turns)
 #### Functionalities
 - **User Input**: Textarea auto-resizes, Enter to send
 - **Suggestions**: Show two suggestions from a pre-generate, hardcoded set of 20 questions to ask the bot. Suggestions change after each bot reply. Only shown after the bot outputs its greeting. When the system asks the user for permission to download the model, the option "Yes!" is made available. Suggestions' buttons have a similar styling to the user messages, but slightly smaller font-size and padding.
-- **Extraction**: The chatbot needs to maintain performance in less efficient clients. Maintaing user awaresness is very difficult with samller, less capable models. So user awareness is done via an extration meethod. The model receives instructions to extract user info (name, email, company, position, context) and return it in it's reply as a JSON object that gets removed before displaying the answer to the user. This data is kept in a varaiable that is added again in future requests to the model.
 - **Dynamic personality** - The instructions added for each model request will rotate between 3 personalities: warm, cold, and enthusiastic.
 - **Portfolio RAG** - Each request to the model gets as context any portfolio data chunks that match a vector search.
+
+#### User details extraction
+The chatbot needs to maintain performance in less efficient clients. Maintaing user awaresness is very difficult with samller, less capable models. So user awareness is done via an extration meethod. The model receives instructions to extract user info (name, email, company, position, context) and return it in it's reply as a JSON object that gets removed before displaying the answer to the user. This data is kept in a varaiable that is added again in future requests to the model.
 
 #### System Instructions
 ```markdown
@@ -316,6 +318,7 @@ Body: Extracted context + form fields
 --font-primary: 'Young Serif', serif /* Header's title */
 --font-body: 'Work Sans', sans-serif /* Body */
 ```
+- `rem` units for fonts-sizes.
 
 ### Icons
 - **Source**: Font Awesome 5 (via CDN or local)
@@ -342,6 +345,9 @@ filter: brightness(1.1)
 
 ### Header
 The header should use the primary color as background. It should contain the only h1 in the website with the more decorative font and in white. 
+
+### Animations
+- GPU-accelerated animations (`transform`, `opacity` only)
 
 ---
 
