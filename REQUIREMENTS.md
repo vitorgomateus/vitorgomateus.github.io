@@ -23,11 +23,18 @@ Showcase UX design expertise and project work through a professional portfolio w
 ## Technical Requirements
 - Easy understanding by an intermediate web developer for manual debugging and editing. 
 - Simpler technical stack, more future proof, and less prone to errors.
-- Easy bootup, preferably without build steps, possibly served via HTTP/HTTPS (not `file://` due to ES modules).
+- Easy bootup, preferably without build steps.
 - Optimize for client performance as having an LLM model will already consume computing power and slow down the UI.
 - Well structured and modern HTML/CSS for more consistent experience and debugging.
 - Must run in Github Pages.
 - The static portofolio feature with vector search and project expansion is unconventional so it needs to be planned carefully.
+
+### Deployment Requirements
+- No environment variables needed
+- No server-side processing
+- No API keys or secrets
+- All configuration in code (model selection, tuning variables)
+
 
 ---
 
@@ -680,11 +687,6 @@ The `embeddings.json` file serves three purposes:
 
 ---
 
-## Deployment Requirements
-- No environment variables needed
-- No server-side processing
-- No API keys or secrets
-- All configuration in code (model selection, tuning variables)
 
 ---
 
