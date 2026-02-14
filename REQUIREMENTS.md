@@ -571,7 +571,8 @@ The `embeddings.json` file serves three purposes:
 - Clean, modern, engaging visual design
 - Smooth animations respecting reduced motion preferences
 - Typography: Young Serif (personality) + Work Sans (readability)
-- Random primary color for playful surprise on each load
+- Random primary color for playful surprise on each load, used for the header background, highlights and primary elements.
+- A favicon of a white "i" inside a primary color colored circle is generated at each load.
   ```javascript
     setRandomPrimaryColor() {
       // Generate random hue (0-360)
