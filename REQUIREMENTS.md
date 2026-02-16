@@ -219,7 +219,7 @@ The chatbot needs to maintain performance in less efficient clients. Maintaing u
 - **Typing Indicator**: Animated dots while waiting for response
 
 
-### 4. Exeperimental Feature On/Off Toggle
+### 4. Experimental Feature On/Off Toggle
 
 #### States
 - **OFF (Default)**: Static portfolio visible, chat interface hidden
