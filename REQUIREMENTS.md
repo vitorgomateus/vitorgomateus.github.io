@@ -35,7 +35,7 @@ Showcase UX design expertise and project work through a professional portfolio w
 - No API keys or secrets
 - All configuration in code (model selection, tuning variables)
 
-### Recommended tech stack
+### Proposed tech stack and JS code structure
 // FRONTEND
 - Vanilla HTML5 (semantic elements, no frameworks)
 - Vanilla CSS3 (CSS variables, flexbox only, no framework)
@@ -52,13 +52,34 @@ Showcase UX design expertise and project work through a professional portfolio w
 - IndexedDB (model caching via WebLLM)
 
 // DESIGN
-- Google Fonts (Young Serif, Work Sans)
+- Google Fonts (Young Serif, Work Sans)y
 - Open Dyslexic (specify source: Google Fonts or fallback)
+- saved locall
 
 // DEPLOYMENT
 - GitHub Pages (static hosting)
-- No build tools, no environment variables, no API keys
 
+```
+src/
+├── core/
+│   ├── app.js          # Main entry point, initialization
+│   ├── state.js        # Centralized state management
+│   └── events.js       # Event delegation setup
+├── features/
+│   ├── portfolio/
+│   │   ├── render.js   # DOM generation
+│   │   ├── search.js   # Vector search logic
+│   │   └── styles.css  # Portfolio styles
+│   ├── chatbot/
+│   │   ├── model.js    # WebLLM integration
+│   │   ├── messages.js # Message handling
+│   │   └── rag.js      # Context retrieval
+│   └── ui/
+│       ├── header.js
+│       ├── input.js
+│       └── alerts.js
+└── index.html          # Single entry point
+```
 
 ---
 
