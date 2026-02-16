@@ -18,7 +18,6 @@ A portfolio website showcasing UX design work, with an experimental AI chatbot f
 ### Design Constraints
 - Mobile-only interface
 - No external API calls
-- No conversation persistence
 
 First load will download the model (~1.9GB). Subsequent loads are instant.
 

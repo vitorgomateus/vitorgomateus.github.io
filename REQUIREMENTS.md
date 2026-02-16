@@ -173,9 +173,6 @@ maxHistory: 5 (conversation turns)
 - **Dynamic personality** - The instructions added for each model request will rotate between 3 personalities: warm, cold, and enthusiastic.
 - **Portfolio RAG** - Each request to the model gets as context any portfolio data chunks that match a vector search.
 
-#### User details extraction
-The chatbot needs to maintain performance in less efficient clients. Maintaing user awaresness is very difficult with samller, less capable models. So user awareness is done via an extration meethod. The model receives instructions to extract user info (name, email, company, position, context) and return it in it's reply as a JSON object that gets removed before displaying the answer to the user. This data is kept in a varaiable that is added again in future requests to the model.
-
 #### System Instructions
 ```markdown
 - Name: Goma (portfolio assistant)
@@ -236,26 +233,34 @@ The chatbot needs to maintain performance in less efficient clients. Maintaing u
         
 ```
 
-#### Context Extraction
+#### User details extraction
 
-**Purpose**: Capture user information (name, email, company, position, interests) naturally during conversation for context persistence and feedback form pre-filling.
+**Purpose**: Maintain user context across the limited conversation window (5 turns) by extracting user information (name, email, company, position, interests) naturally during conversation. This enables context persistence and feedback form pre-filling, with all data stored locally in the browser.
+
+**How It Works**: The model receives instructions to append extracted user data in a special format at the end of each response. This data is parsed and removed before displaying the response to the user, then re-injected into future prompts to maintain awareness.
 
 **Implementation Details**:
 - **Format**: `[EXTRACT]{"name":"","email":"","company":"","position":"","relevant_info":""}[/EXTRACT]`
-- **Location**: Model appends to every response, stripped before display
-- **Internal Storage**: `relevant_info` field is stored as `this.extractedInfo.context` property in code
+- **Location**: Model appends to every response; stripped before display
+- **Internal Storage**: All data stored in-memory as an object
 - **Persistence**: Extracted info injected into system prompt for all future messages
 - **Stripping Regex**: `/\[EXTRACT\][\s\S]*?\[\/EXTRACT\]/g` removes extraction from displayed response
-- **Zero Overhead**: Happens during normal response generation (no extra API calls)
-- **Context Survival**: Persists across conversation despite limited `maxHistory: 5`
-- **Cumulative**: `relevant_info` field accumulates user's projects, technologies, methodologies, interests
+- **Privacy**: Zero server calls; data never leaves the user's device
+- **Lifecycle**: Data persists only during session; cleared on page refresh
+- **Context Survival**: Survives limited `maxHistory: 5` via re-injection into prompts
+- **Cumulative**: `relevant_info` field accumulates user details (projects, technologies, interests)
 
-**⚠️ CRITICAL**: The `[EXTRACT]{...}[/EXTRACT]` directive must remain at the end of system instructions. If removed:
-- Context persistence breaks
-- Feedback form won't pre-fill
-- User info won't carry forward in conversation
+**Failure Handling**:
+- If JSON is malformed: Log error, continue without extraction
+- If extraction missing: Treat as incomplete data, use partial fields
+- If regex fails: Display response as-is (no extraction removal)
 
-**Testing**: After modifying system instructions, verify extraction still outputs valid JSON and gets stripped correctly.
+**Testing Checklist**:
+- [ ] Extract valid JSON: Verify regex strips it and data persists in next message
+- [ ] Extract malformed JSON: Confirm error handling doesn't crash conversation
+- [ ] Missing extraction: Confirm response displays without error
+- [ ] Page refresh: Verify extracted data is cleared (in-memory storage)
+- [ ] Multiple sessions: Confirm no data persists across browser instances
 
 #### Message Management
 - **Display**: User messages (right, primary colored bubble), Bot messages (left, gray bubble)
@@ -750,8 +755,8 @@ The `embeddings.json` file serves three purposes:
 ### Dependencies
 - **WebLLM**: Apache 2.0 License (MLC AI)
 - **Phi-3.5-mini**: MIT License (Microsoft)
-- **Font Awesome**: Free License (if using)
 - **Google Fonts**: Open Font License
+- **Feather Icons**
 
 ### Credits
 - **Built by**: Vítor Gonçalves
