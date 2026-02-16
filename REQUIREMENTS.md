@@ -35,6 +35,30 @@ Showcase UX design expertise and project work through a professional portfolio w
 - No API keys or secrets
 - All configuration in code (model selection, tuning variables)
 
+### Recommended tech stack
+// FRONTEND
+- Vanilla HTML5 (semantic elements, no frameworks)
+- Vanilla CSS3 (CSS variables, flexbox only, no framework)
+- ES6 JavaScript modules (no transpilation, no bundler)
+- normalize.css
+- Feather Icons, local SVGs
+
+// AI/ML
+- WebLLM (Phi-3.5-mini via WebGPU)
+- Client-side cosine similarity search (embeddings.json)
+
+// DATA
+- sentence-transformers (Python 3, for embedding generation)
+- IndexedDB (model caching via WebLLM)
+
+// DESIGN
+- Google Fonts (Young Serif, Work Sans)
+- Open Dyslexic (specify source: Google Fonts or fallback)
+
+// DEPLOYMENT
+- GitHub Pages (static hosting)
+- No build tools, no environment variables, no API keys
+
 
 ---
 
@@ -321,8 +345,7 @@ Body: Extracted context + form fields
 - `rem` units for fonts-sizes.
 
 ### Icons
-- **Source**: Font Awesome 5 (via CDN or local)
-- **Alternative**: Inline SVG for custom icons
+- Feather Icons
 
 ### Buttons
 ```css
