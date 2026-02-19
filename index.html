@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Vítor Gonçalves - UX Designer Portfolio with experimental AI chatbot">
+  <title>Vítor Gonçalves - UX Designer</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Normalize -->
+  <link rel="stylesheet" href="src/normalize.css">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="src/styles.css">
+  <link rel="stylesheet" href="src/features/portfolio/styles.css">
+
+  <!-- Feather Icons -->
+  <script src="https://unpkg.com/feather-icons"></script>
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <div class="app-container" id="app-container">
+    <!-- Header -->
+    <header class="header" role="banner">
+      <h1 class="header__title">Vítor Gonçalves</h1>
+      <div class="header__controls">
+        <button class="header__toggle" type="button" role="switch" aria-checked="false" aria-label="Toggle experimental AI chat" id="feature-toggle">
+          <i data-feather="flask" class="header__toggle-icon" id="feature-toggle-icon" aria-hidden="true"></i>
+        </button>
+        <button class="header__menu-btn" aria-label="Open settings menu" id="menu-btn">
+          <i data-feather="menu"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main content area -->
+    <main class="main" id="main-content" role="main">
+      <!-- Close button for expanded/search views -->
+      <button class="main__close-btn" aria-label="Close and return to portfolio" id="close-view-btn" hidden>
+        <i data-feather="x"></i>
+      </button>
+
+      <!-- Static portfolio container -->
+      <div class="portfolio" id="portfolio-container" role="region" aria-label="Portfolio">
+        <!-- Rendered dynamically by render.js -->
+      </div>
+
+      <!-- Chat container -->
+      <div class="chat" id="chat-container" role="log" aria-label="Chat messages" aria-live="polite" hidden>
+        <div class="chat__messages" id="chat-messages">
+          <!-- Messages rendered dynamically -->
+        </div>
+      </div>
+    </main>
+
+    <!-- Alerts container -->
+    <div class="alerts" id="alerts-container" role="status" aria-live="polite">
+      <!-- Alerts rendered dynamically -->
+    </div>
+
+    <!-- Suggestions container -->
+    <div class="suggestions" id="suggestions-container" aria-label="Suggested messages" hidden>
+      <!-- Suggestions rendered dynamically -->
+    </div>
+
+    <!-- Input bar -->
+    <div class="input-bar" id="input-bar" role="search">
+      <label for="user-input" class="visually-hidden">Type a message or search query</label>
+      <textarea
+        class="input-bar__textarea"
+        id="user-input"
+        placeholder="Search portfolio..."
+        rows="1"
+        aria-label="Type a message or search query"
+      ></textarea>
+      <button class="input-bar__btn" id="input-btn" aria-label="Search" title="Search">
+        <i data-feather="search" id="input-btn-icon"></i>
+      </button>
+    </div>
+
+    <!-- Settings drawer overlay -->
+    <div class="drawer-overlay" id="drawer-overlay" hidden></div>
+
+    <!-- Settings drawer -->
+    <aside class="drawer" id="settings-drawer" role="dialog" aria-label="Settings" aria-modal="true" hidden>
+      <div class="drawer__header">
+        <h2 class="drawer__title">Settings</h2>
+        <button class="drawer__close-btn" aria-label="Close settings" id="drawer-close-btn">
+          <i data-feather="x"></i>
+        </button>
+      </div>
+      <div class="drawer__content">
+        <!-- Model info -->
+        <section class="drawer__section">
+          <h3 class="drawer__section-title">AI Model</h3>
+          <div class="drawer__model-info">
+            <p class="drawer__model-name" id="model-name">Phi-3.5-mini</p>
+            <p class="drawer__model-size">~1.9GB</p>
+            <p class="drawer__model-status" id="model-status">Not loaded</p>
+          </div>
+          <button class="btn btn--secondary drawer__btn" id="clear-cache-btn">
+            <i data-feather="trash-2"></i>
+            Clear Model Cache
+          </button>
+        </section>
+
+        <!-- Testing -->
+        <section class="drawer__section">
+          <h3 class="drawer__section-title">Testing</h3>
+          <button class="btn btn--secondary drawer__btn" id="test-alert-btn">
+            <i data-feather="bell"></i>
+            Test Alert
+          </button>
+        </section>
+
+        <!-- Feedback -->
+        <section class="drawer__section">
+          <h3 class="drawer__section-title">Feedback</h3>
+          <button class="btn btn--secondary drawer__btn" id="feedback-btn">
+            <i data-feather="message-square"></i>
+            Share Feedback
+          </button>
+        </section>
+
+        <!-- Accessibility -->
+        <section class="drawer__section">
+          <h3 class="drawer__section-title">Accessibility</h3>
+          <div class="drawer__accessibility-toggle">
+            <label for="accessibility-toggle" class="drawer__label">
+              Accessibility Mode
+            </label>
+            <button class="header__toggle-switch" type="button" role="switch" aria-checked="false" id="accessibility-toggle">
+              <div class="header__toggle-knob"></div>
+            </button>
+          </div>
+          <p class="drawer__description">Larger fonts, higher contrast, OpenDyslexic font</p>
+        </section>
+      </div>
+    </aside>
+
+    <!-- Feedback modal overlay -->
+    <div class="modal-overlay" id="feedback-modal-overlay" hidden></div>
+
+    <!-- Feedback modal -->
+    <div class="modal" id="feedback-modal" role="dialog" aria-label="Feedback form" aria-modal="true" hidden>
+      <div class="modal__header">
+        <h2 class="modal__title">Share Your Feedback</h2>
+        <button class="modal__close-btn" aria-label="Close feedback form" id="feedback-modal-close">
+          <i data-feather="x"></i>
+        </button>
+      </div>
+      <form class="modal__form" id="feedback-form">
+        <fieldset class="modal__fieldset">
+          <legend class="modal__legend">What would you like to share?</legend>
+          <label class="modal__checkbox-label">
+            <input type="checkbox" name="share-analytics" value="analytics"> Usage analytics
+          </label>
+          <label class="modal__checkbox-label">
+            <input type="checkbox" name="share-feedback" value="feedback" checked> Personal feedback
+          </label>
+        </fieldset>
+        <div class="modal__field">
+          <label for="feedback-name" class="modal__label">Name</label>
+          <input type="text" id="feedback-name" class="modal__input" placeholder="Your name">
+        </div>
+        <div class="modal__field">
+          <label for="feedback-email" class="modal__label">Email</label>
+          <input type="email" id="feedback-email" class="modal__input" placeholder="Your email">
+        </div>
+        <div class="modal__field">
+          <label for="feedback-company" class="modal__label">Company</label>
+          <input type="text" id="feedback-company" class="modal__input" placeholder="Your company">
+        </div>
+        <div class="modal__field">
+          <label for="feedback-message" class="modal__label">Message</label>
+          <textarea id="feedback-message" class="modal__textarea" rows="4" placeholder="Your thoughts..."></textarea>
+        </div>
+        <button type="submit" class="btn btn--primary modal__submit">Send Feedback</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- App entry point -->
+  <script type="module" src="src/core/app.js"></script>
+</body>
+</html>
