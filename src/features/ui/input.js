@@ -30,8 +30,6 @@ export async function handleInput() {
 
 // Handle search in portfolio mode
 async function handleSearchInput(query) {
-  console.log(`[input] Searching: "${query}"`);
-
   const results = await searchEmbeddings(query, { minWords: 1 });
   if (results.length === 0) {
     showAlert('No matching results found. Try different terms.', 'info');
@@ -94,8 +92,6 @@ async function handleChatInput(message) {
 export function initChat() {
   if (chatInitialized) return;
   chatInitialized = true;
-
-  console.log('[input] Initializing chat');
 
   // Disclaimer message
   addSystemMessage(
@@ -190,6 +186,25 @@ export function showSuggestions() {
     });
     container.appendChild(btn);
   });
+}
+
+export function restoreChatSuggestions() {
+  if (!state.experimentalMode) return;
+
+  const container = document.getElementById('suggestions-container');
+  if (!container) return;
+
+  if (!state.isModelLoaded && !state.isModelLoading && !permissionGranted) {
+    showPermissionSuggestion();
+    return;
+  }
+
+  if (state.isModelLoaded && state.showSuggestions) {
+    showSuggestions();
+    return;
+  }
+
+  container.hidden = true;
 }
 
 // Auto-resize textarea

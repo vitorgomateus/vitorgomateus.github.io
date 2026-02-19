@@ -12,7 +12,6 @@ export async function loadEmbeddings() {
     const response = await fetch('embeddings.json');
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     state.embeddings = await response.json();
-    console.log(`[search] Loaded ${state.embeddings.length} embedding chunks`);
     return state.embeddings;
   } catch (error) {
     console.error('[search] Failed to load embeddings:', error);
@@ -26,7 +25,6 @@ export async function searchEmbeddings(query, options = {}) {
   const minWords = options.minWords ?? DEFAULT_MIN_WORDS;
 
   if (!query || query.trim().split(/\s+/).length < minWords) {
-    console.log(`[search] Query too short (min ${minWords} words)`);
     return [];
   }
 
@@ -51,7 +49,6 @@ export async function searchEmbeddings(query, options = {}) {
     .sort((a, b) => b.score - a.score)
     .slice(0, TOP_K);
 
-  console.log(`[search] Found ${results.length} results for: "${query}"`);
   return results;
 }
 

@@ -71,6 +71,8 @@ export async function initModel(onProgress) {
 
   state.isModelLoading = true;
   state.modelStatus = 'downloading';
+  const modelInitStart = performance.now();
+  let loadingStart = null;
 
   try {
     // Dynamic import of WebLLM
@@ -78,10 +80,14 @@ export async function initModel(onProgress) {
 
     engine = await webllm.CreateMLCEngine(MODEL_CONFIG.selectedModel, {
       initProgressCallback: (progress) => {
-        console.log(`[model] ${progress.text}`);
         if (onProgress) onProgress(progress);
 
         // Update status based on progress
+        if (progress.text?.includes('Loading') && loadingStart === null) {
+          loadingStart = performance.now();
+          const downloadMs = Math.round(loadingStart - modelInitStart);
+          console.info(`[telemetry] Model download time: ${downloadMs}ms`);
+        }
         if (progress.text?.includes('Loading')) {
           state.modelStatus = 'loading';
         }
@@ -91,7 +97,17 @@ export async function initModel(onProgress) {
     state.isModelLoaded = true;
     state.isModelLoading = false;
     state.modelStatus = 'loaded';
-    console.log('[model] Model loaded successfully');
+
+    const loadedAt = performance.now();
+    const loadStart = loadingStart ?? modelInitStart;
+    const loadMs = Math.round(loadedAt - loadStart);
+    const totalInitMs = Math.round(loadedAt - modelInitStart);
+    if (loadingStart === null) {
+      console.info(`[telemetry] Model download time: ${totalInitMs}ms`);
+    }
+    console.info(`[telemetry] Model load time: ${loadMs}ms`);
+    console.info(`[telemetry] Model init total time: ${totalInitMs}ms`);
+
     return true;
   } catch (error) {
     console.error('[model] Failed to load model:', error);
@@ -145,14 +161,18 @@ export async function generateResponse(userMessage) {
     // Add current user message
     messages.push({ role: 'user', content: userMessage });
 
-    // Generate response
-    const response = await engine.chat.completions.create({
+    const requestPayload = {
       messages,
       max_tokens: MODEL_CONFIG.maxTokens,
       temperature: MODEL_CONFIG.temperature
-    });
+    };
+    console.info('[telemetry] Model request payload:', requestPayload);
+
+    // Generate response
+    const response = await engine.chat.completions.create(requestPayload);
 
     const rawResponse = response.choices[0]?.message?.content || '';
+    console.info('[telemetry] Model response payload:', response);
 
     // Extract user data from response
     const { cleanResponse, extractedData } = parseExtraction(rawResponse);
@@ -176,6 +196,7 @@ export async function generateResponse(userMessage) {
     if (responseTime > state.performance.maxResponseTime) {
       state.performance.maxResponseTime = responseTime;
     }
+    console.info(`[telemetry] Model response time: ${Math.round(responseTime)}ms`);
 
     state.isGenerating = false;
     return cleanResponse;
@@ -242,7 +263,6 @@ function mergeExtractedData(newData) {
     }
   }
 
-  console.log('[model] Updated user data:', state.extractedUser);
 }
 
 // Get a random greeting
@@ -284,7 +304,6 @@ export async function clearModelCache() {
     state.isModelLoaded = false;
     state.isModelLoading = false;
     state.modelStatus = 'none';
-    console.log('[model] Cache cleared');
     return true;
   } catch (error) {
     console.error('[model] Failed to clear cache:', error);

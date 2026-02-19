@@ -1,7 +1,7 @@
 // Header UI - toggle, menu, random color, favicon
 
 import state from '../../core/state.js';
-import { showSuggestions } from './input.js';
+import { restoreChatSuggestions } from './input.js';
 
 // Set random primary color on load
 export function setRandomPrimaryColor() {
@@ -16,7 +16,6 @@ export function setRandomPrimaryColor() {
   document.documentElement.style.setProperty('--primary-dark', primaryDark);
 
   updateFavicon(hue, saturation, lightness);
-  console.log(`[header] Primary color: ${primaryColor}`);
 }
 
 // Generate favicon with primary color
@@ -88,10 +87,7 @@ export function toggleExperimentalMode() {
       if (window.feather) window.feather.replace();
     }
 
-    // Show suggestions if model is loaded
-    if (state.isModelLoaded && state.showSuggestions) {
-      setTimeout(() => showSuggestions(), 100);
-    }
+    setTimeout(() => restoreChatSuggestions(), 100);
 
     // Track time
     if (state.portfolioStartTime) {
@@ -115,7 +111,7 @@ export function toggleExperimentalMode() {
     }
 
     if (toggleIcon) {
-      toggleIcon.setAttribute('data-feather', 'flask');
+      toggleIcon.setAttribute('data-feather', 'cpu');
       if (window.feather) window.feather.replace();
     }
 
@@ -132,7 +128,6 @@ export function toggleExperimentalMode() {
     state.portfolioStartTime = Date.now();
   }
 
-  console.log(`[header] Mode: ${state.experimentalMode ? 'chat' : 'portfolio'}`);
 }
 
 // Open settings drawer
@@ -193,5 +188,4 @@ export function toggleAccessibility() {
   if (toggle) toggle.setAttribute('aria-checked', String(state.accessibilityMode));
 
   document.body.classList.toggle('accessibility-mode', state.accessibilityMode);
-  console.log(`[header] Accessibility mode: ${state.accessibilityMode}`);
 }

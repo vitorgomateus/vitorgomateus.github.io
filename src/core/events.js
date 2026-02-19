@@ -167,8 +167,6 @@ export function setupEvents() {
 
   // Chat prompt timer
   setupChatPromptTimer();
-
-  console.log('[events] Event listeners set up');
 }
 
 // Handle project click

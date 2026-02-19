@@ -133,7 +133,6 @@ function pruneMessages() {
       messages[i].remove();
     }
     state.chatMessages.splice(0, removeCount);
-    console.log(`[messages] Pruned ${removeCount} old messages`);
   }
 }
 

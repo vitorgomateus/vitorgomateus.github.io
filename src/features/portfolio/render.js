@@ -9,7 +9,6 @@ export function renderPortfolio(container, data) {
     return;
   }
 
-  console.log('[render] Rendering portfolio');
   container.innerHTML = '';
 
   // Profile section

@@ -12,7 +12,7 @@ export function showAlert(message, type = 'info', options = {}) {
   alert.setAttribute('role', 'alert');
 
   // Icon
-  const iconMap = { info: 'info', success: 'check-circle', error: 'x-circle', primary: 'flask' };
+  const iconMap = { info: 'info', success: 'check-circle', error: 'x-circle', primary: 'cpu' };
   const icon = document.createElement('span');
   icon.className = 'alert__icon';
   icon.innerHTML = `<i data-feather="${iconMap[type] || 'info'}"></i>`;
@@ -61,8 +61,6 @@ export function showAlert(message, type = 'info', options = {}) {
       if (alert.parentNode) alert.remove();
     }, autoDismissTime);
   }
-
-  console.log(`[alerts] ${type}: ${message}`);
 
   return alert;
 }

@@ -12,7 +12,6 @@ export async function getRelevantContext(query) {
     const results = await searchEmbeddings(query, { minWords: 3 });
 
     if (!results || results.length === 0) {
-      console.log('[rag] No relevant context found');
       return '';
     }
 
@@ -25,7 +24,6 @@ export async function getRelevantContext(query) {
     });
 
     const context = contextParts.join('\n\n');
-    console.log(`[rag] Providing ${results.length} context chunks`);
     return context;
   } catch (error) {
     console.error('[rag] Error retrieving context:', error);

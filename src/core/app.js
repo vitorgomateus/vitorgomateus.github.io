@@ -8,8 +8,6 @@ import { setupEvents } from './events.js';
 import state from './state.js';
 
 async function init() {
-  console.log('[app] Initializing portfolio...');
-
   // Set random primary color & favicon
   setRandomPrimaryColor();
 
@@ -43,8 +41,6 @@ async function init() {
   if (window.feather) {
     window.feather.replace();
   }
-
-  console.log('[app] Portfolio ready');
 }
 
 // Load portfolio data JSON file
@@ -55,7 +51,6 @@ async function loadPortfolioData() {
     throw new Error(`Failed to load ${filename}: HTTP ${response.status}`);
   }
   const data = await response.json();
-  console.log(`[app] Loaded ${filename}`);
   return data;
 }
 
