@@ -115,10 +115,10 @@ src/
 ### 2. Vector Search via embeddings (part of the static primary feature)
 
 #### Implementation
-- **Embeddings**: Pre-generated from `data-002.json` (or the one with the largest number/version)
+- **Embeddings**: Pre-generated from `data-002.json`
 - **Model**: `all-MiniLM-L6-v2` via sentence-transformers
 - **Search**: Client-side cosine similarity
-- **Trigger**: Minimum 3 words in query
+- **Trigger**: Minimum 3 chars in query, otherwise "search" button is disabled.
 - **Top-K**: 3 most relevant chunks
 - **Threshold**: 0.3 minimum similarity score
 
@@ -171,7 +171,7 @@ maxHistory: 5 (conversation turns)
 - **User Input**: Textarea auto-resizes, Enter to send
 - **Suggestions**: Show two suggestions from a pre-generate, hardcoded set of 20 questions to ask the bot. Suggestions change after each bot reply. Only shown after the bot outputs its greeting. When the system asks the user for permission to download the model, the option "Yes!" is made available. Suggestions' buttons have a similar styling to the user messages, but slightly smaller font-size and padding.
 - **Dynamic personality** - The instructions added for each model request will rotate between 3 personalities: warm, cold, and enthusiastic.
-- **Portfolio RAG** - Each request to the model gets as context any portfolio data chunks that match a vector search.
+- **Portfolio RAG** - Each request to the model gets as context any portfolio data chunks that match a vector search, when a user input is at least 3 words.
 
 #### System Instructions
 ```markdown
@@ -229,7 +229,7 @@ maxHistory: 5 (conversation turns)
   - Keep responses very short and focused.`;
   
   this.extractionInstructions = `\n\nIMPORTANT: Attempt to extract the following information about the user from their messages, and add it in this exact format at the top of EVERY response, and do not mention this effort otherwise. Keep empty strings for unknown fields. 
-  [EXTRACT]{"name":"<name>","email":"<email>","company":"<company>","position":"<job title/role>","relevant_info":"<relevant info: projects, technologies, interests, goals>"}[/EXTRACT]`;
+  [EXTRACT]{"name":"<name>","email":"<email>","company":"<company>","position":"<job title/role>","keywords":"<keywords: projects, technologies, interests, goals>"}[/EXTRACT]`;
         
 ```
 
@@ -240,7 +240,8 @@ maxHistory: 5 (conversation turns)
 **How It Works**: The model receives instructions to append extracted user data in a special format at the end of each response. This data is parsed and removed before displaying the response to the user, then re-injected into future prompts to maintain awareness.
 
 **Implementation Details**:
-- **Format**: `[EXTRACT]{"name":"","email":"","company":"","position":"","relevant_info":""}[/EXTRACT]`
+- **Format**: `[EXTRACT]{"name":"","email":"","company":"","position":"","keywords":""}[/EXTRACT]`
+- **Model instructions** need to be VERY clear as they are prone to failing, but not so long as to overwhelm the context window.
 - **Location**: Model appends to every response; stripped before display
 - **Internal Storage**: All data stored in-memory as an object
 - **Persistence**: Extracted info injected into system prompt for all future messages
@@ -248,7 +249,7 @@ maxHistory: 5 (conversation turns)
 - **Privacy**: Zero server calls; data never leaves the user's device
 - **Lifecycle**: Data persists only during session; cleared on page refresh
 - **Context Survival**: Survives limited `maxHistory: 5` via re-injection into prompts
-- **Cumulative**: `relevant_info` field accumulates user details (projects, technologies, interests)
+- **Cumulative**: `keywords` field accumulates user details (projects, technologies, interests)
 
 **Failure Handling**:
 - If JSON is malformed: Log error, continue without extraction
@@ -274,7 +275,7 @@ maxHistory: 5 (conversation turns)
 #### States
 - **OFF (Default)**: Static portfolio visible, chat interface hidden
 - **ON**: Chat interface visible, static content hidden
-- **Toggle**: Animated switch in header
+- **Toggle**: Animated switch in header, with an icon, an no words.
 - **Persistence**: No persistence (resets on page reload)
 - **Time Tracking**: Track time spent in each mode for feedback
 
@@ -303,13 +304,8 @@ maxHistory: 5 (conversation turns)
 ### 7. Feedback System
 
 #### Trigger Conditions
-- **Time Spent**: 2+ minute in chat or portfolio
+- **Time Spent**: 2+ minute in chat or portfolio, prompts a message in chat, ask the user provide feedback.
 - **User Initiated**: Click feedback button in drawer
-
-#### Bubble
-- Fixed position bottom-right
-- "Share your thoughts?" with dismiss X
-- Dismissible (sets flag to prevent re-showing)
 
 #### Modal Form
 - **Categories**: Categories of analytics and feedback for the user to checkbox select whih to share.
