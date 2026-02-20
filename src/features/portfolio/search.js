@@ -82,7 +82,7 @@ async function getQueryEmbedding(query) {
   const matchingEmbeddings = [];
 
   for (const chunk of state.embeddings) {
-    const textLower = chunk.text.toLowerCase();
+    const textLower = chunk.searchable_text.toLowerCase();
     const matchCount = queryWords.filter(w => textLower.includes(w)).length;
 
     if (matchCount > 0) {
@@ -124,6 +124,11 @@ async function getQueryEmbedding(query) {
 export function resultsToChunkIds(results) {
   const chunkIds = new Set();
 
+  const toId = (value) => String(value || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+
   for (const result of results) {
     if (result.anchor) {
       // Use anchor as chunk identifier
@@ -133,20 +138,8 @@ export function resultsToChunkIds(results) {
       chunkIds.add(`project-${result.project.toLowerCase().replace(/\s+/g, '-')}`);
     }
     if (result.section) {
-      // Map section names to container anchors
-      const sectionMap = {
-        'Summary': 'summary',
-        'Skills': 'skills',
-        'Languages': 'languages',
-        'Experience': 'experience',
-        'Education': 'education',
-        'Projects': 'projects'
-      };
-      const mapped = sectionMap[result.section];
-      if (mapped) {
-        // For sections, show the section heading + matching chunks
-        chunkIds.add(mapped);
-      }
+      const mapped = toId(result.section);
+      if (mapped) chunkIds.add(mapped);
     }
   }
 

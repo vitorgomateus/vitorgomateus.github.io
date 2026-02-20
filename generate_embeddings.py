@@ -1,9 +1,13 @@
 """
 Generate embeddings from portfolio data JSON.
 
+This script intentionally keeps chunking explicit and simple.
+If you add a new section to data-002.json, update chunk_data() for that section.
+If users may ask for that section using different words, add aliases in SECTION_SYNONYMS.
+
 Usage:
   python -m venv venv
-  .\venv\Scripts\Activate.ps1  (Windows) / source venv/bin/activate (Linux/Mac)
+    .\\venv\\Scripts\\Activate.ps1  (Windows) / source venv/bin/activate (Linux/Mac)
   pip install sentence-transformers
   python generate_embeddings.py
 
@@ -16,12 +20,51 @@ from sentence_transformers import SentenceTransformer
 
 MODEL_NAME = 'all-MiniLM-L6-v2'
 
+SECTION_SYNONYMS = {
+    'Summary': ['summary', 'profile', 'about'],
+    'Skills': ['skills', 'expertise', 'competencies'],
+    'Languages': ['languages', 'spoken languages'],
+    'Education': ['education', 'academic background'],
+    'Experience': ['experience', 'work history', 'employment'],
+    'Projects': ['projects', 'case studies', 'work'],
+    'About': ['about website', 'site information'],
+    'Interests': ['interests', 'personal interests', 'hobbies']
+}
+
 def find_data_file():
     """Use the fixed portfolio data source file."""
     data_file = 'data-002.json'
     if not os.path.exists(data_file):
         raise FileNotFoundError(f'{data_file} not found')
     return data_file
+
+def build_searchable_text(chunk):
+    parts = [chunk.get('text', '')]
+
+    section = chunk.get('section')
+    if section:
+        parts.append(section)
+        parts.extend(SECTION_SYNONYMS.get(section, []))
+
+    if chunk.get('project'):
+        parts.append(chunk['project'])
+
+    if chunk.get('anchor'):
+        parts.append(str(chunk['anchor']).replace('-', ' ').replace('_', ' '))
+
+    seen = set()
+    normalized = []
+    for part in parts:
+        token = str(part).strip()
+        if not token:
+            continue
+        key = token.lower()
+        if key in seen:
+            continue
+        seen.add(key)
+        normalized.append(token)
+
+    return '. '.join(normalized)
 
 def chunk_data(data):
     """Convert portfolio data into text chunks with metadata."""
@@ -69,6 +112,25 @@ def chunk_data(data):
                 'section': 'Languages',
                 'anchor': 'languages-container'
             })
+
+        # Interests / hobbies
+        interests = p.get('interests') or p.get('personalInterests') or p.get('hobbies') or []
+        for interest in interests:
+            if isinstance(interest, str):
+                chunks.append({
+                    'text': interest,
+                    'section': 'Interests',
+                    'anchor': 'summary-container'
+                })
+            elif isinstance(interest, dict):
+                title = interest.get('title') or interest.get('name') or interest.get('label') or ''
+                description = interest.get('description') or interest.get('text') or ''
+                if title or description:
+                    chunks.append({
+                        'text': f"{title}: {description}" if title and description else (title or description),
+                        'section': 'Interests',
+                        'anchor': 'summary-container'
+                    })
     
     # Education
     for edu in data.get('education', []):
@@ -159,12 +221,15 @@ def chunk_data(data):
                 'section': 'About',
                 'anchor': 'summary-container'
             })
+
+    for chunk in chunks:
+        chunk['searchable_text'] = build_searchable_text(chunk)
     
     return chunks
 
 def generate_embeddings(chunks, model):
     """Generate embeddings for all chunks."""
-    texts = [c['text'] for c in chunks]
+    texts = [c['searchable_text'] for c in chunks]
     print(f'Generating embeddings for {len(texts)} chunks...')
     
     embeddings = model.encode(texts, show_progress_bar=True)
