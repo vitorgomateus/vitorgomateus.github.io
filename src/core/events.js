@@ -163,7 +163,9 @@ export function setupEvents() {
   });
 
   // Feedback timer
-  setupFeedbackTimer();
+  // disabled for now
+  // Should we use this?
+  // setupFeedbackTimer();
 
   // Chat prompt timer
   setupChatPromptTimer();
@@ -249,8 +251,7 @@ function setupFeedbackTimer() {
   setTimeout(() => {
     if (!state.feedbackDismissed && !state.feedbackShown) {
       showAlert('Share your thoughts?', 'primary', {
-        onClick: openFeedbackModal,
-        autoDismiss: 0
+        onClick: openFeedbackModal
       });
       state.feedbackShown = true;
     }
