@@ -18,7 +18,7 @@ export function renderPortfolio(container, data) {
 
   // Skills section
   if (data.personal?.skills?.length) {
-    container.appendChild(createSkillsSection(data.personal.skills));
+    container.appendChild(createSkillsSection(data.personal.skills, data.personal.skillTags));
   }
 
   // Languages section
@@ -111,7 +111,7 @@ function createContactLink(href, icon, text, external = false) {
 }
 
 // Skills section
-function createSkillsSection(skills) {
+function createSkillsSection(skills, skillTags) {
   const section = document.createElement('section');
   section.className = 'portfolio__section';
   section.id = 'skills-container';
@@ -152,6 +152,24 @@ function createSkillsSection(skills) {
 
     section.appendChild(chunk);
   });
+
+  if (skillTags?.length) {
+    const tagsChunk = document.createElement('div');
+    tagsChunk.className = 'portfolio__chunk portfolio__skill-tags-block';
+    tagsChunk.setAttribute('data-chunk', 'skill-tags');
+
+    const tagsList = document.createElement('ul');
+    tagsList.className = 'portfolio__skill-tools';
+    tagsList.setAttribute('aria-label', 'All skills');
+    skillTags.forEach(tag => {
+      const li = document.createElement('li');
+      li.className = 'portfolio__skill-tool';
+      li.textContent = tag;
+      tagsList.appendChild(li);
+    });
+    tagsChunk.appendChild(tagsList);
+    section.appendChild(tagsChunk);
+  }
 
   return section;
 }

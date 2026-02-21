@@ -9,40 +9,47 @@
     "summary": "Innovative UX Designer with 8+ years of experience delivering end-to-end projects for startups, nonprofits, and large organizations. At the University of Chicago Library, led the redesign of the main website (1.6M+ annual users) and established a design system to unify multiple vendor platforms. Adept at balancing user needs, technical constraints, and business goals to create accessible, future-proof solutions.",
     "skills": [
       {
-        "category": "UX Expertise",
-        "description": "Expert in identifying user needs through research, wireframing, prototyping, and usability testing, ensuring data-driven solutions that address key problems and drive usefulness.",
+        "category": "End-to-End UX Ownership",
+        "description": "Designs and executes the full UX lifecycle — research, wireframing, prototyping, and usability testing — delivering data-driven solutions for high-impact projects, including virtual conferences (200+ presentations) and institutional websites (1.6M+ users).",
         "tools": [
-          "Journey maps",
-          "Affinity maps",
-          "Usability studies",
+          "User research",
+          "Usability testing",
+          "Wireframing",
+          "Prototyping",
+          "Journey mapping",
+          "Affinity mapping",
+          "Heuristic evaluation",
           "Hotjar",
           "Maze",
-          "GA4",
+          "GA4"
+        ]
+      },
+      {
+        "category": "Cross-Functional Collaboration",
+        "description": "Bridges gaps between teams, stakeholders, and consultants to align goals and drive consensus, evidenced by leading a design system overhaul for a major academic library.",
+        "tools": [
+          "Stakeholder alignment",
+          "Design systems",
+          "Agile workflows",
+          "AI-driven prototyping",
+          "Figma",
+          "Notion",
           "PowerBi"
         ]
       },
       {
-        "category": "Proven Track Record",
-        "description": "Managed and executed full project lifecycles, from planning to quality assurance, ensuring seamless delivery with strong attention to detail.",
+        "category": "Scalable & Accessible Design",
+        "description": "Creates future-proof, scalable, inclusive solutions with a focus on WCAG 2.0 compliance.",
         "tools": [
-          "Notion",
-          "Spreadsheets",
-          "Accessibility",
-          "Adobe CS",
-          "Figma"
-        ]
-      },
-      {
-        "category": "Collaborative & Innovative",
-        "description": "A resourceful team player finding innovative solutions to solve problems while thriving in cross-functional environments.",
-        "tools": [
-          "Wireframing",
-          "Prototyping",
-          "Git",
+          "Accessibility auditing",
+          "WCAG 2.0 AA",
+          "Inclusive design",
           "HTML5",
           "CSS3",
-          "JS",
-          "Python"
+          "JavaScript",
+          "Python",
+          "Git",
+          "Adobe Creative Suite"
         ]
       }
     ],
@@ -50,7 +57,43 @@
       "english": "Fluent",
       "portuguese": "Native",
       "spanish": "Basic"
-    }
+    },
+    "skillTags": [
+      "User research",
+      "Usability testing",
+      "Wireframing",
+      "Prototyping",
+      "Journey mapping",
+      "Affinity mapping",
+      "Heuristic evaluation",
+      "Accessibility auditing",
+      "WCAG 2.0 AA compliance",
+      "Stakeholder alignment",
+      "Cross-functional collaboration",
+      "Design systems",
+      "End-to-end project ownership",
+      "Agile workflows",
+      "AI-driven prototyping",
+      "AI integration for accessibility",
+      "Inclusive design",
+      "Rapid iteration",
+      "Stakeholder management",
+      "UX writing",
+      "Information architecture",
+      "Front-end development",
+      "HTML5",
+      "CSS3",
+      "JavaScript",
+      "Python",
+      "Git",
+      "Figma",
+      "Adobe Creative Suite",
+      "Hotjar",
+      "Maze",
+      "GA4",
+      "PowerBi",
+      "Notion"
+    ]
   },
   "education": [
     {
