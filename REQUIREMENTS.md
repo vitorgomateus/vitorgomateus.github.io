@@ -438,7 +438,7 @@ The header should use the primary color as background. It should contain the onl
       "companyUrl": "url (optional)",
       "location": "city, state/country",
       "period": "Month Year - Present/Month Year",
-      "description": "string (2-4 sentences)"
+      "description": "string[] (array of bullet point strings) or a single string (2-4 sentences)"
     }
   ],
   "projects": [
