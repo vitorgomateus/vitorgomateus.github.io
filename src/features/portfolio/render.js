@@ -225,10 +225,21 @@ function createExperienceSection(experience) {
     meta.textContent = `${exp.location} | ${exp.period}`;
     chunk.appendChild(meta);
 
-    const desc = document.createElement('p');
-    desc.className = 'portfolio__entry-description';
-    desc.textContent = exp.description;
-    chunk.appendChild(desc);
+    if (Array.isArray(exp.description)) {
+      const ul = document.createElement('ul');
+      ul.className = 'portfolio__entry-description';
+      exp.description.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = item;
+        ul.appendChild(li);
+      });
+      chunk.appendChild(ul);
+    } else {
+      const desc = document.createElement('p');
+      desc.className = 'portfolio__entry-description';
+      desc.textContent = exp.description;
+      chunk.appendChild(desc);
+    }
 
     section.appendChild(chunk);
   });

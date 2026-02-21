@@ -201,6 +201,14 @@ a.portfolio__entry-company:focus-visible {
   color: var(--text);
 }
 
+ul.portfolio__entry-description {
+  padding-left: var(--space-md);
+}
+
+.portfolio__entry-description li+li {
+  margin-top: var(--space-xs);
+}
+
 /* ========================================
    Languages
    ======================================== */

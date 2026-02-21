@@ -1,27 +1,49 @@
 {
   "personal": {
     "name": "Vítor Gonçalves",
-    "title": "User-Centered Designer | End-to-End Project Specialist",
+    "title": "UX Designer | Research & Design Systems",
     "location": "Chicago, IL, USA",
     "phone": "(224) 933-4283",
-    "email": "hello@vitordesign.pt",
+    "email": "vitorg8.5@gmail.com",
     "linkedin": "https://www.linkedin.com/in/vitorgo/",
-    "summary": "Innovative UX Designer with over 8 years of experience across diverse roles, from web design, to UX research, and development. Has a proven track record of delivering end-to-end projects in collaboration with cross-functional teams across startups, nonprofits, and large organizations. Holding a master's degree in HCI, excels at creating user-centered solutions that balance design and technical requirements.",
+    "summary": "Innovative UX Designer with 8+ years of experience delivering end-to-end projects for startups, nonprofits, and large organizations. At the University of Chicago Library, led the redesign of the main website (1.6M+ annual users) and established a design system to unify multiple vendor platforms. Adept at balancing user needs, technical constraints, and business goals to create accessible, future-proof solutions.",
     "skills": [
       {
         "category": "UX Expertise",
         "description": "Expert in identifying user needs through research, wireframing, prototyping, and usability testing, ensuring data-driven solutions that address key problems and drive usefulness.",
-        "tools": ["Journey maps", "Affinity maps", "Usability studies", "Hotjar", "Maze", "GA4", "PowerBi"]
+        "tools": [
+          "Journey maps",
+          "Affinity maps",
+          "Usability studies",
+          "Hotjar",
+          "Maze",
+          "GA4",
+          "PowerBi"
+        ]
       },
       {
         "category": "Proven Track Record",
         "description": "Managed and executed full project lifecycles, from planning to quality assurance, ensuring seamless delivery with strong attention to detail.",
-        "tools": ["Notion", "Spreadsheets", "Accessibility", "Adobe CS", "Figma"]
+        "tools": [
+          "Notion",
+          "Spreadsheets",
+          "Accessibility",
+          "Adobe CS",
+          "Figma"
+        ]
       },
       {
         "category": "Collaborative & Innovative",
         "description": "A resourceful team player finding innovative solutions to solve problems while thriving in cross-functional environments.",
-        "tools": ["Wireframing", "Prototyping", "Git", "HTML5", "CSS3", "JS", "Python"]
+        "tools": [
+          "Wireframing",
+          "Prototyping",
+          "Git",
+          "HTML5",
+          "CSS3",
+          "JS",
+          "Python"
+        ]
       }
     ],
     "languages": {
@@ -50,12 +72,20 @@
   ],
   "experience": [
     {
-      "title": "Web and Graphic Designer",
+      "title": "UX Designer",
       "company": "University of Chicago Library",
       "companyUrl": "https://www.lib.uchicago.edu/",
       "location": "Chicago, IL, USA",
       "period": "Aug 2023 - Present",
-      "description": "Updated branding across multiple web platforms and documents to enhance brand consistency and modernize the Library's image. Collaborate with cross-functional teams in planning product roadmap and implementing new features. Designed and launched a user-friendly website for a digital collection, making it easier for people to find and use resources. Monitor web analytics, accessibility, and requests for new features."
+      "description": [
+        "Lead Designer for the Library website redesign serving 1.6M+ annual users — owned all design work, co-led research strategy, and collaborated with a cross-functional team (developers, librarians, external consultants) to implement a new design system and CSS framework.",
+        "Led research, design, and implementation of 3 new/rebuilt websites for key University and Library initiatives, with a focus on usability, accessibility, and future-proofing.",
+        "Exploring AI integration to enhance accessibility, personalize user experiences, and streamline workflows.",
+        "Cross-Departmental Consultancy on UX, web/graphic design, social media, SEO, and accessibility.",
+        "Leading an Accessibility Interest Group coordinating digital and physical accessibility efforts across the Library.",
+        "Ensures 90%+ WCAG 2.0 AA compliance across 7+ Library websites.",
+        "Collaborates with the Director of Communications to apply a new brand system across all physical and digital media."
+      ]
     },
     {
       "title": "UX Designer & Developer (volunteer)",
@@ -63,14 +93,20 @@
       "companyUrl": "https://www.changingchildrensworlds.org/",
       "location": "IL, USA",
       "period": "Sep 2022 - Aug 2023",
-      "description": "Planning email outreach campaigns to increase donation acquisition. Researching methods for further improvement. Strengthening the digital experience and presence by studying personas and service blueprints. Modernizing the website in Wix."
+      "description": [
+        "Strengthened digital presence by redesigning the website (Wix), optimizing SEO, and increasing donation acquisition through targeted email campaigns."
+      ]
     },
     {
       "title": "UI/UX Designer & Developer",
       "company": "Freelancing Web Services",
       "location": "Remote",
       "period": "Apr 2020 – Mar 2022",
-      "description": "Facilitated discussions with stakeholders to balance technological constraints, and usability needs in alignment with business goals. Created a complete, consistent, and valuable experience with 99% positive feedback using UX methods to understand the users' mental models, and journey mapping to avoid pitfalls. Directed two projects to transition international scientific conferences to virtual venues. Events lasted 3 days each, spanned worldwide, had over 200 presented papers, and over 3000 messages in online scientific discussion."
+      "description": [
+        "Facilitated discussions with stakeholders to balance technological constraints, and usability needs in alignment with business goals.",
+        "Designed and executed end-to-end UX/UI for two international scientific conferences, single-handedly transitioning 200+ presentations and 3,000+ discussions to a 3-day virtual format — achieving 99% positive feedback.",
+        "Conducted comprehensive UX research (journey mapping, mental model analysis) to identify pain points, eliminate usability pitfalls, and deliver a seamless global experience."
+      ]
     },
     {
       "title": "UI/UX Designer & Developer",
@@ -78,21 +114,32 @@
       "companyUrl": "https://www.watgrid.com/",
       "location": "Ílhavo, Portugal",
       "period": "Feb 2018 - Feb 2020",
-      "description": "Overhauled the UX for a SaaS IoT management platform, collaborating with hardware and software engineers to integrate key partner feedback and deliver a streamlined, user-friendly experience. Established branding consistency and scalability by creating a shared design system for product design and marketing. Monitored product roadmap, feature performance, and usability in alignment with business goals. Developed new features in an Agile environment using AngularJs."
+      "description": [
+        "Overhauled the UX for a SaaS IoT management platform, collaborating with hardware and software engineers to integrate key partner feedback and deliver a streamlined, user-friendly experience.",
+        "Established branding consistency and scalability by creating a shared design system for product design and marketing.",
+        "Monitored product roadmap, feature performance, and usability in alignment with business goals.",
+        "Developed new features in an Agile environment using AngularJs."
+      ]
     },
     {
       "title": "Digital Media Specialist",
       "company": "My Friends in Portugal",
       "location": "Aveiro, Portugal",
       "period": "Mar 2017 - Dec 2017",
-      "description": "Close cooperation with CEO and COO to bootstrap an e-tourism start-up. Responsible for UI development, marketing management, user research, and graphic design."
+      "description": [
+        "Close cooperation with CEO and COO to bootstrap an e-tourism start-up.",
+        "Responsible for UI development, marketing management, user research, and graphic design."
+      ]
     },
     {
       "title": "Lead Photographer",
       "company": "Foto Felicidade",
       "location": "Vila Verde, Portugal",
       "period": "May 2004 - Sep 2014",
-      "description": "Conducted studio and outdoor photo sessions, weddings, and other private events. Digital photo editing and composition."
+      "description": [
+        "Conducted studio and outdoor photo sessions, weddings, and other private events.",
+        "Digital photo editing and composition."
+      ]
     }
   ],
   "projects": [
@@ -105,7 +152,16 @@
       "company": "Watgrid Solutions",
       "role": "UI/UX Designer & Developer",
       "shortDescription": "The platform to be developed for Winegrid was quite challenging as it encompassed a complex information architecture which generated a gap with the user's mental model. In order to test and allow common ground of understanding between the team members a hi-fi prototype was made in Adobe XD. This made it easier to guess implementation efforts and the validity of some of the functionalities.",
-      "skills": ["UI design", "Adobe XD", "AngularJS", "jQuery", "fast prototyping", "usability testing", "information architecture", "design systems"],
+      "skills": [
+        "UI design",
+        "Adobe XD",
+        "AngularJS",
+        "jQuery",
+        "fast prototyping",
+        "usability testing",
+        "information architecture",
+        "design systems"
+      ],
       "contentBlocks": [
         {
           "id": "overview",
@@ -171,7 +227,16 @@
       "company": "Master's Thesis",
       "role": "UX Researcher & Designer",
       "shortDescription": "This project studied the potential contribution of multimedia technology for a timebanking community in Santa Maria da Feira, Portugal. As a proof of concept, two prototypes were developed for a majorly senior community.",
-      "skills": ["UI design", "Wordpress", "Adobe XD", "User Research", "ethnography", "fast prototyping", "usability testing", "questionnaires"],
+      "skills": [
+        "UI design",
+        "Wordpress",
+        "Adobe XD",
+        "User Research",
+        "ethnography",
+        "fast prototyping",
+        "usability testing",
+        "questionnaires"
+      ],
       "contentBlocks": [
         {
           "id": "overview",
@@ -236,7 +301,14 @@
       "company": "University of Chicago Library",
       "role": "Web and Graphic Designer",
       "shortDescription": "Designed and launched a user-friendly website for a digital collection at UChicago Library, making it easier for people to find and use resources. Updated branding across multiple platforms to enhance consistency and modernize the library's image.",
-      "skills": ["UI design", "web design", "branding", "accessibility", "analytics", "stakeholder collaboration"],
+      "skills": [
+        "UI design",
+        "web design",
+        "branding",
+        "accessibility",
+        "analytics",
+        "stakeholder collaboration"
+      ],
       "contentBlocks": [
         {
           "id": "overview",
@@ -255,7 +327,14 @@
       "company": "Freelancing Web Services",
       "role": "UI/UX Designer & Developer",
       "shortDescription": "Directed two projects to transition international scientific conferences to virtual venues. Created a complete, consistent, and valuable experience with 99% positive feedback. Events lasted 3 days each, spanned worldwide, had over 200 presented papers, and over 3000 messages in online scientific discussion.",
-      "skills": ["UI design", "UX research", "journey mapping", "stakeholder management", "virtual events", "user testing"],
+      "skills": [
+        "UI design",
+        "UX research",
+        "journey mapping",
+        "stakeholder management",
+        "virtual events",
+        "user testing"
+      ],
       "contentBlocks": [
         {
           "id": "overview",
@@ -274,7 +353,10 @@
       "company": "Placeholder",
       "role": "Designer",
       "shortDescription": "Placeholder description for BMRC redesign project.",
-      "skills": ["UI design", "web design"],
+      "skills": [
+        "UI design",
+        "web design"
+      ],
       "contentBlocks": [
         {
           "id": "overview",
@@ -293,7 +375,15 @@
       "company": "Master's Project",
       "role": "UI Designer & Developer",
       "shortDescription": "The final year of the master's implemented a method in which different classes/disciplines colaborated in a single project. Notify Me was a project that experimented with detecting user's TV usage. This was exploited using a Bluetooth Beacon to detect proximity using an App. This App promised better TV suggestions made by algorythms and the user's history. An additional gamification concept was developed where users could bet on some TV show's content against each other, using custom currency and applying for monthly prizes.",
-      "skills": ["UI design", "HTML/ CSS/ Javascript", "React+Redux", "Arduino", "Bluetooth", "fast prototyping", "usability testing"],
+      "skills": [
+        "UI design",
+        "HTML/ CSS/ Javascript",
+        "React+Redux",
+        "Arduino",
+        "Bluetooth",
+        "fast prototyping",
+        "usability testing"
+      ],
       "contentBlocks": [
         {
           "id": "overview",
@@ -349,7 +439,11 @@
       "company": "Master's Project",
       "role": "Designer & Developer",
       "shortDescription": "Project for a master's class, with the purpose of exploiting physical objects for digital interactions. Here the sphere was studied to be used as an interface. A prototype was developed using two potentiometers, with which users can select a country and listen to it's music.",
-      "skills": ["Arduino", "3D printing", "physical computing"],
+      "skills": [
+        "Arduino",
+        "3D printing",
+        "physical computing"
+      ],
       "contentBlocks": [
         {
           "id": "overview",
@@ -372,7 +466,11 @@
       "company": "Lampwave Studio",
       "role": "Game Designer",
       "shortDescription": "A colaboration with Lampwave Studio to develop a video-game for a special event. It used the gyroscope to generate a ball-in-a-maze game.",
-      "skills": ["vector design", "video-game design", "UI design"],
+      "skills": [
+        "vector design",
+        "video-game design",
+        "UI design"
+      ],
       "contentBlocks": [
         {
           "id": "overview",
@@ -396,7 +494,13 @@
       "company": "Bachelor's Project",
       "role": "Designer & Developer",
       "shortDescription": "Geolocation-based mobile application developed for bachelor's degree.",
-      "skills": ["vector design", "digital composition", "UI design HTML/ CSS/ Javascript", "PhoneGap", "Geolocation"],
+      "skills": [
+        "vector design",
+        "digital composition",
+        "UI design HTML/ CSS/ Javascript",
+        "PhoneGap",
+        "Geolocation"
+      ],
       "contentBlocks": [
         {
           "id": "overview",
@@ -420,7 +524,11 @@
       "company": "Bachelor's Project",
       "role": "Photography Director",
       "shortDescription": "Short film project where I served as photography director, handling cinematography, lighting, and visual storytelling.",
-      "skills": ["Video capture and editing", "Script writing", "Cinematography"],
+      "skills": [
+        "Video capture and editing",
+        "Script writing",
+        "Cinematography"
+      ],
       "contentBlocks": [
         {
           "id": "overview",
