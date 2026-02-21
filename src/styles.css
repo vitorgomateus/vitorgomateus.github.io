@@ -210,8 +210,8 @@ body {
 
 .header__toggle-track {
   position: relative;
-  width: 2.75rem;
-  height: 1.5rem;
+  width: 3.2rem;
+  height: 1.9rem;
   border-radius: var(--radius-lg);
   background: rgba(255, 255, 255, 0.35);
   border: 1px solid rgba(255, 255, 255, 0.6);
@@ -220,8 +220,8 @@ body {
 
 .header__toggle-knob {
   position: absolute;
-  top: 1px;
-  left: 1px;
+  top: 4px;
+  left: 4px;
   width: 1.25rem;
   height: 1.25rem;
   border-radius: 50%;
@@ -232,17 +232,15 @@ body {
 }
 
 .header__toggle-icon {
-  width: 14px;
-  height: 14px;
+  width: 15px;
+  height: 15px;
+  position: absolute;
+  top: 6px;
 }
 
 .header__toggle:focus-visible {
   outline: 2px solid white;
   outline-offset: 2px;
-}
-
-.header__toggle[aria-checked="true"] .header__toggle-track {
-  background: rgba(255, 255, 255, 0.65);
 }
 
 .header__toggle[aria-checked="true"] .header__toggle-knob {

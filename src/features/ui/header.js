@@ -64,8 +64,6 @@ export function toggleExperimentalMode() {
 
   toggle.setAttribute('aria-checked', String(state.experimentalMode));
 
-  const toggleIcon = document.getElementById('feature-toggle-icon');
-
   if (state.experimentalMode) {
     // Switch to chat mode
     if (portfolioContainer) portfolioContainer.hidden = true;
@@ -79,11 +77,6 @@ export function toggleExperimentalMode() {
     // Update icon to send
     if (inputBtnIcon) {
       inputBtnIcon.setAttribute('data-feather', 'send');
-      if (window.feather) window.feather.replace();
-    }
-
-    if (toggleIcon) {
-      toggleIcon.setAttribute('data-feather', 'code');
       if (window.feather) window.feather.replace();
     }
 
@@ -107,11 +100,6 @@ export function toggleExperimentalMode() {
     // Update icon to search
     if (inputBtnIcon) {
       inputBtnIcon.setAttribute('data-feather', 'search');
-      if (window.feather) window.feather.replace();
-    }
-
-    if (toggleIcon) {
-      toggleIcon.setAttribute('data-feather', 'cpu');
       if (window.feather) window.feather.replace();
     }
 
