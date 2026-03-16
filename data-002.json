@@ -1,16 +1,16 @@
 {
   "personal": {
     "name": "Vítor Gonçalves",
-    "title": "UX Designer | Research & Design Systems",
+    "title": "UX Designer & Developer | Data-driven, Technically Fluent",
     "location": "Chicago, IL, USA",
     "phone": "(224) 933-4283",
     "email": "vitorg8.5@gmail.com",
     "linkedin": "https://www.linkedin.com/in/vitorgo/",
-    "summary": "Innovative UX Designer with 8+ years of experience delivering end-to-end projects for startups, nonprofits, and large organizations. At the University of Chicago Library, led the redesign of the main website (1.6M+ annual users) and established a design system to unify multiple vendor platforms. Adept at balancing user needs, technical constraints, and business goals to create accessible, future-proof solutions.",
+    "summary": "UX Designer with 8+ years of experience delivering end-to-end projects on complex, constraint-driven products. Co-led the redesign of the main website at the UChicago Library (1.6M+ annual users, 400+ editors) and established a design system to unify multiple vendor platforms. Adept at balancing stakeholder ambiguity, technical challenges, and user needs to create accessible, future-proof solutions. Strongest in environments where research rigor, technical feasibility, and stakeholder complexity all matter at once.",
     "skills": [
       {
         "category": "End-to-End UX Ownership",
-        "description": "Designs and executes the full UX lifecycle — research, wireframing, prototyping, and usability testing — delivering data-driven solutions for high-impact projects, including virtual conferences (200+ presentations) and institutional websites (1.6M+ users).",
+        "description": "Designed and executed the full UX lifecycle — research, wireframing, prototyping, and usability testing — delivering data-driven solutions for high-impact projects, including virtual conferences (200+ presentations) and institutional websites (1.6M+ users).",
         "tools": [
           "User research",
           "Usability testing",
@@ -60,39 +60,26 @@
     },
     "skillTags": [
       "User research",
-      "Usability testing",
-      "Wireframing",
       "Prototyping",
       "Journey mapping",
-      "Affinity mapping",
-      "Heuristic evaluation",
-      "Accessibility auditing",
       "WCAG 2.0 AA compliance",
       "Stakeholder alignment",
       "Cross-functional collaboration",
       "Design systems",
       "End-to-end project ownership",
-      "Agile workflows",
       "AI-driven prototyping",
-      "AI integration for accessibility",
       "Inclusive design",
-      "Rapid iteration",
-      "Stakeholder management",
-      "UX writing",
       "Information architecture",
-      "Front-end development",
       "HTML5",
       "CSS3",
       "JavaScript",
       "Python",
-      "Git",
       "Figma",
       "Adobe Creative Suite",
       "Hotjar",
       "Maze",
       "GA4",
-      "PowerBi",
-      "Notion"
+      "PowerBi"
     ]
   },
   "education": [
@@ -121,13 +108,15 @@
       "location": "Chicago, IL, USA",
       "period": "Aug 2023 - Present",
       "description": [
-        "Lead Designer for the Library website redesign serving 1.6M+ annual users — owned all design work, co-led research strategy, and collaborated with a cross-functional team (developers, librarians, external consultants) to implement a new design system and CSS framework.",
+        "Lead Designer for the Library website redesign: 1.6M+ annual users, 420+ CMS editors, multi-vendor platform with 10k+ pages, WCAG 2.0 AA compliant; collaborating with a cross-functional team (developers, librarians, external consultants).",
+        "Discovery research revealed service awareness and navigation issues, highlighting a need to study Information Architecture further and a redesign of various landing pages.",
+        "Staff focus groups pointed to content ownership challenges, prompting a re-structuring of the internally managed CMS tool.",
+        "Creating a Design System's specs and implementation to apply across 6 platforms as a single web experience.",
         "Led research, design, and implementation of 3 new/rebuilt websites for key University and Library initiatives, with a focus on usability, accessibility, and future-proofing.",
-        "Exploring AI integration to enhance accessibility, personalize user experiences, and streamline workflows.",
-        "Cross-Departmental Consultancy on UX, web/graphic design, social media, SEO, and accessibility.",
-        "Leading an Accessibility Interest Group coordinating digital and physical accessibility efforts across the Library.",
-        "Ensures 90%+ WCAG 2.0 AA compliance across 7+ Library websites.",
-        "Collaborates with the Director of Communications to apply a new brand system across all physical and digital media."
+        "Incorporating supervised coding agents to increase software update turnaround, as well as prototyping directly with working applications.",
+        "Cross-Departmental Consultancy: Provide expert guidance on UX, web/graphic design, social media, SEO, and accessibility to other Library units.",
+        "Leading an Accessibility Interest Group, fostering knowledge-sharing and coordinating digital/physical accessibility efforts across the Library.",
+        "Collaborate with the Director of Communications to apply a new brand system in any physical and digital media across all departments."
       ]
     },
     {
@@ -158,10 +147,10 @@
       "location": "Ílhavo, Portugal",
       "period": "Feb 2018 - Feb 2020",
       "description": [
-        "Overhauled the UX for a SaaS IoT management platform, collaborating with hardware and software engineers to integrate key partner feedback and deliver a streamlined, user-friendly experience.",
-        "Established branding consistency and scalability by creating a shared design system for product design and marketing.",
+        "Redesigned the UX for a B2B SaaS IoT management platform from the ground up, embedded directly with hardware and software engineering teams. Translated partner feedback and technical constraints into a streamlined product experience, reducing onboarding friction and consolidating fragmented workflows.",
+        "Built a shared design system spanning product UI and marketing, establishing visual and component consistency across a growing product suite.",
         "Monitored product roadmap, feature performance, and usability in alignment with business goals.",
-        "Developed new features in an Agile environment using AngularJs."
+        "Developed new product features directly in AngularJS within an Agile team, bridging design and engineering without handoff overhead."
       ]
     },
     {
@@ -170,8 +159,7 @@
       "location": "Aveiro, Portugal",
       "period": "Mar 2017 - Dec 2017",
       "description": [
-        "Close cooperation with CEO and COO to bootstrap an e-tourism start-up.",
-        "Responsible for UI development, marketing management, user research, and graphic design."
+        "Bootstrap an e-tourism start-up."
       ]
     },
     {
