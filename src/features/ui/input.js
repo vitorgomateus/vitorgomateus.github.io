@@ -237,6 +237,14 @@ export function closeExpandedView() {
   if (!main) return;
 
   if (expandedProjectId) {
+    // Re-open the projects accordion so the article is in the layout
+    const projectsBtn = document.querySelector('#projects-container .portfolio__section-btn');
+    const projectsBody = document.getElementById('projects-body');
+    if (projectsBtn && projectsBody) {
+      projectsBtn.setAttribute('aria-expanded', 'true');
+      projectsBody.hidden = false;
+    }
+    // Reading offsetTop forces layout reflow — projects-body is now visible
     const project = document.getElementById(`project-${expandedProjectId}`);
     if (project) {
       main.scrollTop = Math.max(0, project.offsetTop - 12);

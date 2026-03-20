@@ -25,12 +25,14 @@
 
 .portfolio__name {
   font-family: var(--font-primary);
-  font-size: 1.1rem;
+  font-size: 1.3rem;
+  font-weight: 700;
   margin: 0 0 var(--space-xs);
   color: var(--text);
 }
 
 .portfolio__title-text {
+  font-size: 0.95rem;
   color: var(--text-light);
   margin: 0 0 var(--space-sm);
 }
@@ -74,16 +76,19 @@
    ======================================== */
 
 .portfolio__section {
-  margin-bottom: var(--space-lg);
+  margin-bottom: var(--space-xl);
 }
 
 .portfolio__section-title {
   font-family: var(--font-primary);
-  font-size: 1rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   margin: 0;
   padding-bottom: var(--space-xs);
   border-bottom: 2px solid var(--primary);
-  color: var(--text);
+  color: var(--text-light);
 }
 
 /* ========================================
@@ -168,7 +173,7 @@
 }
 
 .portfolio__skill-category {
-  font-weight: 600;
+  font-weight: 700;
   font-size: 0.9rem;
   margin: 0 0 var(--space-xs);
   color: var(--primary);
@@ -203,14 +208,14 @@
    ======================================== */
 
 .portfolio__entry {
-  margin-bottom: var(--space-md);
+  margin-bottom: var(--space-lg);
   padding-left: var(--space-md);
   border-left: 2px solid var(--border);
 }
 
 .portfolio__entry-title {
-  font-weight: 600;
-  font-size: 0.9rem;
+  font-weight: 700;
+  font-size: 1rem;
   margin: 0;
   color: var(--text);
 }
@@ -287,6 +292,31 @@ ul.portfolio__entry-description {
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Gradient at bottom when details are open, visually linking summary to details */
+.portfolio__project-summary[aria-expanded="true"] {
+  border-bottom: none;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  padding-bottom: 2.5rem;
+}
+
+.portfolio__project-summary[aria-expanded="true"]:hover {
+  box-shadow: none;
+}
+
+.portfolio__project-summary[aria-expanded="true"]::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2rem;
+  background: linear-gradient(to bottom, transparent, var(--background));
+  pointer-events: none;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -311,7 +341,8 @@ ul.portfolio__entry-description {
 
 .portfolio__project-title {
   font-family: var(--font-primary);
-  font-size: 0.95rem;
+  font-size: 1rem;
+  font-weight: 700;
   margin: 0;
   color: var(--text);
 }
@@ -375,8 +406,8 @@ ul.portfolio__entry-description {
 }
 
 .portfolio__content-heading {
-  font-weight: 600;
-  font-size: 0.9rem;
+  font-weight: 700;
+  font-size: 0.95rem;
   margin: 0 0 var(--space-sm);
   color: var(--primary);
 }
@@ -439,6 +470,17 @@ ul.portfolio__entry-description {
   outline: 2px solid var(--primary);
   outline-offset: 2px;
   border-radius: 2px;
+}
+
+/* ========================================
+   Empty State
+   ======================================== */
+
+.portfolio__empty-state {
+  color: var(--text-light);
+  font-size: 0.9rem;
+  padding: var(--space-lg) 0;
+  text-align: center;
 }
 
 /* ========================================

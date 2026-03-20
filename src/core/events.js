@@ -34,10 +34,10 @@ export function setupEvents() {
     drawerOverlay.addEventListener('click', closeDrawer);
   }
 
-  // Close expanded view
-  const closeViewBtn = document.getElementById('close-view-btn');
-  if (closeViewBtn) {
-    closeViewBtn.addEventListener('click', closeExpandedView);
+  // Close expanded view button (the entire close bar)
+  const closeBar = document.getElementById('close-bar');
+  if (closeBar) {
+    closeBar.addEventListener('click', closeExpandedView);
   }
 
   // Input bar
@@ -62,6 +62,7 @@ export function setupEvents() {
     portfolioContainer.addEventListener('click', (e) => {
       const summary = e.target.closest('.portfolio__project-summary');
       if (summary) {
+        if (summary.getAttribute('data-search-locked') === 'true') return;
         const project = summary.closest('.portfolio__project');
         if (project) {
           const projectId = project.getAttribute('data-project-id');
@@ -75,6 +76,7 @@ export function setupEvents() {
         const summary = e.target.closest('.portfolio__project-summary');
         if (summary) {
           e.preventDefault();
+          if (summary.getAttribute('data-search-locked') === 'true') return;
           const project = summary.closest('.portfolio__project');
           if (project) {
             const projectId = project.getAttribute('data-project-id');
@@ -150,13 +152,13 @@ export function setupEvents() {
       // Close in priority order: modal > drawer > expanded view
       const modal = document.getElementById('feedback-modal');
       const drawer = document.getElementById('settings-drawer');
-      const closeViewBtn = document.getElementById('close-view-btn');
+      const closeBar = document.getElementById('close-bar');
 
       if (modal && !modal.hidden) {
         closeFeedbackModal();
       } else if (drawer && !drawer.hidden) {
         closeDrawer();
-      } else if (closeViewBtn && !closeViewBtn.hidden) {
+      } else if (closeBar && !closeBar.hidden) {
         closeExpandedView();
       }
     }

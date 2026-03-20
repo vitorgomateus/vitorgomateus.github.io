@@ -137,14 +137,16 @@ export function resultsToChunkIds(results) {
     if (result.project_id) {
       // Always include the parent project article chunk so it's not hidden
       chunkIds.add(`project-${result.project_id}`);
+      // Mark overview-level match (no block_id) so render can distinguish from block-only matches
+      if (!result.block_id) {
+        chunkIds.add(`project-overview-${result.project_id}`);
+      }
     } else if (result.project) {
       // Fallback: derive project chunk id from title
       chunkIds.add(`project-${result.project.toLowerCase().replace(/\s+/g, '-')}`);
     }
-    if (result.section) {
-      const mapped = toId(result.section);
-      if (mapped) chunkIds.add(mapped);
-    }
+    // Note: section h2 visibility is driven by the accordion loop in setVisibleChunks
+    // based on whether any data-chunk inside the body is visible — no extra ID needed.
   }
 
   return Array.from(chunkIds);

@@ -16,6 +16,7 @@ Reads data-002.json and produces embeddings.json
 
 import json
 import os
+import re
 from sentence_transformers import SentenceTransformer
 
 MODEL_NAME = 'all-MiniLM-L6-v2'
@@ -145,11 +146,13 @@ def chunk_data(data):
     
     # Experience
     for exp in data.get('experience', []):
+        company_slug = re.sub(r'[^a-z0-9]+', '-', exp['company'].lower()).strip('-')
         text = f"{exp['title']} at {exp['company']}, {exp['location']} ({exp['period']}). {exp['description']}"
         chunks.append({
             'text': text,
             'section': 'Experience',
-            'anchor': 'experience-container'
+            'experience_id': company_slug,
+            'anchor': f'experience-{company_slug}'
         })
     
     # Projects

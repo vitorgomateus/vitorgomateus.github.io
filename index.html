@@ -44,14 +44,6 @@
 
     <!-- Main content area -->
     <main class="main" id="main-content" role="main">
-      <!-- Close bar for expanded/search views -->
-      <div class="main__close-bar" id="close-bar" hidden>
-        <span class="main__close-label" id="close-view-label" hidden>Vector Search</span>
-        <button class="main__close-btn" aria-label="Close and return to portfolio" id="close-view-btn">
-          <i data-feather="x"></i>
-        </button>
-      </div>
-
       <!-- Static portfolio container -->
       <div class="portfolio" id="portfolio-container" role="region" aria-label="Portfolio">
         <!-- Rendered dynamically by render.js -->
@@ -78,6 +70,12 @@
       <!-- Suggestions rendered dynamically -->
     </div>
 
+    <!-- Close bar for expanded/search views -->
+    <button class="main__close-bar" id="close-bar" aria-label="Close and return to portfolio" hidden>
+      <span class="main__close-label" id="close-view-label">Vector Search</span>
+      <i data-feather="x"></i>
+    </button>
+
     <!-- Input bar -->
     <div class="input-bar" id="input-bar" role="search">
       <label for="user-input" class="visually-hidden">Type a message or search query</label>
@@ -97,15 +95,44 @@
     <div class="drawer-overlay" id="drawer-overlay" hidden></div>
 
     <!-- Settings drawer -->
-    <aside class="drawer" id="settings-drawer" role="dialog" aria-label="Settings" aria-modal="true" hidden>
+    <aside class="drawer" id="settings-drawer" role="dialog" aria-label="About this site" aria-modal="true" hidden>
       <div class="drawer__header">
-        <h2 class="drawer__title">Settings</h2>
-        <button class="drawer__close-btn" aria-label="Close settings" id="drawer-close-btn">
+        <h2 class="drawer__title">About</h2>
+        <button class="drawer__close-btn" aria-label="Close" id="drawer-close-btn">
           <i data-feather="x"></i>
         </button>
       </div>
       <div class="drawer__content">
-        <!-- Model info -->
+
+        <!-- About website -->
+        <section class="drawer__section">
+          <p class="drawer__description">This website is an experimental GenAI-powered portfolio running entirely in the browser. No servers, no tracking, complete privacy.</p>
+        </section>
+
+        <!-- Accessibility -->
+        <section class="drawer__section">
+          <h3 class="drawer__section-title">Accessibility</h3>
+          <div class="drawer__accessibility-toggle">
+            <label for="accessibility-toggle" class="drawer__label">
+              Accessibility Mode
+            </label>
+            <button class="header__toggle-switch" type="button" role="switch" aria-checked="false" id="accessibility-toggle">
+              <div class="header__toggle-knob"></div>
+            </button>
+          </div>
+          <p class="drawer__description">Larger fonts, higher contrast, OpenDyslexic font</p>
+        </section>
+
+        <!-- Feedback -->
+        <section class="drawer__section">
+          <h3 class="drawer__section-title">Feedback</h3>
+          <button class="btn btn--secondary drawer__btn" id="feedback-btn">
+            <i data-feather="message-square"></i>
+            Share Feedback
+          </button>
+        </section>
+
+        <!-- AI Model info -->
         <section class="drawer__section">
           <h3 class="drawer__section-title">AI Model</h3>
           <div class="drawer__model-info">
@@ -128,28 +155,6 @@
           </button>
         </section>
 
-        <!-- Feedback -->
-        <section class="drawer__section">
-          <h3 class="drawer__section-title">Feedback</h3>
-          <button class="btn btn--secondary drawer__btn" id="feedback-btn">
-            <i data-feather="message-square"></i>
-            Share Feedback
-          </button>
-        </section>
-
-        <!-- Accessibility -->
-        <section class="drawer__section">
-          <h3 class="drawer__section-title">Accessibility</h3>
-          <div class="drawer__accessibility-toggle">
-            <label for="accessibility-toggle" class="drawer__label">
-              Accessibility Mode
-            </label>
-            <button class="header__toggle-switch" type="button" role="switch" aria-checked="false" id="accessibility-toggle">
-              <div class="header__toggle-knob"></div>
-            </button>
-          </div>
-          <p class="drawer__description">Larger fonts, higher contrast, OpenDyslexic font</p>
-        </section>
       </div>
     </aside>
 

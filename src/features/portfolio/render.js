@@ -18,12 +18,7 @@ export function renderPortfolio(container, data) {
 
   // Skills section
   if (data.personal?.skills?.length) {
-    container.appendChild(createSkillsSection(data.personal.skills, data.personal.skillTags));
-  }
-
-  // Languages section
-  if (data.personal?.languages) {
-    container.appendChild(createLanguagesSection(data.personal.languages));
+    container.appendChild(createSkillsSection(data.personal.skills));
   }
 
   // Experience section
@@ -31,14 +26,19 @@ export function renderPortfolio(container, data) {
     container.appendChild(createExperienceSection(data.experience));
   }
 
+  // Projects section
+  if (data.projects?.length) {
+    container.appendChild(createProjectsSection(data.projects));
+  }
+
   // Education section
   if (data.education?.length) {
     container.appendChild(createEducationSection(data.education));
   }
 
-  // Projects section
-  if (data.projects?.length) {
-    container.appendChild(createProjectsSection(data.projects));
+  // Languages section
+  if (data.personal?.languages) {
+    container.appendChild(createLanguagesSection(data.personal.languages));
   }
 
   // Footer
@@ -65,7 +65,7 @@ function createProfileSection(personal) {
   avatar.loading = 'lazy';
   section.appendChild(avatar);
 
-  const name = document.createElement('h2');
+  const name = document.createElement('p');
   name.className = 'portfolio__name';
   name.textContent = personal.name;
   section.appendChild(name);
@@ -114,7 +114,7 @@ function createContactLink(href, icon, text, external = false) {
 }
 
 // Skills section
-function createSkillsSection(skills, skillTags) {
+function createSkillsSection(skills) {
   const section = document.createElement('section');
   section.className = 'portfolio__section';
   section.id = 'skills-container';
@@ -165,24 +165,6 @@ function createSkillsSection(skills, skillTags) {
 
     body.appendChild(chunk);
   });
-
-  if (skillTags?.length) {
-    const tagsChunk = document.createElement('div');
-    tagsChunk.className = 'portfolio__chunk portfolio__skill-tags-block';
-    tagsChunk.setAttribute('data-chunk', 'skill-tags');
-
-    const tagsList = document.createElement('ul');
-    tagsList.className = 'portfolio__skill-tools';
-    tagsList.setAttribute('aria-label', 'All skills');
-    skillTags.forEach(tag => {
-      const li = document.createElement('li');
-      li.className = 'portfolio__skill-tool';
-      li.textContent = tag;
-      tagsList.appendChild(li);
-    });
-    tagsChunk.appendChild(tagsList);
-    body.appendChild(tagsChunk);
-  }
 
   section.appendChild(body);
   return section;
@@ -516,6 +498,13 @@ function createProjectsSection(projects) {
       });
     }
 
+    if (!project.contentBlocks?.some(b => b.id !== 'overview')) {
+      const empty = document.createElement('p');
+      empty.className = 'portfolio__empty-state';
+      empty.textContent = "That's all for now, folks.";
+      details.appendChild(empty);
+    }
+
     article.appendChild(details);
     body.appendChild(article);
   });
@@ -583,7 +572,9 @@ export function setVisibleChunks(chunkIds, mode = 'filter') {
       d.classList.add('portfolio__project-details--collapsed');
     });
     document.querySelectorAll('.portfolio__project-summary').forEach(s => {
+      s.hidden = false;
       s.setAttribute('aria-expanded', 'false');
+      s.removeAttribute('data-search-locked');
     });
     // Close all section accordions, show all sections and their headings
     document.querySelectorAll('.portfolio__section').forEach(s => { s.hidden = false; });
@@ -603,7 +594,6 @@ export function setVisibleChunks(chunkIds, mode = 'filter') {
   // Hide input bar, show close bar with mode label
   if (closeBar) closeBar.hidden = false;
   if (closeLabel) {
-    closeLabel.hidden = false;
     closeLabel.textContent = mode === 'project' ? 'Project View' : 'Vector Search';
   }
   if (inputBar) inputBar.hidden = true;
@@ -657,16 +647,37 @@ export function setVisibleChunks(chunkIds, mode = 'filter') {
     });
     state.searchActive = true;
 
-    // Auto-expand project details that contain visible content block chunks
-    document.querySelectorAll('.portfolio__project-details--collapsed').forEach(details => {
-      const hasVisible = Array.from(details.querySelectorAll('[data-chunk]')).some(
+    document.querySelectorAll('.portfolio__project').forEach(article => {
+      if (article.classList.contains('portfolio__chunk--hidden')) return;
+
+      const projectId = article.getAttribute('data-project-id');
+      const details = article.querySelector('.portfolio__project-details');
+      const summary = article.querySelector('.portfolio__project-summary');
+      if (!details || !summary) return;
+
+      const overviewMatched = chunkIds.includes(`project-overview-${projectId}`);
+      const matchedBlocks = Array.from(details.querySelectorAll('[data-chunk]')).filter(
         c => !c.classList.contains('portfolio__chunk--hidden')
       );
-      if (hasVisible) {
+      const hasBlocks = matchedBlocks.length > 0;
+
+      // Project title always shows for any matched project article
+      summary.hidden = false;
+
+      if (hasBlocks) {
+        // Blocks matched: expand details
         details.classList.remove('portfolio__project-details--collapsed');
-        const projectId = details.id.replace('project-details-', '');
-        const summary = document.querySelector(`[data-project-id="${projectId}"] .portfolio__project-summary`);
-        if (summary) summary.setAttribute('aria-expanded', 'true');
+        summary.setAttribute('aria-expanded', 'true');
+        // Lock toggle if overview also matched (already the right view)
+        if (overviewMatched) {
+          summary.setAttribute('data-search-locked', 'true');
+        } else {
+          summary.removeAttribute('data-search-locked');
+        }
+      } else {
+        // Overview only: collapsed, clickable to enter project mode
+        summary.setAttribute('aria-expanded', 'false');
+        summary.removeAttribute('data-search-locked');
       }
     });
   }
