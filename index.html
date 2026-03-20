@@ -44,10 +44,13 @@
 
     <!-- Main content area -->
     <main class="main" id="main-content" role="main">
-      <!-- Close button for expanded/search views -->
-      <button class="main__close-btn" aria-label="Close and return to portfolio" id="close-view-btn" hidden>
-        <i data-feather="x"></i>
-      </button>
+      <!-- Close bar for expanded/search views -->
+      <div class="main__close-bar" id="close-bar" hidden>
+        <span class="main__close-label" id="close-view-label" hidden>Vector Search</span>
+        <button class="main__close-btn" aria-label="Close and return to portfolio" id="close-view-btn">
+          <i data-feather="x"></i>
+        </button>
+      </div>
 
       <!-- Static portfolio container -->
       <div class="portfolio" id="portfolio-container" role="region" aria-label="Portfolio">
@@ -66,6 +69,9 @@
     <div class="alerts" id="alerts-container" role="status" aria-live="polite">
       <!-- Alerts rendered dynamically -->
     </div>
+
+    <!-- Search status for screen readers -->
+    <div class="visually-hidden" role="status" aria-live="polite" id="search-status"></div>
 
     <!-- Suggestions container -->
     <div class="suggestions" id="suggestions-container" aria-label="Suggested messages" hidden>

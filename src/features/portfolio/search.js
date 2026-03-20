@@ -131,10 +131,14 @@ export function resultsToChunkIds(results) {
 
   for (const result of results) {
     if (result.anchor) {
-      // Use anchor as chunk identifier
+      // Use anchor as chunk identifier (content block anchors are "project-{id}-{block}")
       chunkIds.add(result.anchor.replace('-container', ''));
     }
-    if (result.project) {
+    if (result.project_id) {
+      // Always include the parent project article chunk so it's not hidden
+      chunkIds.add(`project-${result.project_id}`);
+    } else if (result.project) {
+      // Fallback: derive project chunk id from title
       chunkIds.add(`project-${result.project.toLowerCase().replace(/\s+/g, '-')}`);
     }
     if (result.section) {

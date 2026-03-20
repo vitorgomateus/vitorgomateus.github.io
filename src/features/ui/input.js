@@ -31,13 +31,16 @@ export async function handleInput() {
 // Handle search in portfolio mode
 async function handleSearchInput(query) {
   const results = await searchEmbeddings(query, { minWords: 1 });
+  const statusEl = document.getElementById('search-status');
   if (results.length === 0) {
+    if (statusEl) statusEl.textContent = 'No results found';
     showAlert('No matching results found. Try different terms.', 'info');
     return;
   }
 
   const chunkIds = resultsToChunkIds(results);
   setVisibleChunks(chunkIds, 'filter');
+  if (statusEl) statusEl.textContent = `${results.length} result${results.length === 1 ? '' : 's'} found`;
 
   // Scroll to top of results
   const main = document.getElementById('main-content');
@@ -226,6 +229,9 @@ function resetTextareaHeight(textarea) {
 export function closeExpandedView() {
   const expandedProjectId = state.expandedProject;
   setVisibleChunks(null);
+
+  const statusEl = document.getElementById('search-status');
+  if (statusEl) statusEl.textContent = '';
 
   const main = document.getElementById('main-content');
   if (!main) return;

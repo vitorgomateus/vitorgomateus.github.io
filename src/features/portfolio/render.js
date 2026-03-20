@@ -45,6 +45,9 @@ export function renderPortfolio(container, data) {
   if (data.footer) {
     container.appendChild(createFooter(data.footer));
   }
+
+  // Wire up section accordions
+  initAccordions();
 }
 
 // Create profile/summary section
@@ -119,8 +122,18 @@ function createSkillsSection(skills, skillTags) {
 
   const heading = document.createElement('h2');
   heading.className = 'portfolio__section-title';
-  heading.textContent = 'Skills';
+  const skillsBtn = document.createElement('button');
+  skillsBtn.className = 'portfolio__section-btn';
+  skillsBtn.setAttribute('aria-expanded', 'false');
+  skillsBtn.setAttribute('aria-controls', 'skills-body');
+  skillsBtn.textContent = 'Skills';
+  heading.appendChild(skillsBtn);
   section.appendChild(heading);
+
+  const body = document.createElement('div');
+  body.id = 'skills-body';
+  body.className = 'portfolio__section-body';
+  body.hidden = true;
 
   skills.forEach(skill => {
     const chunk = document.createElement('div');
@@ -150,7 +163,7 @@ function createSkillsSection(skills, skillTags) {
       chunk.appendChild(toolsList);
     }
 
-    section.appendChild(chunk);
+    body.appendChild(chunk);
   });
 
   if (skillTags?.length) {
@@ -168,27 +181,38 @@ function createSkillsSection(skills, skillTags) {
       tagsList.appendChild(li);
     });
     tagsChunk.appendChild(tagsList);
-    section.appendChild(tagsChunk);
+    body.appendChild(tagsChunk);
   }
 
+  section.appendChild(body);
   return section;
 }
 
-// Languages section  
+// Languages section
 function createLanguagesSection(languages) {
   const section = document.createElement('section');
   section.className = 'portfolio__section';
   section.id = 'languages-container';
-  section.setAttribute('data-chunk', 'languages');
   section.setAttribute('aria-label', 'Languages');
 
   const heading = document.createElement('h2');
   heading.className = 'portfolio__section-title';
-  heading.textContent = 'Languages';
+  const langsBtn = document.createElement('button');
+  langsBtn.className = 'portfolio__section-btn';
+  langsBtn.setAttribute('aria-expanded', 'false');
+  langsBtn.setAttribute('aria-controls', 'languages-body');
+  langsBtn.textContent = 'Languages';
+  heading.appendChild(langsBtn);
   section.appendChild(heading);
 
+  const body = document.createElement('div');
+  body.id = 'languages-body';
+  body.className = 'portfolio__section-body';
+  body.hidden = true;
+
   const langContainer = document.createElement('div');
-  langContainer.className = 'portfolio__languages';
+  langContainer.className = 'portfolio__chunk portfolio__languages';
+  langContainer.setAttribute('data-chunk', 'languages');
 
   Object.entries(languages).forEach(([lang, level]) => {
     const langEl = document.createElement('span');
@@ -197,7 +221,8 @@ function createLanguagesSection(languages) {
     langContainer.appendChild(langEl);
   });
 
-  section.appendChild(langContainer);
+  body.appendChild(langContainer);
+  section.appendChild(body);
   return section;
 }
 
@@ -210,8 +235,18 @@ function createExperienceSection(experience) {
 
   const heading = document.createElement('h2');
   heading.className = 'portfolio__section-title';
-  heading.textContent = 'Experience';
+  const expBtn = document.createElement('button');
+  expBtn.className = 'portfolio__section-btn';
+  expBtn.setAttribute('aria-expanded', 'false');
+  expBtn.setAttribute('aria-controls', 'experience-body');
+  expBtn.textContent = 'Experience';
+  heading.appendChild(expBtn);
   section.appendChild(heading);
+
+  const body = document.createElement('div');
+  body.id = 'experience-body';
+  body.className = 'portfolio__section-body';
+  body.hidden = true;
 
   experience.forEach(exp => {
     const chunk = document.createElement('div');
@@ -259,9 +294,10 @@ function createExperienceSection(experience) {
       chunk.appendChild(desc);
     }
 
-    section.appendChild(chunk);
+    body.appendChild(chunk);
   });
 
+  section.appendChild(body);
   return section;
 }
 
@@ -274,8 +310,18 @@ function createEducationSection(education) {
 
   const heading = document.createElement('h2');
   heading.className = 'portfolio__section-title';
-  heading.textContent = 'Education';
+  const eduBtn = document.createElement('button');
+  eduBtn.className = 'portfolio__section-btn';
+  eduBtn.setAttribute('aria-expanded', 'false');
+  eduBtn.setAttribute('aria-controls', 'education-body');
+  eduBtn.textContent = 'Education';
+  heading.appendChild(eduBtn);
   section.appendChild(heading);
+
+  const body = document.createElement('div');
+  body.id = 'education-body';
+  body.className = 'portfolio__section-body';
+  body.hidden = true;
 
   education.forEach(edu => {
     const chunk = document.createElement('div');
@@ -314,9 +360,10 @@ function createEducationSection(education) {
       chunk.appendChild(focus);
     }
 
-    section.appendChild(chunk);
+    body.appendChild(chunk);
   });
 
+  section.appendChild(body);
   return section;
 }
 
@@ -329,8 +376,18 @@ function createProjectsSection(projects) {
 
   const heading = document.createElement('h2');
   heading.className = 'portfolio__section-title';
-  heading.textContent = 'Projects';
+  const projBtn = document.createElement('button');
+  projBtn.className = 'portfolio__section-btn';
+  projBtn.setAttribute('aria-expanded', 'false');
+  projBtn.setAttribute('aria-controls', 'projects-body');
+  projBtn.textContent = 'Projects';
+  heading.appendChild(projBtn);
   section.appendChild(heading);
+
+  const body = document.createElement('div');
+  body.id = 'projects-body';
+  body.className = 'portfolio__section-body';
+  body.hidden = true;
 
   // Only show active projects by default
   const activeProjects = projects.filter(p => p.active);
@@ -404,6 +461,7 @@ function createProjectsSection(projects) {
 
         const blockEl = document.createElement('div');
         blockEl.className = 'portfolio__content-block';
+        blockEl.setAttribute('data-chunk', `project-${project.id}-${block.id}`);
 
         if (block.heading) {
           const blockHeading = document.createElement('h4');
@@ -459,9 +517,10 @@ function createProjectsSection(projects) {
     }
 
     article.appendChild(details);
-    section.appendChild(article);
+    body.appendChild(article);
   });
 
+  section.appendChild(body);
   return section;
 }
 
@@ -510,31 +569,43 @@ function createFooterLink(href, icon, text) {
 // Show/hide chunks for search results or project expansion
 export function setVisibleChunks(chunkIds, mode = 'filter') {
   const allChunks = document.querySelectorAll('[data-chunk]');
-  const closeBtn = document.getElementById('close-view-btn');
+  const closeBar = document.getElementById('close-bar');
+  const closeLabel = document.getElementById('close-view-label');
   const inputBar = document.getElementById('input-bar');
 
   if (!chunkIds || chunkIds.length === 0) {
-    // Reset: show all, hide details
+    // Reset: show all chunks, hide project details
     allChunks.forEach(chunk => {
       chunk.classList.remove('portfolio__chunk--hidden');
       chunk.classList.remove('portfolio__chunk--sr-only');
     });
-    // Collapse all project details
     document.querySelectorAll('.portfolio__project-details').forEach(d => {
       d.classList.add('portfolio__project-details--collapsed');
     });
     document.querySelectorAll('.portfolio__project-summary').forEach(s => {
       s.setAttribute('aria-expanded', 'false');
     });
-    if (closeBtn) closeBtn.hidden = true;
+    // Close all section accordions, show all sections and their headings
+    document.querySelectorAll('.portfolio__section').forEach(s => { s.hidden = false; });
+    document.querySelectorAll('.portfolio__section-title').forEach(h => { h.hidden = false; });
+    document.querySelectorAll('.portfolio__section-btn').forEach(btn => {
+      btn.setAttribute('aria-expanded', 'false');
+      const body = document.getElementById(btn.getAttribute('aria-controls'));
+      if (body) body.hidden = true;
+    });
+    if (closeBar) closeBar.hidden = true;
     if (inputBar) inputBar.hidden = false;
     state.expandedProject = null;
     state.searchActive = false;
     return;
   }
 
-  // Hide input bar, show close button
-  if (closeBtn) closeBtn.hidden = false;
+  // Hide input bar, show close bar with mode label
+  if (closeBar) closeBar.hidden = false;
+  if (closeLabel) {
+    closeLabel.hidden = false;
+    closeLabel.textContent = mode === 'project' ? 'Project View' : 'Vector Search';
+  }
   if (inputBar) inputBar.hidden = true;
 
   if (mode === 'project') {
@@ -549,6 +620,15 @@ export function setVisibleChunks(chunkIds, mode = 'filter') {
       }
     });
 
+    // Un-hide all nested chunks inside the visible project (content blocks within details)
+    const projectArticle = document.querySelector(`[data-chunk="${chunkIds[0]}"]`);
+    if (projectArticle) {
+      projectArticle.querySelectorAll('[data-chunk]').forEach(child => {
+        child.classList.remove('portfolio__chunk--hidden');
+        child.classList.remove('portfolio__chunk--sr-only');
+      });
+    }
+
     // Expand the project details
     const projectId = chunkIds[0]?.replace('project-', '');
     if (projectId) {
@@ -558,6 +638,12 @@ export function setVisibleChunks(chunkIds, mode = 'filter') {
       if (summary) summary.setAttribute('aria-expanded', 'true');
       state.expandedProject = projectId;
     }
+
+    // Hide Projects h2, show projects-body so the article is accessible
+    const projectsHeading = document.querySelector('#projects-container .portfolio__section-title');
+    if (projectsHeading) projectsHeading.hidden = true;
+    const projectsBody = document.getElementById('projects-body');
+    if (projectsBody) projectsBody.hidden = false;
   } else {
     // Search filter: show matching chunks
     allChunks.forEach(chunk => {
@@ -570,12 +656,56 @@ export function setVisibleChunks(chunkIds, mode = 'filter') {
       }
     });
     state.searchActive = true;
+
+    // Auto-expand project details that contain visible content block chunks
+    document.querySelectorAll('.portfolio__project-details--collapsed').forEach(details => {
+      const hasVisible = Array.from(details.querySelectorAll('[data-chunk]')).some(
+        c => !c.classList.contains('portfolio__chunk--hidden')
+      );
+      if (hasVisible) {
+        details.classList.remove('portfolio__project-details--collapsed');
+        const projectId = details.id.replace('project-details-', '');
+        const summary = document.querySelector(`[data-project-id="${projectId}"] .portfolio__project-summary`);
+        if (summary) summary.setAttribute('aria-expanded', 'true');
+      }
+    });
   }
+
+  // Open sections with visible chunks, hide sections with none
+  document.querySelectorAll('.portfolio__section-btn').forEach(btn => {
+    const body = document.getElementById(btn.getAttribute('aria-controls'));
+    if (!body) return;
+    const chunks = body.querySelectorAll('[data-chunk]');
+    const hasVisible = chunks.length === 0 || Array.from(chunks).some(c => !c.classList.contains('portfolio__chunk--hidden'));
+    btn.setAttribute('aria-expanded', hasVisible ? 'true' : 'false');
+    body.hidden = !hasVisible;
+    btn.closest('.portfolio__section').hidden = !hasVisible;
+  });
 
   // Re-render feather icons for any newly visible elements
   if (window.feather) {
     window.feather.replace();
   }
+}
+
+function initAccordions() {
+  document.querySelectorAll('.portfolio__section-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const expanded = btn.getAttribute('aria-expanded') === 'true';
+      // Close all sections
+      document.querySelectorAll('.portfolio__section-btn').forEach(b => {
+        b.setAttribute('aria-expanded', 'false');
+        const body = document.getElementById(b.getAttribute('aria-controls'));
+        if (body) body.hidden = true;
+      });
+      // Open clicked section (if it was closed)
+      if (!expanded) {
+        btn.setAttribute('aria-expanded', 'true');
+        const body = document.getElementById(btn.getAttribute('aria-controls'));
+        if (body) body.hidden = false;
+      }
+    });
+  });
 }
 
 // Utility

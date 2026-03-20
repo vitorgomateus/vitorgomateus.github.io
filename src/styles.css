@@ -39,6 +39,10 @@
   --transition-speed: 0.2s;
 }
 
+html {
+  font-size: 16px;
+}
+
 /* Accessibility mode overrides */
 .accessibility-mode {
   --background: #fdf6e3;
@@ -296,11 +300,26 @@ body {
   background: var(--background);
 }
 
-.main__close-btn {
+.main__close-bar {
   position: sticky;
   top: 0;
-  float: right;
   z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+  padding: var(--space-sm);
+  background: var(--background);
+  border-bottom: 1px solid var(--border);
+}
+
+.main__close-label {
+  font-size: 0.8rem;
+  color: var(--text-light);
+  font-weight: 500;
+}
+
+.main__close-btn {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 50%;
@@ -310,8 +329,8 @@ body {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  margin: var(--space-sm);
   color: var(--text);
+  flex-shrink: 0;
 }
 
 .main__close-btn:hover {

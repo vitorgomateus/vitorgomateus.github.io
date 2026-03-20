@@ -176,6 +176,7 @@ def chunk_data(data):
             'text': overview_text,
             'section': 'Projects',
             'project': project_name,
+            'project_id': proj['id'],
             'anchor': anchor
         }
         if overview_image:
@@ -193,11 +194,14 @@ def chunk_data(data):
                     label += f" - {block['heading']}"
                 text = f"{label}: {block['text']}"
                 
+                block_anchor = f"{anchor}-{block['id']}"
                 chunk = {
                     'text': text,
                     'section': 'Projects',
                     'project': project_name,
-                    'anchor': anchor
+                    'project_id': proj['id'],
+                    'block_id': block['id'],
+                    'anchor': block_anchor
                 }
                 if block.get('image') and block['image'].get('src'):
                     chunk['image'] = block['image']['src']
