@@ -438,8 +438,6 @@ function createProjectsSection(projects) {
 
     if (project.contentBlocks?.length) {
       project.contentBlocks.forEach(block => {
-        // Skip overview block since shortDescription covers it
-        if (block.id === 'overview') return;
 
         const blockEl = document.createElement('div');
         blockEl.className = 'portfolio__content-block';

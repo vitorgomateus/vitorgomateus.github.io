@@ -178,11 +178,11 @@
       "id": "winegrid",
       "active": true,
       "title": "Winegrid",
-      "subtitle": "The Winegrid platform for the company Watgrid",
+      "subtitle": "Centering an IoT SaaS platform for wine production into it's users",
       "year": "2019",
       "company": "Watgrid Solutions",
       "role": "UI/UX Designer & Developer",
-      "shortDescription": "The platform to be developed for Winegrid was quite challenging as it encompassed a complex information architecture which generated a gap with the user's mental model. In order to test and allow common ground of understanding between the team members a hi-fi prototype was made in Adobe XD. This made it easier to guess implementation efforts and the validity of some of the functionalities.",
+      "shortDescription": "An innovative group developing Winegrid: a range of IoT sensors for wine production and a SaaS platform to control them.",
       "skills": [
         "UI design",
         "Adobe XD",
@@ -196,8 +196,8 @@
       "contentBlocks": [
         {
           "id": "overview",
-          "heading": null,
-          "text": "The platform to be developed for Winegrid was quite challenging as it encompassed a complex information architecture which generated a gap with the user's mental model. In order to test and allow common ground of understanding between the team members a hi-fi prototype was made in Adobe XD. This made it easier to guess implementation efforts and the validity of some of the functionalities.",
+          "heading": "Overview",
+          "text": "The Winegrid platform had been designed from a technical stand point and lacked some awareness of the user's mental model. Embedded in a secretive industry, creative user research and prototyping led to a more efficient, user-friendly experience.",
           "image": {
             "src": "res/img/loading-giffer.gif",
             "alt": "Animated loading logo",
@@ -206,9 +206,14 @@
           }
         },
         {
-          "id": "product",
-          "heading": "Product",
-          "text": "Watgrid's product, Winegrid, was a very interesting project and I'm very glad I got to be part of it during my master's. It is a groundbreaking technology, with a complex information architecture. They develop and produce sensors to monitor wine production in real time, alongside a SaaS platform to control their devices. I was working as a UX designer, supporting the platform's development team.",
+          "id": "problem",
+          "heading": "Problem",
+          "text": "Winegrid's platform monitored wine production in real time through IoT sensors — a technically sophisticated product aimed at an industry with deeply specific operational workflows. The core problem wasn't visual: it was a misalignment between how the engineering team modeled the product and how winemakers actually think about their work. Most engineers had no direct experience with industrial wine production, and that gap was showing up in the information architecture. The platform was already live and being actively developed, which meant there was no opportunity to start over — only to course-correct in motion."
+        },
+        {
+          "id": "solution",
+          "heading": "Solution",
+          "text": "The first step was understanding the domain well enough to translate it. That meant studying winemaking workflows to build a clearer model of what users actually needed to see and control, then using that to challenge assumptions that had been baked into the platform's structure. \n To align the team around proposed changes without lengthy back-and-forth, a high-fidelity prototype was built in Adobe XD — concrete enough to evaluate implementation complexity and test whether the new structure held up under realistic use.",
           "image": {
             "src": "res/img/winegrid-adobe-logo.png",
             "alt": "Winegrid product logo",
@@ -221,15 +226,9 @@
           }
         },
         {
-          "id": "ux-challenges",
-          "heading": "UX Challenges",
-          "text": "The fact that it was a company just popping out of start-up status, meant there was still some distance between the engineer's mental model, and that which would make sense for the final users. Also, few of the engineers understood how to produce wine and none of them how a full sized industrial production of wine works. So it was necessary to understand the differences, create a new mental model and reflect this on the platform itself. For about a year this was a work in progress, as the platform was already up and running. I studied, designed and developed, also as new features were being introduced to the platform on a regular basis. Gladly, new investments were made that changed our game.",
-          "image": null
-        },
-        {
-          "id": "development-challenges",
-          "heading": "Development Challenges",
-          "text": "Most notoriously, I designed and developed a selection element that faced a challenged, and of which I am quite satisfied. The user needs to be able to select the daily reading frequency of each sensor, but that can't be more that once every thirty minutes, and it has to be in equal intervals throughout the day. These were technical constraints. The user should also be able to select when the first read of the day was to happen. In order to avoid explaining to the user all the necessary, and to avoid error, it was necessary for the affordance of this element to enforce all of this, and be clear at the same time. So a slider for the frequency was chosen, alongside a scheduler that allowed to select the initial time and view all the other consecutive schedule readings. To further ensure readability, a clarifying human readable sentence was output dynamically with the selection. This was developed in Angular and later translated into Jquery.",
+          "id": "feature",
+          "heading": "Feature Development",
+          "text": "One of the more constrained design problems was the sensor scheduling interface. Users needed to set a daily reading frequency, subject to real technical limits: no more than once every 30 minutes, at equal intervals, with a configurable start time. Rather than expose those rules as form validation after the fact, the design enforced them through the affordance itself: a frequency slider constrained to valid values, paired with a visual scheduler showing all resulting readings, and a dynamically generated plain-language summary of the selection. The goal was zero-error input without requiring users to understand the underlying constraints. This was built and shipped in AngularJS.",
           "image": {
             "src": "res/img/timer-selection-ui.webp",
             "alt": "Screen capture of a frequency selector interface",
@@ -240,12 +239,6 @@
               "icon": "fa fa-play-circle"
             }
           }
-        },
-        {
-          "id": "graphical-design-marketing",
-          "heading": "Work in Graphical Design and Marketing",
-          "text": "Besides working as a UX Designer, I also supported the marketing team, mostly with graphical design. The branding of the company was also not solidified, so this was a challenging process as well. Most notoriously, I designed a quick guide for users, in a single sheet of A4, to go with every shipped device. It used only iconography, so that translated versions were not necessary, and a QR Code directed for further clarifications, although this was reported as not used. I also produced an instructional video and maintained the website's activity.",
-          "image": null
         }
       ]
     },
