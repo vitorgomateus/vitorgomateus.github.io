@@ -411,9 +411,8 @@ function createProjectsSection(projects) {
 
   // Only show active projects by default
   const activeProjects = projects.filter(p => p.active);
-  const inactiveProjects = projects.filter(p => !p.active);
 
-  [...activeProjects, ...inactiveProjects].forEach(project => {
+  activeProjects.forEach(project => {
     const article = document.createElement('article');
     article.className = 'portfolio__project';
     article.id = `project-${project.id}`;
@@ -644,7 +643,7 @@ export function setVisibleChunks(chunkIds, mode = 'filter', query = '') {
   // Hide input bar, show close bar with mode label
   if (closeBar) closeBar.hidden = false;
   if (closeLabel) {
-    closeLabel.textContent = mode === 'project' ? 'Project View' : query ? `"${query}"` : 'Vector Search';
+    closeLabel.textContent = mode === 'project' ? 'Project View' : `Vector Search: ${query}`;
   }
   if (inputBar) inputBar.hidden = true;
 
@@ -710,10 +709,6 @@ export function setVisibleChunks(chunkIds, mode = 'filter', query = '') {
         c => !c.classList.contains('portfolio__chunk--hidden')
       );
       const hasBlocks = matchedBlocks.length > 0;
-      console.log(`[render] project=${projectId} overviewMatched=${overviewMatched} hasBlocks=${hasBlocks} matchedBlocks=${matchedBlocks.map(b => b.getAttribute('data-chunk'))}`);
-      if (hasBlocks) console.log(`[render] details expanded for ${projectId}`);
-      else console.log(`[render] summary-only shown for ${projectId}`);
-
       // Project title always shows for any matched project article
       summary.hidden = false;
 

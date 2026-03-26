@@ -1,4 +1,5 @@
 // Main entry point - app initialization
+console.log('Hey there, curious mind 👀 — feel free to reach out: vitorgomateus@gmail.com');
 
 import { renderPortfolio } from '../features/portfolio/render.js';
 import { loadEmbeddings } from '../features/portfolio/search.js';
