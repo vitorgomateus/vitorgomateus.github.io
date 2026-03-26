@@ -175,6 +175,32 @@
   ],
   "projects": [
     {
+      "id": "library-redesign",
+      "active": true,
+      "title": "University of Chicago Library Website Redesign",
+      "subtitle": "Digital collection website redesign",
+      "year": "2023-2024",
+      "company": "University of Chicago Library",
+      "role": "Web and Graphic Designer",
+      "shortDescription": "Designed and launched a user-friendly website for a digital collection at UChicago Library, making it easier for people to find and use resources. Updated branding across multiple platforms to enhance consistency and modernize the library's image.",
+      "skills": [
+        "UI design",
+        "web design",
+        "branding",
+        "accessibility",
+        "analytics",
+        "stakeholder collaboration"
+      ],
+      "contentBlocks": [
+        {
+          "id": "overview",
+          "heading": null,
+          "text": "Designed and launched a user-friendly website for a digital collection at UChicago Library, making it easier for people to find and use resources. Updated branding across multiple platforms to enhance consistency and modernize the library's image.",
+          "image": null
+        }
+      ]
+    },
+    {
       "id": "winegrid",
       "active": true,
       "title": "Winegrid",
@@ -243,6 +269,44 @@
       ]
     },
     {
+      "id": "conferences",
+      "active": true,
+      "title": "Conference Virtual Venues",
+      "subtitle": "Transitioning international conferences to virtual platforms",
+      "year": "2020",
+      "company": "Freelancing Web Services",
+      "role": "UI/UX Designer & Developer",
+      "shortDescription": "When Covid hit, an international scientific conference organizing committee needed to transition to a virtual venue a on short notice. As we didn't find a ready-made fitting solution, I built one.",
+      "skills": [
+        "UI design",
+        "UX research",
+        "journey mapping",
+        "stakeholder management",
+        "virtual events",
+        "user testing"
+      ],
+      "contentBlocks": [
+        {
+          "id": "problem",
+          "heading": "Problem",
+          "text": "A science committee needed to transition to a virtual venue on short notice due to Covid-19. This brought a few challenges. Asynchoronous participation accross several timezones, when they haven't dedicated their day to the conference, means people will be less motivated to engage. Scientists seeing others present and defend their work live is a key part of the credibility of their contribution and of the value of the conference itself.",
+          "image": null
+        },
+        {
+          "id": "research",
+          "heading": "Research",
+          "text": "I ran an audit of current solutions, and discussed in depth with the stakeholders and other scientists. I identified that onboarding was critical to help participants adapt to a new format. Having solid format for online discussion was key to ensure relevance. A semi-asynchronous format was developed where sessions were made live gradually throughout the conference, and the authors were mandatorily available during their time, while asynchrinous discussion could happen at any time.",
+          "image": null
+        },
+        {
+          "id": "solution",
+          "heading": "Solution",
+          "text": "Wordpress was the ideal solution for the platform, as I could focus on making dedicated screen templates and use plugins to add the necessary features. A comment section plugin was customized to identify roles (author, moderator, participant) and manage notifications during the live portion of the sessions. Maintainng a journey map of user onboarding made the experience seamless. \n \n Both users and stakeholders reported a high degree of satisfaction, and there were no technical issues. The conference hosted 200+ presentations and 3000+ comments in online discussion, over a 3-day period and across almost all timezones. This success led to a second conference being transitioned to the same platform a year later.",
+          "image": null
+        }
+      ]
+    },
+    {
       "id": "timebank",
       "active": true,
       "title": "Banco de Tempo de Santa Maria da Feira",
@@ -273,104 +337,28 @@
           }
         },
         {
-          "id": "collaborative-economy",
-          "heading": "Collaborative Economy",
-          "text": "The Collaborative Economy is a phenomenon of the recent decade, where new and old habits of exchange were developed and re-discovered in the digital realm. Most notoriously - new methods of creating value collaboratively; making use of inert value and sharing goods, services and even time - have created a new highly valued market, challenged policies, and promoted a more sustainable way for people to face their daily challenges. There are also companies that tag along with the promises of social, economic and ecological sustainability, but fail to deliver and end up just exploiting members of their digitally created communities for their own gain.",
+          "id": "motivation",
+          "heading": "Motivation",
+          "text": "Time banks are a form of community exchange where everyone's time holds equal value — an hour of plumbing traded for an hour of tutoring. In Portugal, these networks are small, locally organized, and almost entirely analog. The gap between their social value and their digital infrastructure seemed like an interesting design problem, and it became the basis for my Master's dissertation.",
           "image": null
         },
         {
-          "id": "time-banks",
-          "heading": "Time Banks",
-          "text": "In the meantime, there's an idea that has existed far before, and that is used mostly for social rehabilitation and economic self-reliance in smaller communities. We're talking about time-banks, where people exchange their time, valuing everyone's time equally. So an hour from a plumber is as valuable as an hour from a tutoring mathematician. One would request a service and \"pay\" the person in time-credits, equivalent to the time spent in providing it. And this person will be able to exchange similarly with other members.",
+          "id": "problem",
+          "heading": "Problem",
+          "text": "The Timebank of Santa Maria da Feira was a well-functioning community — validated membership, coordinator oversight, genuine participation — but it had a persistent imbalance: members offered services far more readily than they requested them. The assumption going in was that a cleaner digital interface would lower friction and increase exchanges. The actual problem turned out to be more fundamental. \n Through field visits, informal conversations, and structured questionnaires, a different picture emerged. For most active members — many of them retirees — the primary motivation for participating wasn't economic. It was the sense of being valued and having company. One participant put it plainly: \"If I need a ride somewhere, I don't request from the TimeBank, I take a cab.\" The barrier wasn't usability. It was how members framed their own participation, both internally and in how the network talked about itself. \n This reframed the design challenge: the platform needed to make requesting feel like contributing, not consuming.",
           "image": null
         },
         {
-          "id": "time-banks-portugal",
-          "heading": "Time Banks in Portugal",
-          "text": "In Portugal, Time Banks have existed for a while and have a few slightly specific rules. Each agency, consisting usually of easily below 200 members, should validate each member upon joining, through a personal interview. The agency also intermediates each exchange, to promote that all members have an equal opportunity to contribute. This network, in Portugal, has very little digital support for their members and coordinators.",
-          "image": null
-        },
-        {
-          "id": "value-definition",
-          "heading": "A different definition of value",
-          "text": "This system is based on a marxist conception of value, of which modern notions have undermined, and probably wouldn't be a system sustainable on a large scale, although something similar exists spanning through the United Kingdom. This system's value lies in small communities, and ususally undermined groups of society, strengthening social ties, their notion of self-worth, and overall health of the individuals.",
-          "image": null
-        },
-        {
-          "id": "idea",
-          "heading": "Idea",
-          "text": "Contrasting the digital development of modern Collaborative Economy platforms, with the actual social sustainability contribution of Time banks in Portugal, this project took to study and develop a prototype of a platform for Time Banks in Portugal, collaborating with the agency of Santa Maria da Feira. This community was chosen for being very dynamic and with a very stable organization, a strong sense of belonging between members, and also, for the convenience of proximity.",
-          "image": null
-        },
-        {
-          "id": "challenges",
-          "heading": "Challenges",
-          "text": "One of the biggest challenges was lining up with how they value this network. The value in belonging was not so much in obtaining services and saving money, as one might expect, although a lot of value could be obtained from here. Food, home maintenance services, tutoring, transportation, dance/yoga/painting classes etc... The main motivation was to be able to participate and underlyingly feel valued, and most times even just to have company. This makes sense as most of the more active members are retirees. This was possible to realize through questionnaires and also visits to the community with conversations over tea, getting to know if there was any community spirit, how some of them joined, some particular situations, and how the agency itself functions. The questionnaires aimed at understanding their motivations, current use of technology and foreseable usage of a digital platform for the Time Bank.\n\nAnother challenge was to establish the contribution that digital technologies might have to help them with their main problem: there's a higher tendency in members offering services than requiring them. Two conclusions were obtained in regard to this issue. The literary study established that changing the way their activity was framed by their internal and external discourse would make a significant difference. The empirical study established that a simple and familiar interface to choose and \"purchase\" services would motivate members to request more exchanges.\n\n\"If I need a ride somewhere, I don't request from the TimeBank, I take a cab.\" - a timebank participant",
-          "image": null
-        },
-        {
-          "id": "prototypes",
-          "heading": "Prototypes",
-          "text": "Two prototypes were eventually developed and tested, with different purposes. A first one in Wordpress to test the technology's reliability, as the maintenance of the platform should not require technical capacity. And a second on in Adobe XD to validate an established design and proof of concept.\n\nResults were certainly positive, and this project might still come to fulfilled fruition.\n\n\"I never make any requests, but since it's this easy, I'll definitely start making some.\" - another timebank participant",
-          "image": null
-        }
-      ]
-    },
-    {
-      "id": "library-redesign",
-      "active": true,
-      "title": "University of Chicago Library Website Redesign",
-      "subtitle": "Digital collection website redesign",
-      "year": "2023-2024",
-      "company": "University of Chicago Library",
-      "role": "Web and Graphic Designer",
-      "shortDescription": "Designed and launched a user-friendly website for a digital collection at UChicago Library, making it easier for people to find and use resources. Updated branding across multiple platforms to enhance consistency and modernize the library's image.",
-      "skills": [
-        "UI design",
-        "web design",
-        "branding",
-        "accessibility",
-        "analytics",
-        "stakeholder collaboration"
-      ],
-      "contentBlocks": [
-        {
-          "id": "overview",
-          "heading": null,
-          "text": "Designed and launched a user-friendly website for a digital collection at UChicago Library, making it easier for people to find and use resources. Updated branding across multiple platforms to enhance consistency and modernize the library's image.",
-          "image": null
-        }
-      ]
-    },
-    {
-      "id": "ola-mlc",
-      "active": true,
-      "title": "OLA/MLC Conference Virtual Venues",
-      "subtitle": "Transitioning international conferences to virtual platforms",
-      "year": "2020-2021",
-      "company": "Freelancing Web Services",
-      "role": "UI/UX Designer & Developer",
-      "shortDescription": "Directed two projects to transition international scientific conferences to virtual venues. Created a complete, consistent, and valuable experience with 99% positive feedback. Events lasted 3 days each, spanned worldwide, had over 200 presented papers, and over 3000 messages in online scientific discussion.",
-      "skills": [
-        "UI design",
-        "UX research",
-        "journey mapping",
-        "stakeholder management",
-        "virtual events",
-        "user testing"
-      ],
-      "contentBlocks": [
-        {
-          "id": "overview",
-          "heading": null,
-          "text": "Directed two projects to transition international scientific conferences to virtual venues. Created a complete, consistent, and valuable experience with 99% positive feedback using UX methods to understand users' mental models and journey mapping to avoid pitfalls. Events lasted 3 days each, spanned worldwide, had over 200 presented papers, and over 3000 messages in online scientific discussion.",
+          "id": "solution",
+          "heading": "Solution",
+          "text": "Two prototypes were developed for different purposes. The first was built in WordPress — deliberately chosen because the platform would need to be maintained by coordinators without technical capacity. The goal was to test whether an off-the-shelf CMS could support the core workflows reliably before investing in a custom design. \n The second was a high-fidelity prototype in Adobe XD, designed to validate the interaction model that came out of the research: a simple, familiar service-browsing interface that framed requests as participation rather than dependency. Usability testing with community members produced results that supported the hypothesis. One participant, who said they had never made a request before, responded: \"Since it's this easy, I'll definitely start making some.\"",
           "image": null
         }
       ]
     },
     {
       "id": "bmrc-redesign",
-      "active": true,
+      "active": false,
       "title": "BMRC Website Redesign",
       "subtitle": "Placeholder project",
       "year": "2023",
