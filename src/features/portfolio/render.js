@@ -85,7 +85,7 @@ function createProfileSection(personal, current) {
 
   const avatar = document.createElement('img');
   avatar.className = 'portfolio__avatar';
-  avatar.src = 'res/img/profile_circle_2_bw_sm.webp';
+  avatar.src = 'res/img/avatar.jpg';
   avatar.alt = `Photo of ${personal.name}`;
   avatar.loading = 'lazy';
 
