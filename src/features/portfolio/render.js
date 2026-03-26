@@ -13,7 +13,7 @@ export function renderPortfolio(container, data) {
 
   // Profile section
   if (data.personal) {
-    container.appendChild(createProfileSection(data.personal));
+    container.appendChild(createProfileSection(data.personal, data.current));
   }
 
   // Skills section
@@ -50,54 +50,92 @@ export function renderPortfolio(container, data) {
   initAccordions();
 }
 
+function createCurrentGroup(label, items) {
+  const group = document.createElement('div');
+  group.className = 'portfolio__current-group';
+
+  const heading = document.createElement('h3');
+  heading.className = 'portfolio__group-label';
+  heading.textContent = label;
+  group.appendChild(heading);
+
+  const list = document.createElement('ul');
+  list.className = 'portfolio__current-list';
+  items.forEach(item => {
+    const li = document.createElement('li');
+    li.className = 'portfolio__current-item';
+    li.textContent = item;
+    list.appendChild(li);
+  });
+  group.appendChild(list);
+  return group;
+}
+
 // Create profile/summary section
-function createProfileSection(personal) {
+function createProfileSection(personal, current) {
   const section = document.createElement('section');
   section.className = 'portfolio__section portfolio__profile';
   section.id = 'summary-container';
   section.setAttribute('data-chunk', 'summary');
-  section.setAttribute('aria-label', 'Profile summary');
+
+  const srHeading = document.createElement('h2');
+  srHeading.className = 'visually-hidden';
+  srHeading.textContent = `About ${personal.name.split(' ')[0]}`;
+  section.appendChild(srHeading);
 
   const avatar = document.createElement('img');
   avatar.className = 'portfolio__avatar';
   avatar.src = 'res/img/profile_circle_2_bw_sm.webp';
   avatar.alt = `Photo of ${personal.name}`;
   avatar.loading = 'lazy';
-  section.appendChild(avatar);
 
   const name = document.createElement('p');
   name.className = 'portfolio__name';
   name.textContent = personal.name;
-  section.appendChild(name);
 
   const title = document.createElement('p');
   title.className = 'portfolio__title-text';
   title.textContent = personal.title;
-  section.appendChild(title);
+
+  const identity = document.createElement('div');
+  identity.className = 'portfolio__identity';
+  identity.appendChild(avatar);
+  identity.appendChild(name);
+  identity.appendChild(title);
+  section.appendChild(identity);
+
+  // Current: working on / thinking about + AI teaser
+  if (current) {
+    const currentEl = document.createElement('div');
+    currentEl.className = 'portfolio__current';
+    currentEl.id = 'current-container';
+
+    const groups = document.createElement('div');
+    groups.className = 'portfolio__current-groups';
+    if (current.working?.length) groups.appendChild(createCurrentGroup('Working on', current.working));
+    if (current.thinking?.length) groups.appendChild(createCurrentGroup('Thinking about', current.thinking));
+    currentEl.appendChild(groups);
+
+    const teaser = document.createElement('button');
+    teaser.className = 'portfolio__ai-teaser';
+    teaser.id = 'ai-teaser-btn';
+    teaser.type = 'button';
+    teaser.innerHTML = '<span class="portfolio__ai-teaser-badge">Experimental</span><span class="portfolio__ai-teaser-text">This portfolio runs an AI — entirely in your browser, zero servers</span><i data-feather="arrow-right"></i>';
+    currentEl.appendChild(teaser);
+
+    section.appendChild(currentEl);
+  }
+
+  const summaryLabel = document.createElement('h3');
+  summaryLabel.className = 'portfolio__group-label';
+  summaryLabel.textContent = 'Summary';
+  section.appendChild(summaryLabel);
 
   const summary = document.createElement('p');
   summary.className = 'portfolio__summary';
   summary.textContent = personal.summary;
   section.appendChild(summary);
 
-  // Contact links
-  const contact = document.createElement('div');
-  contact.className = 'portfolio__contact';
-
-  if (personal.email) {
-    contact.appendChild(createContactLink(`mailto:${personal.email}`, 'mail', personal.email));
-  }
-  if (personal.linkedin) {
-    contact.appendChild(createContactLink(personal.linkedin, 'linkedin', 'LinkedIn', true));
-  }
-  if (personal.location) {
-    const loc = document.createElement('span');
-    loc.className = 'portfolio__contact-link';
-    loc.innerHTML = `<i data-feather="map-pin"></i> ${personal.location}`;
-    contact.appendChild(loc);
-  }
-
-  section.appendChild(contact);
   return section;
 }
 
@@ -438,6 +476,7 @@ function createProjectsSection(projects) {
 
     if (project.contentBlocks?.length) {
       project.contentBlocks.forEach(block => {
+        if (block.id === 'overview') return; // shortDescription covers it
 
         const blockEl = document.createElement('div');
         blockEl.className = 'portfolio__content-block';

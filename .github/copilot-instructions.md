@@ -7,6 +7,7 @@ Portfolio website with experimental local AI chatbot feature. Primary focus: sho
 - [README.md](../README.md) - User-facing overview, setup instructions
 - [REQUIREMENTS.md](../REQUIREMENTS.md) - Complete technical specifications (authoritative source)
 - This file - Critical instructions for AI agents working with the codebase
+- When a solution needs to be corrected, look for opportunities to update these instructions to prevent similar issues in the future, but keeping this file relatively concise.
 
 **Critical instructions:** (See REQUIREMENTS.md for full details)
 - **Portfolio First:** Static portfolio is the primary interface, chatbot is experimental

@@ -34,6 +34,15 @@ export function setupEvents() {
     drawerOverlay.addEventListener('click', closeDrawer);
   }
 
+  // AI teaser button in Now section
+  const aiTeaserBtn = document.getElementById('ai-teaser-btn');
+  if (aiTeaserBtn) {
+    aiTeaserBtn.addEventListener('click', () => {
+      const featureToggle = document.getElementById('feature-toggle');
+      if (featureToggle && !state.experimentalMode) featureToggle.click();
+    });
+  }
+
   // Close expanded view button (the entire close bar)
   const closeBar = document.getElementById('close-bar');
   if (closeBar) {
@@ -169,8 +178,7 @@ export function setupEvents() {
   // Should we use this?
   // setupFeedbackTimer();
 
-  // Chat prompt timer
-  setupChatPromptTimer();
+  // setupChatPromptTimer(); // replaced by the AI teaser in the Now section
 }
 
 // Handle project click
