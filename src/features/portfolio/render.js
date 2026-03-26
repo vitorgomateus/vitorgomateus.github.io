@@ -467,6 +467,18 @@ function createProjectsSection(projects) {
 
     article.appendChild(summary);
 
+    // "Read full project" button — only for projects with content beyond the summary
+    const hasDetails = project.contentBlocks?.some(b => b.id !== 'overview');
+    if (hasDetails) {
+      article.setAttribute('data-has-details', 'true');
+      const readFullBtn = document.createElement('button');
+      readFullBtn.className = 'portfolio__read-full-btn';
+      readFullBtn.type = 'button';
+      readFullBtn.textContent = 'Read full project';
+      readFullBtn.hidden = true;
+      article.appendChild(readFullBtn);
+    }
+
     // Details (visually hidden, accessible to SR)
     const details = document.createElement('div');
     details.className = 'portfolio__project-details portfolio__project-details--collapsed';
@@ -593,7 +605,7 @@ function createFooterLink(href, icon, text) {
 }
 
 // Show/hide chunks for search results or project expansion
-export function setVisibleChunks(chunkIds, mode = 'filter') {
+export function setVisibleChunks(chunkIds, mode = 'filter', query = '') {
   const allChunks = document.querySelectorAll('[data-chunk]');
   const closeBar = document.getElementById('close-bar');
   const closeLabel = document.getElementById('close-view-label');
@@ -613,6 +625,7 @@ export function setVisibleChunks(chunkIds, mode = 'filter') {
       s.setAttribute('aria-expanded', 'false');
       s.removeAttribute('data-search-locked');
     });
+    document.querySelectorAll('.portfolio__read-full-btn').forEach(btn => { btn.hidden = true; });
     // Close all section accordions, show all sections and their headings
     document.querySelectorAll('.portfolio__section').forEach(s => { s.hidden = false; });
     document.querySelectorAll('.portfolio__section-title').forEach(h => { h.hidden = false; });
@@ -631,7 +644,7 @@ export function setVisibleChunks(chunkIds, mode = 'filter') {
   // Hide input bar, show close bar with mode label
   if (closeBar) closeBar.hidden = false;
   if (closeLabel) {
-    closeLabel.textContent = mode === 'project' ? 'Project View' : 'Vector Search';
+    closeLabel.textContent = mode === 'project' ? 'Project View' : query ? `"${query}"` : 'Vector Search';
   }
   if (inputBar) inputBar.hidden = true;
 
@@ -697,9 +710,20 @@ export function setVisibleChunks(chunkIds, mode = 'filter') {
         c => !c.classList.contains('portfolio__chunk--hidden')
       );
       const hasBlocks = matchedBlocks.length > 0;
+      console.log(`[render] project=${projectId} overviewMatched=${overviewMatched} hasBlocks=${hasBlocks} matchedBlocks=${matchedBlocks.map(b => b.getAttribute('data-chunk'))}`);
+      if (hasBlocks) console.log(`[render] details expanded for ${projectId}`);
+      else console.log(`[render] summary-only shown for ${projectId}`);
 
       // Project title always shows for any matched project article
       summary.hidden = false;
+
+      // Show "Read full project" if some blocks of this project are hidden
+      const readFullBtn = article.querySelector('.portfolio__read-full-btn');
+      if (readFullBtn) {
+        const allBlocks = details.querySelectorAll('[data-chunk]');
+        const someHidden = Array.from(allBlocks).some(c => c.classList.contains('portfolio__chunk--hidden'));
+        readFullBtn.hidden = !someHidden;
+      }
 
       if (hasBlocks) {
         // Blocks matched: expand details

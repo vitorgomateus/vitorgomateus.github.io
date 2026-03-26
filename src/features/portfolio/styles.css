@@ -431,6 +431,27 @@ ul.portfolio__entry-description {
   outline-offset: 2px;
 }
 
+.portfolio__read-full-btn {
+  display: block;
+  width: 100%;
+  margin-top: var(--space-sm);
+  padding: var(--space-xs) var(--space-md);
+  background: transparent;
+  border: 1px solid var(--primary);
+  border-radius: var(--radius-sm);
+  color: var(--primary);
+  font-size: 0.85rem;
+  cursor: pointer;
+  text-align: center;
+}
+
+.portfolio__read-full-btn:hover,
+.portfolio__read-full-btn:focus-visible {
+  background: var(--primary);
+  color: var(--background);
+  outline: none;
+}
+
 .portfolio__project-title {
   font-family: var(--font-primary);
   font-size: 1rem;

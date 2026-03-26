@@ -69,6 +69,13 @@ export function setupEvents() {
   const portfolioContainer = document.getElementById('portfolio-container');
   if (portfolioContainer) {
     portfolioContainer.addEventListener('click', (e) => {
+      const readFull = e.target.closest('.portfolio__read-full-btn');
+      if (readFull) {
+        const project = readFull.closest('.portfolio__project');
+        if (project) handleProjectClick(project.getAttribute('data-project-id'));
+        return;
+      }
+
       const summary = e.target.closest('.portfolio__project-summary');
       if (summary) {
         if (summary.getAttribute('data-search-locked') === 'true') return;

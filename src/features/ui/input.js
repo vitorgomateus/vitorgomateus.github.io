@@ -39,7 +39,10 @@ async function handleSearchInput(query) {
   }
 
   const chunkIds = resultsToChunkIds(results);
-  setVisibleChunks(chunkIds, 'filter');
+  console.log('[search] query:', query);
+  console.log('[search] raw results:', results.map(r => ({ anchor: r.anchor, score: r.score?.toFixed(3), project_id: r.project_id, block_id: r.block_id, section: r.section })));
+  console.log('[search] chunkIds:', chunkIds);
+  setVisibleChunks(chunkIds, 'filter', query);
   if (statusEl) statusEl.textContent = `${results.length} result${results.length === 1 ? '' : 's'} found`;
 
   // Scroll to top of results
