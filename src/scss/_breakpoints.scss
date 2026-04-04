@@ -57,6 +57,15 @@
         border: 1px solid var(--border);
     }
 
+    .header > .container,
+    .input-bar > .container,
+    .alerts > .container,
+    #search-status > .container,
+    .suggestions > .container {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
     .header__title {
         font-size: clamp(1.65rem, 1.2vw + 1rem, 2.2rem);
     }

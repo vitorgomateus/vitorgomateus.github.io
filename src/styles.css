@@ -165,15 +165,20 @@ body {
    Header
    ======================================== */
 .header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 var(--content-padding-x);
   height: var(--header-height);
   min-height: var(--header-height);
   background: var(--primary);
   color: white;
   z-index: 10;
+}
+
+.header > .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--content-padding-x);
+  height: 100%;
+  width: 100%;
 }
 
 .header__title {
@@ -452,10 +457,15 @@ body {
    Alerts
    ======================================== */
 .alerts {
+  width: 100%;
+}
+
+.alerts > .container {
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);
   padding: 0 var(--content-padding-x);
+  width: 100%;
 }
 
 .alert {
@@ -531,11 +541,16 @@ body {
    Suggestions
    ======================================== */
 .suggestions {
+  width: 100%;
+}
+
+.suggestions > .container {
   display: flex;
   gap: var(--space-sm);
   padding: var(--space-sm) var(--content-padding-x);
   flex-wrap: wrap;
   justify-content: flex-end;
+  width: 100%;
 }
 
 .suggestion-btn {
@@ -571,13 +586,17 @@ body {
    Input Bar
    ======================================== */
 .input-bar {
+  min-height: var(--input-bar-height);
+  background: var(--background);
+  border-top: 1px solid var(--border);
+}
+
+.input-bar > .container {
   display: flex;
   align-items: flex-end;
   gap: var(--space-sm);
   padding: var(--space-sm) var(--content-padding-x);
-  min-height: var(--input-bar-height);
-  background: var(--background);
-  border-top: 1px solid var(--border);
+  width: 100%;
 }
 
 .input-bar__textarea {
@@ -1020,6 +1039,14 @@ body {
     height: min(100vh - 4rem, var(--app-max-height));
     border-radius: 1.25rem;
     border: 1px solid var(--border);
+  }
+  .header > .container,
+  .input-bar > .container,
+  .alerts > .container,
+  #search-status > .container,
+  .suggestions > .container {
+    max-width: 900px;
+    margin: 0 auto;
   }
   .header__title {
     font-size: clamp(1.65rem, 1.2vw + 1rem, 2.2rem);
