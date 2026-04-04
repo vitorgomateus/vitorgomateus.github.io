@@ -977,6 +977,16 @@ body {
   :root {
     --content-padding-x: 1.25rem;
   }
+  .header__title {
+    font-size: clamp(1.35rem, 1.1vw + 0.95rem, 1.85rem);
+  }
+  .drawer__title,
+  .modal__title {
+    font-size: clamp(1.2rem, 0.7vw + 0.9rem, 1.55rem);
+  }
+  .drawer__section-title {
+    font-size: clamp(0.9rem, 0.3vw + 0.8rem, 1rem);
+  }
 }
 @media (max-width: 767px) {
   body {
@@ -1012,7 +1022,7 @@ body {
     border: 1px solid var(--border);
   }
   .header__title {
-    font-size: 1.5rem;
+    font-size: clamp(1.65rem, 1.2vw + 1rem, 2.2rem);
   }
   .chat {
     padding: var(--space-lg);

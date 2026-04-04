@@ -78,9 +78,17 @@ See [REQUIREMENTS.md](REQUIREMENTS.md#embeddings-json-structure) for schema deta
 
 ### Local Development
 ```bash
-# Start HTTP server (required for ES modules)
-python -m http.server 8000
-# Open http://localhost:8000
+npm install
+npm run dev
+```
+
+This starts both:
+- a local static server at `http://localhost:8000`
+- the SCSS compiler in watch mode
+
+If you only want the server:
+```bash
+npm run serve
 ```
 
 ### SCSS Workflow
