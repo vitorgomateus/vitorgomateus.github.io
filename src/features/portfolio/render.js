@@ -406,10 +406,8 @@ function createProjectsSection(projects) {
 
   const body = document.createElement('div');
   body.id = 'projects-body';
-  body.className = 'portfolio__section-body';
+  body.className = 'portfolio__section-body portfolio__projects-grid';
   body.hidden = true;
-
-  // Only show active projects by default
   const activeProjects = projects.filter(p => p.active);
 
   activeProjects.forEach(project => {

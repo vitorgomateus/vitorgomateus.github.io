@@ -92,7 +92,7 @@ src/
 - The static portfolio displays the portfolio data from the embeddings file as HTML and makes certain parts of it visible or hidden on different occasions. One user action is to run an embeddings search which filters the portfolio display according to the results, so the HTML elements need to be grouped in chunks which can be matched against the embeddings results and the embeddings file needs to maintain the nesting logic present in the JSON so that a Javascript may generate well structured, semantic HTML.
 
 ### 0. UI main sections
-- **Container** - The whole UI is restricted to a container with a max size of 460px × 720px, so that it maintains a mobile model in any screen. These values should be established as variables to be reused where necessary, namely on elements with position fixed or absolute, to ensure they follow the same constrain. Everything happens inside this container; fixed or absolute containers need to be positioned so that they stay inside.
+- **Container** - The UI is mobile-first and must support two viewport tiers: mobile baseline and one desktop breakpoint. At mobile sizes, keep the 460px × 720px model as the baseline constraint. At desktop sizes, allow the container to expand while preserving spacing rhythm, readability, and containment of fixed/absolute layers. Container values should be established as variables to be reused where necessary, namely on elements with position fixed or absolute, to ensure they follow the same constrain. Everything happens inside this container; fixed or absolute containers need to be positioned so that they stay inside.
 - **Navbar Header** - A navbar on top with the name (Vítor Gonçalves), an experimental feature toggle, and a menu toggle for a right side drawer. This uses the primary color as background and the decorative font for the name.
 - **Input bar** - A bottom input bar with a text input and a search/send button to both start a search on the static portfolio, or send a message to the experimental AI chatbot feature.
 - **Main area** - The main display area between the top and bottom bars displays the content of the static portfolio or the chatbot conversation, depending on which feature is active. 
@@ -612,10 +612,10 @@ The `embeddings.json` file serves three purposes:
 - Graceful degradation on slower devices
 - GPU-accelerated animations only
 
-#### Mobile Only
-- Fixed dimensions (max 460px × 720px)
-- No responsive breakpoints
-- Simplified interface for small screens
+#### Responsive Scope
+- Mobile-first baseline (max 460px × 720px)
+- One desktop breakpoint for expanded layout
+- Keep interface semantics and interaction model consistent across tiers
 - Touch-friendly targets (minimum 44×44px)
 
 #### Aesthetic Playfulness 

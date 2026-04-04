@@ -16,7 +16,7 @@ A portfolio website showcasing UX design work, with an experimental AI chatbot f
 - Website must run from Github Pages
 
 ### Design Constraints
-- Mobile-only interface
+- Mobile-first interface with desktop breakpoint support
 - No external API calls
 
 First load will download the model (~1.9GB). Subsequent loads are instant.
@@ -56,7 +56,7 @@ For technical details, see [REQUIREMENTS.md](REQUIREMENTS.md).
 ## Limitations
 - WebGPU support limited (Chrome/Edge only)
 - Large initial download (1.9GB)
-- Fixed mobile dimensions (no responsive design)
+- Two layout tiers (mobile baseline + desktop breakpoint)
 - Single model
 - Limited context window (256 tokens)
 - No streaming display (accumulated then shown)
@@ -81,6 +81,17 @@ See [REQUIREMENTS.md](REQUIREMENTS.md#embeddings-json-structure) for schema deta
 # Start HTTP server (required for ES modules)
 python -m http.server 8000
 # Open http://localhost:8000
+```
+
+### SCSS Workflow
+```bash
+npm install
+npm run build:css
+```
+
+For continuous compilation while editing styles:
+```bash
+npm run watch:css
 ```
 
 ## Credits
