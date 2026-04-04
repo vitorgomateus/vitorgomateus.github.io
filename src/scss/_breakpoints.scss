@@ -57,11 +57,12 @@
         border: 1px solid var(--border);
     }
 
-    .header > .container,
-    .input-bar > .container,
-    .alerts > .container,
-    #search-status > .container,
-    .suggestions > .container {
+    .header>.container,
+    .input-bar>.container,
+    .main__close-bar>.container,
+    .alerts>.container,
+    #search-status>.container,
+    .suggestions>.container {
         max-width: 900px;
         margin: 0 auto;
     }

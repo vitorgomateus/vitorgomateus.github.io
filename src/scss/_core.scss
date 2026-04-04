@@ -186,7 +186,7 @@ body {
   z-index: 10;
 }
 
-.header > .container {
+.header>.container {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -319,11 +319,6 @@ body {
 }
 
 .main__close-bar {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: var(--space-sm);
-  padding: var(--space-sm) var(--content-padding-x);
   min-height: var(--input-bar-height);
   background: var(--background);
   border: none;
@@ -331,6 +326,16 @@ body {
   width: 100%;
   cursor: pointer;
   color: var(--text);
+}
+
+.main__close-bar>.container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--content-padding-x);
+  width: 100%;
+  height: 100%;
 }
 
 .main__close-bar:hover {
@@ -489,7 +494,7 @@ body {
   width: 100%;
 }
 
-.alerts > .container {
+.alerts>.container {
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);
@@ -577,7 +582,7 @@ body {
   width: 100%;
 }
 
-.suggestions > .container {
+.suggestions>.container {
   display: flex;
   gap: var(--space-sm);
   padding: var(--space-sm) var(--content-padding-x);
@@ -626,7 +631,7 @@ body {
   border-top: 1px solid var(--border);
 }
 
-.input-bar > .container {
+.input-bar>.container {
   display: flex;
   align-items: flex-end;
   gap: var(--space-sm);

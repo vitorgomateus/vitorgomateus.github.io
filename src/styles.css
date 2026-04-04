@@ -302,11 +302,6 @@ body {
 }
 
 .main__close-bar {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: var(--space-sm);
-  padding: var(--space-sm) var(--content-padding-x);
   min-height: var(--input-bar-height);
   background: var(--background);
   border: none;
@@ -314,6 +309,16 @@ body {
   width: 100%;
   cursor: pointer;
   color: var(--text);
+}
+
+.main__close-bar > .container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--content-padding-x);
+  width: 100%;
+  height: 100%;
 }
 
 .main__close-bar:hover {
@@ -1042,6 +1047,7 @@ body {
   }
   .header > .container,
   .input-bar > .container,
+  .main__close-bar > .container,
   .alerts > .container,
   #search-status > .container,
   .suggestions > .container {
