@@ -1,11 +1,16 @@
-// WebLLM model integration
+// Transformers.js model integration
 
 import state from '../../core/state.js';
 import { getRelevantContext } from './rag.js';
 
 // Model configuration
+// Requires a pre-exported ONNX model available on HuggingFace (e.g. via onnx-community).
+// If onnx-community/gemma-4-E2B-ONNX is not yet published, export it with:
+//   optimum-cli export onnx --model google/gemma-4-E2B --task text-generation-with-past --dtype fp16 out/
+// then upload to HuggingFace and update selectedModel below.
 const MODEL_CONFIG = {
-  selectedModel: 'Phi-3.5-mini-instruct-q4f16_1-MLC',
+  selectedModel: 'onnx-community/gemma-4-E2B-ONNX',
+  dtype: 'q4',
   maxTokens: 256,
   temperature: 0.3
 };
@@ -65,7 +70,7 @@ const SUGGESTION_MESSAGES = [
 
 let engine = null;
 
-// Initialize the WebLLM engine
+// Initialize the Transformers.js pipeline engine
 export async function initModel(onProgress) {
   if (state.isModelLoading || state.isModelLoaded) return;
 
@@ -75,21 +80,37 @@ export async function initModel(onProgress) {
   let loadingStart = null;
 
   try {
-    // Dynamic import of WebLLM
-    const webllm = await import('https://esm.run/@mlc-ai/web-llm');
+    // Dynamic import of Transformers.js v3
+    const { pipeline } = await import('https://cdn.jsdelivr.net/npm/@huggingface/transformers@3');
 
-    engine = await webllm.CreateMLCEngine(MODEL_CONFIG.selectedModel, {
-      initProgressCallback: (progress) => {
-        if (onProgress) onProgress(progress);
+    engine = await pipeline('text-generation', MODEL_CONFIG.selectedModel, {
+      device: 'webgpu',
+      dtype: MODEL_CONFIG.dtype,
+      progress_callback: (progress) => {
+        // Adapt Transformers.js progress events to the { progress: 0-1, text } shape
+        // expected by messages.js updateProgress()
+        const adapted = {};
 
-        // Update status based on progress
-        if (progress.text?.includes('Loading') && loadingStart === null) {
-          loadingStart = performance.now();
-          const downloadMs = Math.round(loadingStart - modelInitStart);
-          console.info(`[telemetry] Model download time: ${downloadMs}ms`);
-        }
-        if (progress.text?.includes('Loading')) {
+        if (progress.status === 'progress' && progress.progress !== undefined) {
+          adapted.progress = progress.progress / 100;
+          adapted.text = `Downloading... ${Math.round(progress.progress)}%`;
+        } else if (progress.status === 'loading') {
+          adapted.text = 'Loading model...';
+          if (loadingStart === null) {
+            loadingStart = performance.now();
+            const downloadMs = Math.round(loadingStart - modelInitStart);
+            console.info(`[telemetry] Model download time: ${downloadMs}ms`);
+          }
           state.modelStatus = 'loading';
+        } else if (progress.status === 'ready') {
+          adapted.progress = 1;
+          adapted.text = 'Finish loading on WebGPU';
+        } else if (progress.status === 'initiate' || progress.status === 'download') {
+          adapted.text = 'Downloading model...';
+        }
+
+        if (onProgress && (adapted.text || adapted.progress !== undefined)) {
+          onProgress(adapted);
         }
       }
     });
@@ -162,17 +183,18 @@ export async function generateResponse(userMessage) {
     messages.push({ role: 'user', content: userMessage });
 
     const requestPayload = {
-      messages,
-      max_tokens: MODEL_CONFIG.maxTokens,
-      temperature: MODEL_CONFIG.temperature
+      max_new_tokens: MODEL_CONFIG.maxTokens,
+      temperature: MODEL_CONFIG.temperature,
+      do_sample: true
     };
     console.info('[telemetry] Model request payload:', requestPayload);
 
-    // Generate response
-    const response = await engine.chat.completions.create(requestPayload);
+    // Generate response — Transformers.js TextGenerationPipeline with chat messages
+    const result = await engine(messages, requestPayload);
 
-    const rawResponse = response.choices[0]?.message?.content || '';
-    console.info('[telemetry] Model response payload:', response);
+    // result[0].generated_text is the full messages array + new assistant turn
+    const rawResponse = result[0]?.generated_text?.at(-1)?.content || '';
+    console.info('[telemetry] Model response payload:', result);
 
     // Extract user data from response
     const { cleanResponse, extractedData } = parseExtraction(rawResponse);
@@ -285,21 +307,17 @@ export function getNextSuggestions() {
 export async function clearModelCache() {
   try {
     if (engine) {
-      await engine.unload();
+      await engine.dispose?.();
       engine = null;
     }
 
-    // Clear IndexedDB caches used by WebLLM
-    const databases = await indexedDB.databases();
-    const webllmDbs = databases.filter(db =>
-      db.name?.includes('webllm') ||
-      db.name?.includes('mlc') ||
-      db.name?.includes('model')
+    // Clear Cache API entries used by Transformers.js
+    const cacheNames = await caches.keys();
+    const tfCaches = cacheNames.filter(name =>
+      name.includes('transformers') ||
+      name.includes('huggingface')
     );
-
-    for (const db of webllmDbs) {
-      indexedDB.deleteDatabase(db.name);
-    }
+    await Promise.all(tfCaches.map(name => caches.delete(name)));
 
     state.isModelLoaded = false;
     state.isModelLoading = false;
@@ -319,9 +337,9 @@ export function checkWebGPUSupport() {
 // Get model display info
 export function getModelInfo() {
   return {
-    name: 'Phi-3.5-mini',
+    name: 'Gemma 4 E2B',
     fullName: MODEL_CONFIG.selectedModel,
-    size: '~1.9GB',
+    size: '~1.5GB',
     status: state.modelStatus
   };
 }

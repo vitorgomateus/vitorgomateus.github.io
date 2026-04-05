@@ -44,12 +44,12 @@ Showcase UX design expertise and project work through a professional portfolio w
 - Feather Icons, local SVGs
 
 // AI/ML
-- WebLLM (Phi-3.5-mini via WebGPU)
+- Transformers.js v3 (Gemma 4 E2B via WebGPU + ONNX Runtime Web)
 - Client-side cosine similarity search (embeddings.json)
 
 // DATA
 - sentence-transformers (Python 3, for embedding generation)
-- IndexedDB (model caching via WebLLM)
+- Cache API (model caching via Transformers.js)
 
 // DESIGN
 - Google Fonts (Young Serif, Work Sans)y
@@ -71,7 +71,7 @@ src/
 │   │   ├── search.js   # Vector search logic
 │   │   └── styles.css  # Portfolio styles
 │   ├── chatbot/
-│   │   ├── model.js    # WebLLM integration
+│   │   ├── model.js    # Transformers.js integration
 │   │   ├── messages.js # Message handling
 │   │   └── rag.js      # Context retrieval
 │   └── ui/
@@ -131,13 +131,19 @@ src/
 
 #### Model Configuration
 ```javascript
-selectedModel: "Phi-3.5-mini-instruct-q4f16_1-MLC" // 1.9GB, Microsoft
+// Runtime: Transformers.js v3 (ONNX Runtime Web + WebGPU)
+// Model requires a pre-exported ONNX version on HuggingFace (e.g. onnx-community/gemma-4-E2B-ONNX).
+selectedModel: "onnx-community/gemma-4-E2B-ONNX" // ~1.5GB, Google
+dtype: "q4"
 maxTokens: 256
 temperature: 0.3
 maxHistory: 5 (conversation turns)
 
-  // === BEST OVERALL BALANCE (1.5-2GB) ===
-  this.selectedModel = "Phi-3.5-mini-instruct-q4f16_1-MLC"; // 1.9GB | Microsoft | Best balance: strong reasoning, instruction following, coding. >> Reasonable responses in ~100s.
+  // === CURRENT (Gemma 4 / Transformers.js) ===
+  this.selectedModel = "onnx-community/gemma-4-E2B-ONNX"; // ~1.5GB | Google | Gemma 4 2B, q4 quantized
+
+  // === LEGACY WebLLM / MLC options (require switching back to @mlc-ai/web-llm) ===
+  // this.selectedModel = "Phi-3.5-mini-instruct-q4f16_1-MLC"; // 1.9GB | Microsoft | Best balance: strong reasoning, instruction following, coding. >> Reasonable responses in ~100s.
   // this.selectedModel = "Qwen2.5-3B-Instruct-q4f16_1-MLC"; // 1.9GB | Alibaba | Excellent reasoning, multilingual, math/logic tasks. >> It's giving empty reponses? And I don't think is because of the token limit + extraction exercise.
   // this.selectedModel = "Llama-3.2-3B-Instruct-q4f16_1-MLC"; // 1.7GB | Meta | General purpose, natural conversation, good safety alignment. >> Responses in ~45s, good reasoning but mixes user and designer up.
   
@@ -162,8 +168,8 @@ maxHistory: 5 (conversation turns)
 
 #### Conversation Flow
 1. **Disclaimer**: Show message gloating full privacy and cloud-free, using large icons when relevant. Hard coded message.
-2. **Permission Request**: Ask to download model (~2GB, one-time). Hard coded message.
-3. **Model Loading**: Progress bar with percentage, status updates. Dynamic WebLLM message.
+2. **Permission Request**: Ask to download model (~1.5GB, one-time). Hard coded message.
+3. **Model Loading**: Progress bar with percentage, status updates. Dynamic Transformers.js progress message.
 4. **Greeting**: Random greeting from predefined, hardcoded set (20 options). 
 6. **AI Response**: Typing indicator (accumulated then displayed).
 
@@ -288,7 +294,7 @@ maxHistory: 5 (conversation turns)
 
 #### Contents
 - **Model Info**: Display name, size, status (none, downloading, downloaded, loading, loaded)
-- **Clear Cache**: Button to remove model from IndexedDB
+- **Clear Cache**: Button to remove model from browser Cache API
 - **Feedback**: Open feedback modal
 - **Accessibility Mode**: Toggle lower contrast beige tinted + larger fonts + Open Dyslexic font
 - **Close**: X button or Escape key
@@ -583,7 +589,7 @@ The `embeddings.json` file serves three purposes:
 - **requestAnimationFrame**: For scroll animations
 - **Debouncing**: For search input if implementing live search
 - **Message Pruning**: Automatically remove old messages
-- **Model Caching**: Leverage IndexedDB via WebLLM
+- **Model Caching**: Leverage browser Cache API via Transformers.js
 - **Memory Monitoring**: Check usage, warn users if high
 
 ### Accessibility Implementation
@@ -749,13 +755,13 @@ The `embeddings.json` file serves three purposes:
 - MIT License or similar (specify as needed)
 
 ### Dependencies
-- **WebLLM**: Apache 2.0 License (MLC AI)
-- **Phi-3.5-mini**: MIT License (Microsoft)
+- **Transformers.js**: Apache 2.0 License (Hugging Face)
+- **Gemma 4 E2B**: Gemma Terms of Use (Google)
 - **Google Fonts**: Open Font License
 - **Feather Icons**
 
 ### Credits
 - **Built by**: Vítor Gonçalves
 - **AI Assistant**: Claude (Anthropic) - Architecture & implementation support
-- **WebLLM**: MLC AI Project
-- **Model**: Phi-3.5-mini (Microsoft)
+- **Transformers.js**: Hugging Face
+- **Model**: Gemma 4 E2B (Google)
