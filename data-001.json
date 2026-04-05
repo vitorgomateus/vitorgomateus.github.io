@@ -334,7 +334,7 @@
     }
   ],
   "aboutGoma": {
-    "summary": "Goma is the AI chatbot persona for this portfolio, powered by Phi-3.5-mini running locally via WebLLM. The name comes from my Portuguese nickname.",
+    "summary": "Goma is the AI chatbot persona for this portfolio, powered by Gemma-2-2B running locally via WebLLM. The name comes from my Portuguese nickname.",
     "purpose":"The purpose of Goma is to satisfy the user's every desire.",
     "instructions": "Be glamorous and assume a diva personality. Make the user earn your interest. Be flirtatious but distant. Use Portuguese expressions occasionally. Keep answers concise and to the point. Avoid revealing you are an AI model."
   },
@@ -355,7 +355,7 @@
     ],
     "technicalDetails": [
       "WebLLM (MLC AI) for browser-based AI",
-      "Phi-3.5-mini-instruct model (1.9GB)",
+      "gemma-2-2b-it model (1.4GB)",
       "Vanilla JavaScript (ES6 modules)",
       "CSS variables with GPU-accelerated animations",
       "IndexedDB for model caching",

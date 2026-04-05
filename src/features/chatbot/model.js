@@ -5,7 +5,7 @@ import { getRelevantContext } from './rag.js';
 
 // Model configuration
 const MODEL_CONFIG = {
-  selectedModel: 'Phi-3.5-mini-instruct-q4f16_1-MLC',
+  selectedModel: 'gemma-2-2b-it-q4f16_1-MLC',
   maxTokens: 256,
   temperature: 0.3
 };
@@ -319,9 +319,9 @@ export function checkWebGPUSupport() {
 // Get model display info
 export function getModelInfo() {
   return {
-    name: 'Phi-3.5-mini',
+    name: 'Gemma-2-2B',
     fullName: MODEL_CONFIG.selectedModel,
-    size: '~1.9GB',
+    size: '~1.4GB',
     status: state.modelStatus
   };
 }

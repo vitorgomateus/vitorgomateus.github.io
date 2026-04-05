@@ -44,7 +44,7 @@ Showcase UX design expertise and project work through a professional portfolio w
 - Feather Icons, local SVGs
 
 // AI/ML
-- WebLLM (Phi-3.5-mini via WebGPU)
+- WebLLM (Gemma-2-2B via WebGPU)
 - Client-side cosine similarity search (embeddings.json)
 
 // DATA
@@ -131,19 +131,19 @@ src/
 
 #### Model Configuration
 ```javascript
-selectedModel: "Phi-3.5-mini-instruct-q4f16_1-MLC" // 1.9GB, Microsoft
+selectedModel: "gemma-2-2b-it-q4f16_1-MLC" // 1.4GB, Google
 maxTokens: 256
 temperature: 0.3
 maxHistory: 5 (conversation turns)
 
   // === BEST OVERALL BALANCE (1.5-2GB) ===
-  this.selectedModel = "Phi-3.5-mini-instruct-q4f16_1-MLC"; // 1.9GB | Microsoft | Best balance: strong reasoning, instruction following, coding. >> Reasonable responses in ~100s.
+  // this.selectedModel = "Phi-3.5-mini-instruct-q4f16_1-MLC"; // 1.9GB | Microsoft | Best balance: strong reasoning, instruction following, coding. >> Reasonable responses in ~100s.
   // this.selectedModel = "Qwen2.5-3B-Instruct-q4f16_1-MLC"; // 1.9GB | Alibaba | Excellent reasoning, multilingual, math/logic tasks. >> It's giving empty reponses? And I don't think is because of the token limit + extraction exercise.
   // this.selectedModel = "Llama-3.2-3B-Instruct-q4f16_1-MLC"; // 1.7GB | Meta | General purpose, natural conversation, good safety alignment. >> Responses in ~45s, good reasoning but mixes user and designer up.
   
   // === COMPACT & FAST (0.8-1.5GB) ===
   // this.selectedModel = "Qwen2.5-1.5B-Instruct-q4f16_1-MLC"; // 0.9GB | Alibaba | Fast responses (~10s), decent reasoning, multilingual. >> Responses in ~10s but dumb.
-  // this.selectedModel = "gemma-2-2b-it-q4f16_1-MLC"; // 1.4GB | Google | Excellent safety, factual responses, instruction following
+  this.selectedModel = "gemma-2-2b-it-q4f16_1-MLC"; // 1.4GB | Google | Excellent safety, factual responses, instruction following
   // this.selectedModel = "Phi-2-q4f16_1-MLC"; // 1.6GB | Microsoft | Strong reasoning and coding for size, common sense
   // this.selectedModel = "SmolLM2-1.7B-Instruct-q4f16_1-MLC"; // 1.0GB | Hugging Face | Efficient, good general chat, open license. >> Responses in ~15s, but can't extract data and questions are a bit silly, seems to not understand context very well.
   // this.selectedModel = "Phi-3-mini-4k-instruct-q4f16_1-MLC"; // 1.9GB | Microsoft | Similar to 3.5 but older, still very capable
@@ -162,7 +162,7 @@ maxHistory: 5 (conversation turns)
 
 #### Conversation Flow
 1. **Disclaimer**: Show message gloating full privacy and cloud-free, using large icons when relevant. Hard coded message.
-2. **Permission Request**: Ask to download model (~2GB, one-time). Hard coded message.
+2. **Permission Request**: Ask to download model (~1.4GB, one-time). Hard coded message.
 3. **Model Loading**: Progress bar with percentage, status updates. Dynamic WebLLM message.
 4. **Greeting**: Random greeting from predefined, hardcoded set (20 options). 
 6. **AI Response**: Typing indicator (accumulated then displayed).
@@ -750,7 +750,7 @@ The `embeddings.json` file serves three purposes:
 
 ### Dependencies
 - **WebLLM**: Apache 2.0 License (MLC AI)
-- **Phi-3.5-mini**: MIT License (Microsoft)
+- **Gemma-2-2B**: Apache 2.0 License (Google)
 - **Google Fonts**: Open Font License
 - **Feather Icons**
 
@@ -758,4 +758,4 @@ The `embeddings.json` file serves three purposes:
 - **Built by**: Vítor Gonçalves
 - **AI Assistant**: Claude (Anthropic) - Architecture & implementation support
 - **WebLLM**: MLC AI Project
-- **Model**: Phi-3.5-mini (Microsoft)
+- **Model**: Gemma-2-2B (Google)
