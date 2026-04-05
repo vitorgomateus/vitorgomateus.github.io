@@ -1,0 +1,92 @@
+/* Comfortable padding on 375px and wider */
+@media (min-width: 375px) {
+    :root {
+        --content-padding-x: 1.25rem;
+    }
+
+    .header__title {
+        font-size: clamp(1.35rem, 1.1vw + 0.95rem, 1.85rem);
+    }
+
+    .drawer__title,
+    .modal__title {
+        font-size: clamp(1.2rem, 0.7vw + 0.9rem, 1.55rem);
+    }
+
+    .drawer__section-title {
+        font-size: clamp(0.9rem, 0.3vw + 0.8rem, 1rem);
+    }
+}
+
+@media (max-width: 767px) {
+    body {
+        padding: 0;
+    }
+
+    /* Experimental chat widget fills full width on small screens */
+    .app-container.is-experimental {
+        max-width: 100%;
+        box-shadow: none;
+    }
+
+    .drawer {
+        width: min(86%, 340px);
+    }
+}
+
+@media (min-width: 1024px) {
+    :root {
+        --header-height: 4rem;
+        --input-bar-height: 4rem;
+        --space-md: 1.125rem;
+        --space-lg: 1.75rem;
+        --content-padding-x: 1.5rem;
+    }
+
+    /* Background and centering only in experimental mode */
+    body:has(.app-container.is-experimental) {
+        padding: 2rem;
+        align-items: center;
+        background: radial-gradient(circle at 20% 20%, #eef5ff 0%, #ffffff 50%, #f5f7fb 100%);
+    }
+
+    /* Floating card appearance only for experimental chat widget */
+    .app-container.is-experimental {
+        height: min(calc(100vh - 4rem), var(--app-max-height));
+        border-radius: 1.25rem;
+        border: 1px solid var(--border);
+    }
+
+    .header>.container,
+    .input-bar>.container,
+    .main__close-bar>.container,
+    .alerts>.container,
+    #search-status>.container,
+    .suggestions>.container {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .header__title {
+        font-size: clamp(1.65rem, 1.2vw + 1rem, 2.2rem);
+    }
+
+    .chat {
+        padding: var(--space-lg);
+    }
+
+    .message {
+        max-width: 72%;
+        font-size: 0.95rem;
+    }
+
+    .drawer {
+        width: 420px;
+        max-width: 46%;
+    }
+
+    .modal {
+        width: min(680px, calc(100% - 4 * var(--space-lg)));
+        max-height: min(760px, calc(100% - 4 * var(--space-lg)));
+    }
+}

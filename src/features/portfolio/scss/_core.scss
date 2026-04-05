@@ -1,6 +1,7 @@
 /* ========================================
    Portfolio Styles
    ======================================== */
+
 .portfolio {
   padding: var(--space-md) var(--content-padding-x);
 }
@@ -8,6 +9,7 @@
 /* ========================================
    Now Section
    ======================================== */
+
 .portfolio__current {
   margin-top: var(--space-lg);
   margin-bottom: var(--space-lg);
@@ -94,6 +96,7 @@
 /* ========================================
    Profile Section
    ======================================== */
+
 .portfolio__profile {
   margin-bottom: var(--space-lg);
 }
@@ -124,6 +127,7 @@
   color: var(--text-light);
   margin: 0 0 var(--space-sm);
 }
+
 
 .portfolio__summary {
   line-height: 1.6;
@@ -162,6 +166,7 @@
 /* ========================================
    Section Containers
    ======================================== */
+
 .portfolio__section {
   margin-bottom: var(--space-xl);
 }
@@ -181,6 +186,7 @@
 /* ========================================
    Section Accordion
    ======================================== */
+
 .portfolio__section-btn {
   background: none;
   border: none;
@@ -204,7 +210,7 @@
 }
 
 .portfolio__section-btn::after {
-  content: "";
+  content: '';
   display: inline-block;
   width: 0.4rem;
   height: 0.4rem;
@@ -215,7 +221,7 @@
   flex-shrink: 0;
 }
 
-.portfolio__section-btn[aria-expanded=true]::after {
+.portfolio__section-btn[aria-expanded="true"]::after {
   transform: rotate(-45deg);
   /* ^ pointing up */
 }
@@ -227,6 +233,7 @@
 /* ========================================
    Data Chunks
    ======================================== */
+
 .portfolio__chunk {
   margin-bottom: var(--space-md);
   padding: var(--space-sm) 0;
@@ -252,6 +259,7 @@
 /* ========================================
    Skills
    ======================================== */
+
 .portfolio__skill {
   margin-bottom: var(--space-md);
 }
@@ -290,6 +298,7 @@
 /* ========================================
    Experience & Education
    ======================================== */
+
 .portfolio__entry {
   margin-bottom: var(--space-lg);
   padding-left: var(--space-md);
@@ -335,13 +344,14 @@ ul.portfolio__entry-description {
   padding-left: var(--space-md);
 }
 
-.portfolio__entry-description li + li {
+.portfolio__entry-description li+li {
   margin-top: var(--space-xs);
 }
 
 /* ========================================
    Languages
    ======================================== */
+
 .portfolio__languages {
   display: flex;
   gap: var(--space-md);
@@ -360,6 +370,7 @@ ul.portfolio__entry-description {
 /* ========================================
    Projects
    ======================================== */
+
 .portfolio__project {
   margin-bottom: var(--space-md);
 }
@@ -378,19 +389,19 @@ ul.portfolio__entry-description {
 }
 
 /* Gradient at bottom when details are open, visually linking summary to details */
-.portfolio__project-summary[aria-expanded=true] {
+.portfolio__project-summary[aria-expanded="true"] {
   border-bottom: none;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   padding-bottom: 2.5rem;
 }
 
-.portfolio__project-summary[aria-expanded=true]:hover {
+.portfolio__project-summary[aria-expanded="true"]:hover {
   box-shadow: none;
 }
 
-.portfolio__project-summary[aria-expanded=true]::after {
-  content: "";
+.portfolio__project-summary[aria-expanded="true"]::after {
+  content: '';
   position: absolute;
   bottom: 0;
   left: 0;
@@ -404,10 +415,12 @@ ul.portfolio__entry-description {
   .portfolio__project-summary {
     transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
   }
+
   .portfolio__section-btn::after {
     transition: transform var(--transition-speed) ease;
   }
 }
+
 .portfolio__project-summary:hover {
   transform: scale(0.99);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -575,6 +588,7 @@ ul.portfolio__entry-description {
 /* ========================================
    Empty State
    ======================================== */
+
 .portfolio__empty-state {
   color: var(--text-light);
   font-size: 0.9rem;
@@ -585,6 +599,7 @@ ul.portfolio__entry-description {
 /* ========================================
    Footer
    ======================================== */
+
 .portfolio__footer {
   border-top: 1px solid var(--border);
   padding-top: var(--space-md);
@@ -623,69 +638,4 @@ ul.portfolio__entry-description {
   font-size: 0.75rem;
   color: var(--text-light);
   margin: 0;
-}
-
-@media (min-width: 375px) {
-  .portfolio__name {
-    font-size: clamp(1.45rem, 1vw + 1rem, 1.9rem);
-  }
-  .portfolio__group-label,
-  .portfolio__section-title {
-    font-size: clamp(0.8rem, 0.25vw + 0.72rem, 0.95rem);
-  }
-  .portfolio__section-btn {
-    font-size: clamp(1.05rem, 0.4vw + 0.92rem, 1.2rem);
-  }
-  .portfolio__skill-category,
-  .portfolio__entry-title,
-  .portfolio__project-title,
-  .portfolio__content-heading {
-    font-size: clamp(1rem, 0.35vw + 0.9rem, 1.2rem);
-  }
-}
-@media (max-width: 767px) {
-  .portfolio {
-    padding: var(--space-md) var(--content-padding-x);
-  }
-}
-@media (min-width: 1024px) {
-  .portfolio {
-    padding: var(--space-lg) var(--content-padding-x);
-    max-width: 900px;
-    margin: 0 auto;
-  }
-  .portfolio__identity {
-    margin-bottom: var(--space-xl);
-  }
-  .portfolio__name {
-    font-size: clamp(1.9rem, 1.4vw + 1rem, 2.8rem);
-  }
-  .portfolio__section-btn {
-    font-size: clamp(1.1rem, 0.6vw + 0.9rem, 1.45rem);
-  }
-  .portfolio__entry-title,
-  .portfolio__project-title,
-  .portfolio__content-heading {
-    font-size: clamp(1.1rem, 0.5vw + 0.95rem, 1.4rem);
-  }
-  .portfolio__summary,
-  .portfolio__entry-description,
-  .portfolio__project-short,
-  .portfolio__content-text {
-    line-height: 1.7;
-  }
-  .portfolio__current-groups {
-    gap: var(--space-lg);
-  }
-  .portfolio__section {
-    margin-bottom: calc(var(--space-xl) + var(--space-sm));
-  }
-  .portfolio__projects-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-md);
-  }
-  .portfolio__project-summary {
-    padding: var(--space-lg);
-  }
 }

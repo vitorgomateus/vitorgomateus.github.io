@@ -1,0 +1,28 @@
+{
+  "name": "vitorgomateus.github.io",
+  "version": "1.0.0",
+  "description": "**🚧 Active Development**",
+  "scripts": {
+    "serve": "http-server . -p 8000 -c-1",
+    "dev": "concurrently \"npm:serve\" \"npm:watch:css\"",
+    "build:css": "sass src/styles.scss:src/styles.css src/features/portfolio/styles.scss:src/features/portfolio/styles.css --no-source-map",
+    "watch:css": "sass --watch src/styles.scss:src/styles.css src/features/portfolio/styles.scss:src/features/portfolio/styles.css --no-source-map"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vitorgomateus/vitorgomateus.github.io.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/vitorgomateus/vitorgomateus.github.io/issues"
+  },
+  "homepage": "https://github.com/vitorgomateus/vitorgomateus.github.io#readme",
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "http-server": "^14.1.1",
+    "sass": "^1.99.0"
+  }
+}

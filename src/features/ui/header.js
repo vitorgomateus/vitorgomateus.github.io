@@ -50,6 +50,9 @@ function updateFavicon(hue, saturation, lightness) {
 export function toggleExperimentalMode() {
   state.experimentalMode = !state.experimentalMode;
 
+  const appContainer = document.getElementById('app-container');
+  if (appContainer) appContainer.classList.toggle('is-experimental', state.experimentalMode);
+
   const toggle = document.getElementById('feature-toggle');
   const portfolioContainer = document.getElementById('portfolio-container');
   const chatContainer = document.getElementById('chat-container');

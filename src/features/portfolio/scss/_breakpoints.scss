@@ -1,0 +1,79 @@
+@media (min-width: 375px) {
+    .portfolio__name {
+        font-size: clamp(1.45rem, 1vw + 1rem, 1.9rem);
+    }
+
+    .portfolio__group-label,
+    .portfolio__section-title {
+        font-size: clamp(0.8rem, 0.25vw + 0.72rem, 0.95rem);
+    }
+
+    .portfolio__section-btn {
+        font-size: clamp(1.05rem, 0.4vw + 0.92rem, 1.2rem);
+    }
+
+    .portfolio__skill-category,
+    .portfolio__entry-title,
+    .portfolio__project-title,
+    .portfolio__content-heading {
+        font-size: clamp(1rem, 0.35vw + 0.9rem, 1.2rem);
+    }
+}
+
+@media (max-width: 767px) {
+    .portfolio {
+        padding: var(--space-md) var(--content-padding-x);
+    }
+}
+
+@media (min-width: 1024px) {
+    .portfolio {
+        padding: var(--space-lg) var(--content-padding-x);
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .portfolio__identity {
+        margin-bottom: var(--space-xl);
+    }
+
+    .portfolio__name {
+        font-size: clamp(1.9rem, 1.4vw + 1rem, 2.8rem);
+    }
+
+    .portfolio__section-btn {
+        font-size: clamp(1.1rem, 0.6vw + 0.9rem, 1.45rem);
+    }
+
+    .portfolio__entry-title,
+    .portfolio__project-title,
+    .portfolio__content-heading {
+        font-size: clamp(1.1rem, 0.5vw + 0.95rem, 1.4rem);
+    }
+
+    .portfolio__summary,
+    .portfolio__entry-description,
+    .portfolio__project-short,
+    .portfolio__content-text {
+        line-height: 1.7;
+    }
+
+    .portfolio__current-groups {
+        gap: var(--space-lg);
+    }
+
+    .portfolio__section {
+        margin-bottom: calc(var(--space-xl) + var(--space-sm));
+    }
+
+    .portfolio__projects-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-md);
+    }
+
+    .portfolio__project-summary {
+        padding: var(--space-lg);
+    }
+
+}

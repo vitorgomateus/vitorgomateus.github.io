@@ -4,7 +4,7 @@ let alertTimeout = null;
 
 // Show an alert
 export function showAlert(message, type = 'info', options = {}) {
-  const container = document.getElementById('alerts-container');
+  const container = document.getElementById('alerts-content') || document.getElementById('alerts-container');
   if (!container) return;
 
   const alert = document.createElement('div');

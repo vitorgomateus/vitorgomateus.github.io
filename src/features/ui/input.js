@@ -10,6 +10,14 @@ import { showAlert } from './alerts.js';
 let chatInitialized = false;
 let permissionGranted = false;
 
+function getSearchStatusTarget() {
+  return document.getElementById('search-status-content') || document.getElementById('search-status');
+}
+
+function getSuggestionsContentContainer() {
+  return document.getElementById('suggestions-content') || document.getElementById('suggestions-container');
+}
+
 // Handle input submission (search or chat)
 export async function handleInput() {
   const textarea = document.getElementById('user-input');
@@ -31,7 +39,7 @@ export async function handleInput() {
 // Handle search in portfolio mode
 async function handleSearchInput(query) {
   const results = await searchEmbeddings(query, { minWords: 1 });
-  const statusEl = document.getElementById('search-status');
+  const statusEl = getSearchStatusTarget();
   if (results.length === 0) {
     if (statusEl) statusEl.textContent = 'No results found';
     showAlert('No matching results found. Try different terms.', 'info');
@@ -148,17 +156,18 @@ async function startModelDownload() {
 
 // Show permission suggestion ("Yes!")
 function showPermissionSuggestion() {
-  const container = document.getElementById('suggestions-container');
-  if (!container) return;
+  const wrapper = document.getElementById('suggestions-container');
+  const container = getSuggestionsContentContainer();
+  if (!wrapper || !container) return;
 
   container.innerHTML = '';
-  container.hidden = false;
+  wrapper.hidden = false;
 
   const btn = document.createElement('button');
   btn.className = 'suggestion-btn';
   btn.textContent = 'Yes!';
   btn.addEventListener('click', () => {
-    container.hidden = true;
+    wrapper.hidden = true;
     const textarea = document.getElementById('user-input');
     if (textarea) textarea.value = 'Yes!';
     handleInput();
@@ -170,11 +179,12 @@ function showPermissionSuggestion() {
 export function showSuggestions() {
   if (!state.experimentalMode || !state.showSuggestions) return;
 
-  const container = document.getElementById('suggestions-container');
-  if (!container) return;
+  const wrapper = document.getElementById('suggestions-container');
+  const container = getSuggestionsContentContainer();
+  if (!wrapper || !container) return;
 
   container.innerHTML = '';
-  container.hidden = false;
+  wrapper.hidden = false;
 
   const suggestions = getNextSuggestions();
   suggestions.forEach(text => {
@@ -184,7 +194,7 @@ export function showSuggestions() {
     btn.addEventListener('click', () => {
       const textarea = document.getElementById('user-input');
       if (textarea) textarea.value = text;
-      container.hidden = true;
+      wrapper.hidden = true;
       handleInput();
     });
     container.appendChild(btn);
@@ -194,8 +204,8 @@ export function showSuggestions() {
 export function restoreChatSuggestions() {
   if (!state.experimentalMode) return;
 
-  const container = document.getElementById('suggestions-container');
-  if (!container) return;
+  const wrapper = document.getElementById('suggestions-container');
+  if (!wrapper) return;
 
   if (!state.isModelLoaded && !state.isModelLoading && !permissionGranted) {
     showPermissionSuggestion();
@@ -207,7 +217,7 @@ export function restoreChatSuggestions() {
     return;
   }
 
-  container.hidden = true;
+  wrapper.hidden = true;
 }
 
 // Auto-resize textarea
@@ -230,7 +240,7 @@ export function closeExpandedView() {
   const expandedProjectId = state.expandedProject;
   setVisibleChunks(null);
 
-  const statusEl = document.getElementById('search-status');
+  const statusEl = getSearchStatusTarget();
   if (statusEl) statusEl.textContent = '';
 
   const main = document.getElementById('main-content');
