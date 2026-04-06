@@ -4,7 +4,7 @@ import state from '../../core/state.js';
 import { getRelevantContext } from './rag.js';
 
 // Model configuration
-// Requires a pre-exported ONNX model available on HuggingFace (e.g. via onnx-community).
+// Requires pre-exported ONNX models available on HuggingFace.
 // If onnx-community/gemma-4-E2B-ONNX is not yet published, export it with:
 //   optimum-cli export onnx --model google/gemma-4-E2B --task text-generation-with-past --dtype fp16 out/
 // then upload to HuggingFace and update selectedModel below.
@@ -13,6 +13,10 @@ const MODEL_CONFIG = {
   dtype: 'q4',
   maxTokens: 256,
   temperature: 0.3
+};
+
+const MODEL_INFO = {
+  'onnx-community/gemma-4-E2B-ONNX': { name: 'Gemma 4 E2B', size: '~1.5GB', dtype: 'q4' }
 };
 
 const PERSONALITIES = [
@@ -69,6 +73,32 @@ const SUGGESTION_MESSAGES = [
 ];
 
 let engine = null;
+let activeModelId = MODEL_CONFIG.selectedModel;
+
+function isUnauthorizedAccessError(error) {
+  const message = (error?.message || '').toLowerCase();
+  return message.includes('unauthorized') || message.includes('401');
+}
+
+function getModelConfigUrl(modelId) {
+  return `https://huggingface.co/${modelId}/resolve/main/config.json`;
+}
+
+async function preflightModelAccess(modelId) {
+  const configUrl = getModelConfigUrl(modelId);
+  const response = await fetch(configUrl, { method: 'GET', cache: 'no-store' });
+
+  if (response.status === 401) {
+    throw new Error(
+      `Gemma model access denied (401): ${configUrl}. ` +
+      'The repository is private or gated for this browser session.'
+    );
+  }
+
+  if (!response.ok) {
+    throw new Error(`Gemma config unavailable (${response.status}): ${configUrl}`);
+  }
+}
 
 // Initialize the Transformers.js pipeline engine
 export async function initModel(onProgress) {
@@ -77,15 +107,26 @@ export async function initModel(onProgress) {
   state.isModelLoading = true;
   state.modelStatus = 'downloading';
   const modelInitStart = performance.now();
-  let loadingStart = null;
-
   try {
     // Dynamic import of Transformers.js v3
     const { pipeline } = await import('https://cdn.jsdelivr.net/npm/@huggingface/transformers@3');
+    let loadingStart = null;
+
+    const modelMeta = MODEL_INFO[MODEL_CONFIG.selectedModel] || { name: MODEL_CONFIG.selectedModel, size: 'unknown' };
+    activeModelId = MODEL_CONFIG.selectedModel;
+
+    if (onProgress) {
+      onProgress({ text: `Preparing ${modelMeta.name}...` });
+    }
+
+    if (onProgress) {
+      onProgress({ text: 'Checking Gemma access...' });
+    }
+    await preflightModelAccess(MODEL_CONFIG.selectedModel);
 
     engine = await pipeline('text-generation', MODEL_CONFIG.selectedModel, {
       device: 'webgpu',
-      dtype: MODEL_CONFIG.dtype,
+      dtype: modelMeta.dtype || MODEL_CONFIG.dtype,
       progress_callback: (progress) => {
         // Adapt Transformers.js progress events to the { progress: 0-1, text } shape
         // expected by messages.js updateProgress()
@@ -114,6 +155,7 @@ export async function initModel(onProgress) {
         }
       }
     });
+    console.info(`[model] Loaded model: ${MODEL_CONFIG.selectedModel}`);
 
     state.isModelLoaded = true;
     state.isModelLoading = false;
@@ -131,6 +173,9 @@ export async function initModel(onProgress) {
 
     return true;
   } catch (error) {
+    if (isUnauthorizedAccessError(error)) {
+      console.error('[model] Gemma repository returned unauthorized access. Ensure the model is public or your access is approved.');
+    }
     console.error('[model] Failed to load model:', error);
     state.isModelLoading = false;
     state.modelStatus = 'none';
@@ -336,10 +381,11 @@ export function checkWebGPUSupport() {
 
 // Get model display info
 export function getModelInfo() {
+  const modelMeta = MODEL_INFO[activeModelId] || { name: activeModelId, size: 'unknown' };
   return {
-    name: 'Gemma 4 E2B',
-    fullName: MODEL_CONFIG.selectedModel,
-    size: '~1.5GB',
+    name: modelMeta.name,
+    fullName: activeModelId,
+    size: modelMeta.size,
     status: state.modelStatus
   };
 }
