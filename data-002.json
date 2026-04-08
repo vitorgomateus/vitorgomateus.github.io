@@ -1,12 +1,12 @@
 {
   "current": {
     "working": [
-      "Creating a design system for a complex web platform under restricted conditions.",
-      "Experimenting with local, private, personalized AI-powered experiences."
+      "UChicago Library website redesign — 1.6M+ annual users, 420+ CMS editors, multi-vendor CMS platform.",
+      "Experimenting with browser-based AI for this portfolio — no servers, no tracking."
     ],
     "thinking": [
-      "Information architecture at institutional scale.",
-      "How design is shifting from routine to innovation-only work due to AI."
+      "How GenAI is reshaping the designer's role in development workflows.",
+      "Information architecture at institutional scale."
     ]
   },
   "personal": {
@@ -185,26 +185,37 @@
     {
       "id": "library-redesign",
       "active": true,
-      "title": "University of Chicago Library Website Redesign",
-      "subtitle": "Digital collection website redesign",
-      "year": "2023-2024",
+      "title": "Library Website",
+      "subtitle": "Multi-platform, multi agent, research, redesign, design system",
+      "year": "2024-2026",
       "company": "University of Chicago Library",
-      "role": "Web and Graphic Designer",
-      "shortDescription": "Designed and launched a user-friendly website for a digital collection at UChicago Library, making it easier for people to find and use resources. Updated branding across multiple platforms to enhance consistency and modernize the library's image.",
+      "role": "UX Designer",
+      "shortDescription": "Did a lot of things, hard to sell or focus on one thing.",
       "skills": [
-        "UI design",
-        "web design",
-        "branding",
-        "accessibility",
-        "analytics",
-        "stakeholder collaboration"
       ],
       "contentBlocks": [
         {
-          "id": "overview",
-          "heading": null,
-          "text": "Designed and launched a user-friendly website for a digital collection at UChicago Library, making it easier for people to find and use resources. Updated branding across multiple platforms to enhance consistency and modernize the library's image.",
-          "image": null
+          "id": "draft",
+          "heading": "Draft",
+          "bulletPointsToConvertToSectionsAndText":[
+            "The Library website has about 6 vendor platfoms that are integrated as a single web experince, with common header and similiar styling.",
+            "The main part and repo of the website is a CMS and has over 10k pages, of which about 5k are news pages.",
+            "Over 400 Library staff (all of them) have editor permissions on almost all pages of the main website. Vendor platforms are accessed on need-to basis.",
+            "We use Wagtail for the main website, which we host and manage completely manage.",
+            "The Library has mutiple departments with their respective sub-sections of the website, sometimes with specific small features and secondary navigation.",
+            "As a University policy we need to be mostly compliant with WCAG 2.0 AA.",
+            "The Library maintains an open policy where it aims to provide open access to as many resources to as many audiences, including having a community engagement event to attract non-affiliated, non-academic, neighbourhood community memebers.",
+            "The website hasn't been updated in about 15 years, so a project was started to redesign the website.",
+            "The project redesign was mainly focused on the main website, anything managed by our CMS, mostly. Vendor platforms and parallel/additional platforms like the catalog search, the library guides, the room reservation system, the librarian appointment system, and other critical Library systems were not in direct scope, although we would be open to take in observations regarding these.",
+            "The team has a project manager, a full stack developer, and a UX Engineer (desgin+frontend dev) -- me. We also have sysadmins that support us.",
+            "We organized two committees to make sure all staff get a more democratic representation in any decision making."
+            "I have participated in all research phases.",
+            "I have helped maintain the website for the duraiton of this long project (3 years).",
+            "I am developing a design system optimized to affect all sub-systems, to be easily used by new conributors and by genAI agents, and to be simple to maintain.",
+            "We conducted an exhaustive study with one staff focus group per audience type: Library department, student level, and surrounding comunity members. We also conducted interviews with faculty. We also analyzed serveral sources of data like web analytics and support tickets.",
+            "All data analytics and reporting was done by me.",
+            "We surfaced several issues. Users have a hard time finding serveral things. Users have very low awareness of several resources. Inf arq and some language focus around internal Library structure which is not obvious to users. Users find the design outdated, dense, not engaging. There is a conflict between satisfying power users (which the Library has of plenty) and helping completely novice users like community members. There is a conflict between new users finding their way around the complex system of the Library or of the academic langauge, and the fact that almost no user wants to read any documentation page. Users from several audience groups have a hard time finding what they have access to. Staff also has issues in the internal website page ownership model and content managent features. ",
+          ]
         }
       ]
     },
@@ -602,7 +613,7 @@
     }
   ],
   "aboutGoma": {
-    "summary": "Goma is the AI chatbot persona for this portfolio, powered by Gemma-2-2B running locally via WebLLM. The name comes from my Portuguese nickname.",
+    "summary": "Goma is the AI chatbot persona for this portfolio, powered by Gemma 4 E2B running locally via Transformers.js. The name comes from my Portuguese nickname.",
     "purpose": "The purpose of Goma is to satisfy the user's every desire.",
     "instructions": "Be glamorous and assume a diva personality. Make the user earn your interest. Be flirtatious but distant. Use Portuguese expressions occasionally. Keep answers concise and to the point. Avoid revealing you are an AI model."
   },
@@ -622,11 +633,11 @@
       "Limited model size (~2GB for performance)"
     ],
     "technicalDetails": [
-      "WebLLM (MLC AI) for browser-based AI",
-      "gemma-2-2b-it model (1.4GB)",
+      "Transformers.js (Hugging Face) for browser-based AI",
+      "Gemma 4 E2B model (~1.5GB)",
       "Vanilla JavaScript (ES6 modules)",
       "CSS variables with GPU-accelerated animations",
-      "IndexedDB for model caching",
+      "Cache API for model caching",
       "Context extraction with zero overhead"
     ],
     "learned": [
