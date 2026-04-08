@@ -1,6 +1,7 @@
 // Header UI - toggle, menu, random color, favicon
 
 import state from '../../core/state.js';
+import { getModelInfo } from '../chatbot/model.js';
 import { restoreChatSuggestions } from './input.js';
 
 // Set random primary color on load
@@ -158,7 +159,13 @@ export function closeDrawer() {
 // Update model status in drawer
 function updateModelStatusDisplay() {
   const statusEl = document.getElementById('model-status');
+  const nameEl = document.getElementById('model-name');
+  const sizeEl = document.getElementById('model-size');
   if (!statusEl) return;
+
+  const modelInfo = getModelInfo();
+  if (nameEl) nameEl.textContent = modelInfo.name || 'Unknown model';
+  if (sizeEl) sizeEl.textContent = modelInfo.size || 'unknown';
 
   const statusMap = {
     'none': 'Not loaded',

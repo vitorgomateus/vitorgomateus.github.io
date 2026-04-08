@@ -3,7 +3,7 @@
 ## Status
 **🚧 Active Development**
 
-A portfolio website showcasing UX design work, with an experimental AI chatbot feature that runs entirely in the client's browser. The chatbot (Goma) uses Transformers.js (Gemma 4 E2B) and WebGPU for 100% client-side processing - zero server communication, complete privacy.
+A portfolio website showcasing UX design work, with an experimental AI chatbot feature that runs entirely in the client's browser. The chatbot (Goma) uses Transformers.js (Gemma 4 E2B-it) and WebGPU for 100% client-side processing - zero server communication, complete privacy.
 
 ## Goals
 - **Primary**: Professional portfolio showcasing UX design expertise and projects
@@ -22,7 +22,7 @@ A portfolio website showcasing UX design work, with an experimental AI chatbot f
 First load will download the model (~1.5GB). Subsequent loads are instant.
 
 ## Technology
-- **LLM:** Gemma 4 E2B via Transformers.js (Hugging Face)
+- **LLM:** Gemma 4 E2B-it via Transformers.js (Hugging Face)
 - **Acceleration:** WebGPU
 - **Fonts:** Young Serif, Work Sans
 
@@ -30,7 +30,7 @@ First load will download the model (~1.5GB). Subsequent loads are instant.
 
 ### The Chatbot
 The AI assistant (named Goma) runs entirely in your browser using Transformers.js and WebGPU:
-1. **First Visit**: Downloads the Gemma 4 E2B model (~1.5GB, one-time, cached locally)
+1. **First Visit**: Downloads the Gemma 4 E2B-it model (~1.5GB, one-time, cached locally)
 2. **Chat**: Your messages stay on your device - no server communication
 3. **Context**: The bot remembers the last 5 conversation turns and user details you share
 4. **Responses**: Generated locally, typically taking a few seconds
@@ -106,5 +106,5 @@ npm run watch:css
 - **Built by:** Vítor Gonçalves
 - **AI Assistant:** Claude (Anthropic) - Architecture & implementation support
 - **Transformers.js:** Hugging Face
-- **Model:** Gemma 4 E2B (Google)
+- **Model:** Gemma 4 E2B-it (Google)
 - **Fonts:** Google Fonts

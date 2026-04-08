@@ -2,7 +2,7 @@
 
 import state from '../../core/state.js';
 import { addMessage, addProgressMessage, addSystemMessage, hideTypingIndicator, showTypingIndicator, updateProgress } from '../chatbot/messages.js';
-import { checkWebGPUSupport, generateResponse, getNextSuggestions, getRandomGreeting, initModel } from '../chatbot/model.js';
+import { checkWebGPUSupport, generateResponse, getModelInfo, getNextSuggestions, getRandomGreeting, initModel } from '../chatbot/model.js';
 import { setVisibleChunks } from '../portfolio/render.js';
 import { resultsToChunkIds, searchEmbeddings } from '../portfolio/search.js';
 import { showAlert } from './alerts.js';
@@ -119,8 +119,9 @@ export function initChat() {
 
   // Permission request
   setTimeout(() => {
+    const modelInfo = getModelInfo();
     addMessage(
-      "To chat with me, I need to download a small AI model (~1.5GB). It's a one-time download and will be cached for future visits. Ready to proceed?",
+      `To chat with me, I need to download ${modelInfo.name} (${modelInfo.size}). It's a one-time download and will be cached for future visits. Ready to proceed?`,
       'bot'
     );
 
@@ -131,6 +132,8 @@ export function initChat() {
 
 // Start model download after permission
 async function startModelDownload() {
+  if (state.isModelLoading || state.isModelLoaded) return;
+
   addProgressMessage();
 
   try {

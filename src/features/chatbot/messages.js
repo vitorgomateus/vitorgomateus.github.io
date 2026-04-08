@@ -4,6 +4,7 @@ import state from '../../core/state.js';
 
 const MAX_MESSAGES = 50;
 const PRUNE_PERCENT = 0.25;
+let lastProgressPercent = 0;
 
 // Add a message to the chat UI
 export function addMessage(content, type = 'bot', options = {}) {
@@ -78,6 +79,11 @@ export function addProgressMessage() {
   const container = document.getElementById('chat-messages');
   if (!container) return null;
 
+  const existing = document.getElementById('model-progress-message');
+  if (existing) existing.remove();
+
+  lastProgressPercent = 0;
+
   const messageEl = document.createElement('div');
   messageEl.className = 'message message--system';
   messageEl.id = 'model-progress-message';
@@ -104,11 +110,17 @@ export function addProgressMessage() {
 
 // Update progress bar
 export function updateProgress(progress) {
+  const messageEl = document.getElementById('model-progress-message');
+  if (!messageEl) return;
+
   const fill = document.getElementById('model-progress-fill');
   const status = document.getElementById('model-progress-status');
 
   if (fill && progress.progress !== undefined) {
-    const percent = Math.round(progress.progress * 100);
+    const rawPercent = Math.round(progress.progress * 100);
+    // Keep progress monotonic to avoid visual jitter from mixed progress events.
+    const percent = Math.max(lastProgressPercent, rawPercent);
+    lastProgressPercent = percent;
     fill.style.width = `${percent}%`;
   }
 

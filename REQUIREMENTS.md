@@ -44,7 +44,7 @@ Showcase UX design expertise and project work through a professional portfolio w
 - Feather Icons, local SVGs
 
 // AI/ML
-- Transformers.js v3 (Gemma 4 E2B via WebGPU + ONNX Runtime Web)
+- Transformers.js v4 (Gemma 4 E2B-it via WebGPU + ONNX Runtime Web)
 - Client-side cosine similarity search (embeddings.json)
 
 // DATA
@@ -131,16 +131,16 @@ src/
 
 #### Model Configuration
 ```javascript
-// Runtime: Transformers.js v3 (ONNX Runtime Web + WebGPU)
-// Model requires a pre-exported ONNX version on HuggingFace (e.g. onnx-community/gemma-4-E2B-ONNX).
-selectedModel: "onnx-community/gemma-4-E2B-ONNX" // ~1.5GB, Google
+// Runtime: Transformers.js v4 (ONNX Runtime Web + WebGPU)
+// Model requires a pre-exported ONNX version on HuggingFace (e.g. onnx-community/gemma-4-E2B-it-ONNX).
+selectedModel: "onnx-community/gemma-4-E2B-it-ONNX" // ~1.5GB, Google
 dtype: "q4"
 maxTokens: 256
 temperature: 0.3
 maxHistory: 5 (conversation turns)
 
   // === CURRENT (Gemma 4 / Transformers.js) ===
-  this.selectedModel = "onnx-community/gemma-4-E2B-ONNX"; // ~1.5GB | Google | Gemma 4 2B, q4 quantized
+  this.selectedModel = "onnx-community/gemma-4-E2B-it-ONNX"; // ~1.5GB | Google | Gemma 4 E2B-it, q4 quantized
 
   // === LEGACY WebLLM / MLC options (require switching back to @mlc-ai/web-llm) ===
   // this.selectedModel = "Phi-3.5-mini-instruct-q4f16_1-MLC"; // 1.9GB | Microsoft | Best balance: strong reasoning, instruction following, coding. >> Reasonable responses in ~100s.
@@ -756,7 +756,7 @@ The `embeddings.json` file serves three purposes:
 
 ### Dependencies
 - **Transformers.js**: Apache 2.0 License (Hugging Face)
-- **Gemma 4 E2B**: Gemma Terms of Use (Google)
+- **Gemma 4 E2B-it**: Gemma Terms of Use (Google)
 - **Google Fonts**: Open Font License
 - **Feather Icons**
 
@@ -764,4 +764,4 @@ The `embeddings.json` file serves three purposes:
 - **Built by**: Vítor Gonçalves
 - **AI Assistant**: Claude (Anthropic) - Architecture & implementation support
 - **Transformers.js**: Hugging Face
-- **Model**: Gemma 4 E2B (Google)
+- **Model**: Gemma 4 E2B-it (Google)
