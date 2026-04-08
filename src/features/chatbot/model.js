@@ -80,26 +80,6 @@ function isUnauthorizedAccessError(error) {
   return message.includes('unauthorized') || message.includes('401');
 }
 
-function getModelConfigUrl(modelId) {
-  return `https://huggingface.co/${modelId}/resolve/main/config.json`;
-}
-
-async function preflightModelAccess(modelId) {
-  const configUrl = getModelConfigUrl(modelId);
-  const response = await fetch(configUrl, { method: 'GET', cache: 'no-store' });
-
-  if (response.status === 401) {
-    throw new Error(
-      `Gemma model access denied (401): ${configUrl}. ` +
-      'The repository is private or gated for this browser session.'
-    );
-  }
-
-  if (!response.ok) {
-    throw new Error(`Gemma config unavailable (${response.status}): ${configUrl}`);
-  }
-}
-
 // Initialize the Transformers.js pipeline engine
 export async function initModel(onProgress) {
   if (state.isModelLoading || state.isModelLoaded) return;
@@ -118,11 +98,6 @@ export async function initModel(onProgress) {
     if (onProgress) {
       onProgress({ text: `Preparing ${modelMeta.name}...` });
     }
-
-    if (onProgress) {
-      onProgress({ text: 'Checking Gemma access...' });
-    }
-    await preflightModelAccess(MODEL_CONFIG.selectedModel);
 
     engine = await pipeline('text-generation', MODEL_CONFIG.selectedModel, {
       device: 'webgpu',

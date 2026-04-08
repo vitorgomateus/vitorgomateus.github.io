@@ -151,9 +151,9 @@ async function startModelDownload() {
     console.error('[input] Model loading failed:', error);
     const lowerMessage = (error?.message || '').toLowerCase();
     const gatedHint = lowerMessage.includes('unauthorized') || lowerMessage.includes('401')
-      ? ' Gemma model access was denied (401). The Hugging Face repo must be public or your browser session must have approved access.'
+      ? ' The configured model repository may be private or gated on Hugging Face.'
       : '';
-    addMessage(`I'm sorry, there was an error loading the AI model.${gatedHint}`, 'bot');
+    addMessage(`I'm sorry, there was an error loading the AI model.${gatedHint} Please try refreshing the page.`, 'bot');
     showAlert('Failed to load AI model.', 'error');
   }
 }
