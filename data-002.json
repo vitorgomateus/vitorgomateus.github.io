@@ -190,32 +190,46 @@
       "year": "2024-2026",
       "company": "University of Chicago Library",
       "role": "UX Designer",
-      "shortDescription": "Did a lot of things, hard to sell or focus on one thing.",
+      "shortDescription": "Leading UX research and design system for a 15-year overdue redesign of a 10,000+ page institutional website serving 1.6 million annual users across six integrated platforms.",
       "skills": [
+        "User Research",
+        "Information Architecture",
+        "Stakeholder Facilitation",
+        "Frontend Development",
+        "Design Systems",
+        "Data Analysis",
+        "Accessibility (WCAG 2.0 AA)"
       ],
       "contentBlocks": [
         {
-          "id": "draft",
-          "heading": "Draft",
-          "bulletPointsToConvertToSectionsAndText":[
-            "The Library website has about 6 vendor platfoms that are integrated as a single web experince, with common header and similiar styling.",
-            "The main part and repo of the website is a CMS and has over 10k pages, of which about 5k are news pages.",
-            "Over 400 Library staff (all of them) have editor permissions on almost all pages of the main website. Vendor platforms are accessed on need-to basis.",
-            "We use Wagtail for the main website, which we host and manage completely manage.",
-            "The Library has mutiple departments with their respective sub-sections of the website, sometimes with specific small features and secondary navigation.",
-            "As a University policy we need to be mostly compliant with WCAG 2.0 AA.",
-            "The Library maintains an open policy where it aims to provide open access to as many resources to as many audiences, including having a community engagement event to attract non-affiliated, non-academic, neighbourhood community memebers.",
-            "The website hasn't been updated in about 15 years, so a project was started to redesign the website.",
-            "The project redesign was mainly focused on the main website, anything managed by our CMS, mostly. Vendor platforms and parallel/additional platforms like the catalog search, the library guides, the room reservation system, the librarian appointment system, and other critical Library systems were not in direct scope, although we would be open to take in observations regarding these.",
-            "The team has a project manager, a full stack developer, and a UX Engineer (desgin+frontend dev) -- me. We also have sysadmins that support us.",
-            "We organized two committees to make sure all staff get a more democratic representation in any decision making."
-            "I have participated in all research phases.",
-            "I have helped maintain the website for the duraiton of this long project (3 years).",
-            "I am developing a design system optimized to affect all sub-systems, to be easily used by new conributors and by genAI agents, and to be simple to maintain.",
-            "We conducted an exhaustive study with one staff focus group per audience type: Library department, student level, and surrounding comunity members. We also conducted interviews with faculty. We also analyzed serveral sources of data like web analytics and support tickets.",
-            "All data analytics and reporting was done by me.",
-            "We surfaced several issues. Users have a hard time finding serveral things. Users have very low awareness of several resources. Inf arq and some language focus around internal Library structure which is not obvious to users. Users find the design outdated, dense, not engaging. There is a conflict between satisfying power users (which the Library has of plenty) and helping completely novice users like community members. There is a conflict between new users finding their way around the complex system of the Library or of the academic langauge, and the fact that almost no user wants to read any documentation page. Users from several audience groups have a hard time finding what they have access to. Staff also has issues in the internal website page ownership model and content managent features. ",
-          ]
+          "id": "overview",
+          "heading": "Overview",
+          "text": "The University of Chicago Library website includes a main CMS with over 10,000 pages, and six vendor platforms unified as a single web experience. Over 400 staff hold editor permissions across the main site. The user base spans the academic affiliates, to the neighborhood community members, and international researchers. I am the UX designer on a focused team responsible for research, frontend development, and design system implementation. Over three years, the scope and complexity of the project has required ongoing negotiation with stakeholders across departments with competing priorities and content ownership.",
+          "image": null
+        },
+        {
+          "id": "problem-discovery",
+          "heading": "Problem Discovery and IA",
+          "text": "The problem discovery phase included focus groups and interviews with every user group, including the Library departments, as well as web analytics and support ticket analysis. These conversations revealed fundamental IA and navigational issues where most language reflects Library internal structure which is not obvious for most users. A card sort with students confirmed they preferred shorter, noun phrase categories. \n\n The IA was redesigned around user-facing language, with underexposed services repositioned into higher-visibility locations to close an awareness gap the research had surfaced. Tree testing is currently underway to validate the new structure.",
+          "image": null
+        },
+        {
+          "id": "services-dashboard",
+          "heading": "Services Dashboard",
+          "text": "Users need a unified view of all the Library services that live on different vendor platforms. One of these they could only manage via email. I used our research findings to build a mockup on which stakeholder feedback was gathered to shape the final design. A few rounds of feedback with different departments informed the current test implementation, which is now being prepared for user testing.",
+          "image": null
+        },
+        {
+          "id": "extra",
+          "heading": "Extra",
+          "list": [
+            "Built a custom click-tracking script extending Google Analytics to enable heatmap-style interaction analysis",
+            "Developing a design system in frontend code (SCSS + HTML), with annotation layers for accessibility, responsiveness, and custom tracking hooks; geared for simplicity, maintainability, and AI agent usability.",
+            "Studying dynamic personalization of landing pages",
+            "Working with stakeholders to optimize the page ownership model used by 400+ staff editors",
+            "Conducted research, mockups, and user testing loops for the Library Guides landing page"
+          ],
+          "image": null
         }
       ]
     },
