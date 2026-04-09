@@ -1,0 +1,35 @@
+- [ ] Need to test and compare gemma 2 and Qwen3.
+- [ ] Need to review chatbot instructions. Qwen3 seems to generate very long incomplete answers and Gemma 2 seems to generate too dry and useless replies, even an empty reply. Qwen also seems to expose `<thinking>` strings.
+- [ ] The side drawer gets squished on smaller screens.
+- [ ] The side drawer moves the website to the left when it opens which looks bad.
+- [ ] Need to review message suggestions.
+- [ ] Need to make the suggestions look more different from the sent messages.
+- [ ] Maybe I can move the generate embeddings to Github Actinos.
+- [ ] need better console logs to test and compare models.
+- [ ] The input bar needs bottom spacing in smaller screens.
+- [ ] Website is still looking quite dry and boring. 
+    - Contemporary Minimalist with a Trust-Driven Approach, or  functional minimalism. The aesthetic leans into subtle sophistication—using restrained color schemes (with occasional accents for calls-to-action), open space, and a focus on content to create an environment that feels both modern and reliable, avoiding unnecessary ornamentation in favor of purposeful design. The visual tone is calm and reassuring,  it avoids coldness by incorporating subtle warmth in typography and micro-interactions, making the experience feel supportive rather than transactional.
+    - Make the design in the glass morphism style, but keep the current design, so I can change a line in the code and switch them.
+- [ ] Need somethings like "If you want to talk about any of these, do reach out!", also a more interesting console log greeting, like some ascii art.
+- [ ] Allow navigation behavior, like go back after opening a project and maybe from the experimental featuer?
+- [ ] test with a screen reader simulator.
+- [ ] Should I reconsider the embeddings?
+- [ ] Distinction of loaded vs downloaded is still not ideal.
+- [ ] Can I make my name and the experimental toggle into one? 
+- [ ] Maybe the chatbot could be at the bottom of the page so that if the user finished scrolling the page they come to it, but then we need to change the behavior of the input bar and that might get confusing for users. For now, when the main area is displaying the static portfolio, the chatbot interface needs to be hidden.
+- [ ] Can we detect the memory or CPU capacity of the browser and tell them if we think their system will withstand the model?
+- [ ] header can be a gradient to a very slighter darker version of the primary color
+- [ ] Make the bot manner be more enthusiastic when the user shares details more interesting to me, and not otherwise
+- [ ] Would be better to sepparate the model interaction and the user data extraction.
+- [ ] Should I consider collecting data without the user allowing to come? At least performance data. 
+    - You can log website interaction to your Google Sheet for free, using only JS and Google Apps Script, suitable for simple/low-volume use cases. On the Apps Script, check the Referer HTTP header to see if the request originated from your domain. Maybe I should get my own domain first? But I think there are other security concerns. This would be better than mail to: btw.
+- [ ] It would be nice if the user typed "images", all the images showed up
+- [ ] Better loading animation. AI nowadays use a floating ethereal bubble, can I parody that? Maybe something that looks like a minimalistic jackpot machine randomizing words. Or just a tired ghost.
+- [ ] Do we have image lightboxes?
+- [ ] The bot can have this in its toolbelt: “MY pronouns are they/them because I don’t have legs, jk, if I was a 'she' you'd perceive me as more efficient, and a 'he' as effective, and I aim to be neither!”
+- [ ] How many ai requests to make this project? How much data center power and emissions?
+- [ ] Should the bot say something after a long time inactive? Should there be a 'notification' dot/bubble somwhere as if the bot is tryint to talk to the user, when the chat feature is not active?
+- [ ] Give Goma UI commands like “toggle accessibility”
+- [ ] Include a body of facts on the data file about the history of language, Portuguese food and maybe some trivia that I hold in my head? Not accessible via HTML, only via chatbot.
+- [ ] Allow Goma to customize the interface according to the conversation, or their mood!
+- [ ] Study creativity methods and make the bot generate creative ideas? 

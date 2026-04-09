@@ -50,3 +50,4 @@ Temporary Items
 .apdisk
 /venv
 node_modules/
+.github/
