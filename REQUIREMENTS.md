@@ -137,7 +137,7 @@ temperature: 0.3
 maxHistory: 5 (conversation turns)
 
   // === CURRENT PICK ===
-  this.selectedModel = "Qwen3-1.7B-q4f16_1-MLC"; // ~2.0GB | Alibaba | Better quality/speed balance than Gemma-2-2B on current WebLLM registry. Requires enable_thinking: false for faster answers.
+  this.selectedModel = "Qwen3-1.7B-q4f16_1-MLC"; // ~2.0GB | Alibaba | Better quality/speed balance than Gemma-2-2B on current WebLLM registry. Requires enable_thinking: false for faster answers. 30-80s
 
   // === BEST OVERALL BALANCE (1.5-2GB) ===
   // this.selectedModel = "Phi-3.5-mini-instruct-q4f16_1-MLC"; // 1.9GB | Microsoft | Best balance: strong reasoning, instruction following, coding. >> Reasonable responses in ~100s.

@@ -5,7 +5,8 @@ import { getRelevantContext } from './rag.js';
 
 // Model configuration
 const MODEL_CONFIG = {
-  selectedModel: 'Qwen3-1.7B-q4f16_1-MLC',
+  selectedModel: 'Qwen3-1.7B-q4f16_1-MLC',   // ~2.0GB | Alibaba | enable_thinking: false required
+  // selectedModel: 'gemma-2-2b-it-q4f16_1-MLC', // ~1.4GB | Google  | no special flags needed
   maxTokens: 256,
   temperature: 0.3
 };
