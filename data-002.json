@@ -195,6 +195,10 @@
       ],
       "contentBlocks": [
         {
+          "prompt1":"Take this dump of information about this project and help me promote it on my online portfolio. First of all, re-write it for clarity. ",
+          "prompt2":"Read everything and identify the main narrative to promote it according to my profile and strategy. Identify the three main points to place a paragraph about eahc on my website. Then list a few bullet points of also interesting facts about this project but which are not not too revealing. Ask any clarifying questions. I barely have images to go along with it, but I'll figure something later. Help me look good with just a little bit of honest embelishment."
+        },
+        {
           "id": "draft",
           "heading": "Draft",
           "bulletPointsToConvertToSectionsAndText":[
@@ -208,13 +212,23 @@
             "The website hasn't been updated in about 15 years, so a project was started to redesign the website.",
             "The project redesign was mainly focused on the main website, anything managed by our CMS, mostly. Vendor platforms and parallel/additional platforms like the catalog search, the library guides, the room reservation system, the librarian appointment system, and other critical Library systems were not in direct scope, although we would be open to take in observations regarding these.",
             "The team has a project manager, a full stack developer, and a UX Engineer (desgin+frontend dev) -- me. We also have sysadmins that support us.",
-            "We organized two committees to make sure all staff get a more democratic representation in any decision making."
+            "We organized two committees to make sure all staff get a more democratic representation in any decision making.",
             "I have participated in all research phases.",
             "I have helped maintain the website for the duraiton of this long project (3 years).",
             "I am developing a design system optimized to affect all sub-systems, to be easily used by new conributors and by genAI agents, and to be simple to maintain.",
-            "We conducted an exhaustive study with one staff focus group per audience type: Library department, student level, and surrounding comunity members. We also conducted interviews with faculty. We also analyzed serveral sources of data like web analytics and support tickets.",
+            "We conducted an exhaustive study with one staff focus group per audience type: one per each Library staff department, per student level, and one for the surrounding comunity members. We also conducted interviews with several faculty. We also analyzed serveral sources of data like web analytics and support tickets.",
             "All data analytics and reporting was done by me.",
-            "We surfaced several issues. Users have a hard time finding serveral things. Users have very low awareness of several resources. Inf arq and some language focus around internal Library structure which is not obvious to users. Users find the design outdated, dense, not engaging. There is a conflict between satisfying power users (which the Library has of plenty) and helping completely novice users like community members. There is a conflict between new users finding their way around the complex system of the Library or of the academic langauge, and the fact that almost no user wants to read any documentation page. Users from several audience groups have a hard time finding what they have access to. Staff also has issues in the internal website page ownership model and content managent features. ",
+            "We surfaced several issues. Users have a hard time finding serveral things. Users have very low awareness of several resources. Inf arq and some language focus around internal Library structure which is not obvious to users. Users find the design outdated, dense, not engaging. There is a conflict between satisfying power users (of which the Library has plenty) and helping completely novice users like community members. There is a conflict between new users finding their way around the complex system of the Library or of the academic langauge, and the fact that almost no user wants to read any documentation page. Users from several audience groups have a hard time finding what they have access to. Staff also has issues in the internal website page ownership model and content managent features. ",
+            "We conducted a card sort with students only, and found that they prefer shorter, generic, verbs, as top level categories. We also found redundant grouping, and confusing language. We redesigned the information arquitecture keeping these in mind. I also decided to place certain services in better highglighted locations of the navigation to increase awareness of them. We are now running tree tests to validate it.",
+            "I created a script that adds custom click tracking to Google Analytics so we can do heat map analyzis.",
+            "We established that there our services were too scattered. (room reservation, librarian appointment, book requests, scan requests, book holds) that each lives in a sepparate vendor platform and it makes users have to check and remember multiple locations. So we started designing a new dashboard that fetches all these services and provides the user with an overview.",
+            "I designed this as a mockup from my research to serve as an ideation common ground.",
+            "We had rounds of ideation with our access services team which manage most of the fetched services. With their feedback I finalized a mockup and delivered to our developer. We continued rounds of ideation and feedback on the test version with other relevant teams untill we were ready to test with users.",
+            "We are currently planning the user testing for this dashboard. Staff is excited about this.",
+            "We are also studying a way to customize landing pages according to audience with a deeply documented matrix of our services and respective access.",
+            "DS",
+            "page ownership model",
+            "library guides homepage redesign"
           ]
         }
       ]
