@@ -190,12 +190,18 @@ def chunk_data(data):
         for block in proj.get('contentBlocks', []):
             if block.get('id') == 'overview':
                 continue
-            
+
+            block_text_parts = []
             if block.get('text'):
+                block_text_parts.append(block['text'])
+            if isinstance(block.get('list'), list) and block['list']:
+                block_text_parts.append(' '.join(str(item) for item in block['list']))
+
+            if block_text_parts:
                 label = f"{project_name}"
                 if block.get('heading'):
                     label += f" - {block['heading']}"
-                text = f"{label}: {block['text']}"
+                text = f"{label}: {' '.join(block_text_parts)}"
                 
                 block_anchor = f"{anchor}-{block['id']}"
                 chunk = {

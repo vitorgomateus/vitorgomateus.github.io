@@ -505,6 +505,20 @@ function createProjectsSection(projects) {
           blockEl.appendChild(blockText);
         }
 
+        if (Array.isArray(block.list) && block.list.length > 0) {
+          const listEl = document.createElement('ul');
+          listEl.className = 'portfolio__content-list';
+
+          block.list.forEach(item => {
+            const li = document.createElement('li');
+            li.className = 'portfolio__content-list-item';
+            li.textContent = item;
+            listEl.appendChild(li);
+          });
+
+          blockEl.appendChild(listEl);
+        }
+
         if (block.image) {
           const imgWrap = document.createElement('figure');
           imgWrap.className = 'portfolio__content-image';

@@ -230,43 +230,6 @@
             "Conducted research, mockups, and user testing loops for the Library Guides landing page"
           ],
           "image": null
-        },
-        {
-          "prompt1": "Take this dump of information about this project and help me promote it on my online portfolio. First of all, re-write it for clarity. ",
-          "prompt2": "Read everything and identify the main narrative to promote it according to my profile and strategy. Identify the three main points to place a paragraph about eahc on my website. Then list a few bullet points of also interesting facts about this project but which are not not too revealing. Ask any clarifying questions. I barely have images to go along with it, but I'll figure something later. Help me look good with just a little bit of honest embelishment."
-        },
-        {
-          "active": false,
-          "bulletPointsToConvertToSectionsAndText": [
-            "The Library website has about 6 vendor platfoms that are integrated as a single web experince, with common header and similiar styling.",
-            "The main part and repo of the website is a CMS and has over 10k pages, of which about 5k are news pages.",
-            "Over 400 Library staff (all of them) have editor permissions on almost all pages of the main website. Vendor platforms are accessed on need-to basis.",
-            "We use Wagtail for the main website, which we host and manage completely manage.",
-            "The Library has mutiple departments with their respective sub-sections of the website, sometimes with specific small features and secondary navigation.",
-            "As a University policy we need to be mostly compliant with WCAG 2.0 AA.",
-            "The Library maintains an open policy where it aims to provide open access to as many resources to as many audiences, including having a community engagement event to attract non-affiliated, non-academic, neighbourhood community memebers.",
-            "The website hasn't been updated in about 15 years, so a project was started to redesign the website.",
-            "The project redesign was mainly focused on the main website, anything managed by our CMS, mostly. Vendor platforms and parallel/additional platforms like the catalog search, the library guides, the room reservation system, the librarian appointment system, and other critical Library systems were not in direct scope, although we would be open to take in observations regarding these.",
-            "The team has a project manager, a full stack developer, and a UX Engineer (desgin+frontend dev) -- me. We also have sysadmins that support us.",
-            "We organized two committees to make sure all staff get a more democratic representation in any decision making.",
-            "I have participated in all research phases.",
-            "I have helped maintain the website for the duraiton of this long project (3 years).",
-            "I am developing a design system optimized to affect all sub-systems, to be easily used by new conributors and by genAI agents, and to be simple to maintain.",
-            "We conducted an exhaustive study with one staff focus group per audience type: one per each Library staff department, per student level, and one for the surrounding comunity members. We also conducted interviews with several faculty. We also analyzed serveral sources of data like web analytics and support tickets.",
-            "All data analytics and reporting was done by me.",
-            "We surfaced several issues. Users have a hard time finding serveral things. Users have very low awareness of several resources. Inf arq and some language focus around internal Library structure which is not obvious to users. Users find the design outdated, dense, not engaging. There is a conflict between satisfying power users (of which the Library has plenty) and helping completely novice users like community members. There is a conflict between new users finding their way around the complex system of the Library or of the academic langauge, and the fact that almost no user wants to read any documentation page. Users from several audience groups have a hard time finding what they have access to. Staff also has issues in the internal website page ownership model and content managent features. ",
-            "We conducted a card sort with students only, and found that they prefer shorter, generic, verbs, as top level categories. We also found redundant grouping, and confusing language. We redesigned the information arquitecture keeping these in mind. I also decided to place certain services in better highglighted locations of the navigation to increase awareness of them. We are now running tree tests to validate it.",
-            "I created a script that adds custom click tracking to Google Analytics so we can do heat map analyzis.",
-            "We established that there our services were too scattered. (room reservation, librarian appointment, book requests, scan requests, book holds) that each lives in a sepparate vendor platform and it makes users have to check and remember multiple locations. So we started designing a new dashboard that fetches all these services and provides the user with an overview.",
-            "I designed this as a mockup from my research to serve as an ideation common ground.",
-            "We had rounds of ideation with our access services team which manage most of the fetched services. With their feedback I finalized a mockup and delivered to our developer. We continued rounds of ideation and feedback on the test version with other relevant teams untill we were ready to test with users.",
-            "We are currently planning the user testing for this dashboard. Staff is excited about this.",
-            "We are also studying a way to customize landing pages according to audience with a deeply documented matrix of our services and respective access.",
-            "My developer skills have allowed me to sit in project management meetings and negotiate with stakeholders without consulting our full stack developer (he still has final say on all his work).",
-            "I am building a Design System directly in front end code. It simplifies handoff as all files are ready to use by a developer, both SCSS and HTML. It allows me to make mockups for any given exercise using our most current design system. IT documents the most critical strategic decisions and maps them to tokens. It has an annotation layer for our custom click tracking script, for any a11y concerns, responsiveness behavior, or specific animation. It establishes global design decisions and demoes several components without being prescriptive about each component and variant. It allows both developers to copy chunks of HTML and to test the DS as it is specified. It creates a realistic environment to develop our design system. It is based on BS5 and structured so that it is easier to maintain long term.",
-            "We've been working with a group of stakeholders to review workflows and simplify the page ownership model, so that is is easier for staff to keep pages updated.",
-            "I've made research and mockups on the landing page for our Library Guides section of the website with stakeholder feedback and user testing loops."
-          ]
         }
       ]
     },
