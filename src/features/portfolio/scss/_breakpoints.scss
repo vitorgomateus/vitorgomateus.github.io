@@ -66,12 +66,6 @@
         margin-bottom: calc(var(--space-xl) + var(--space-sm));
     }
 
-    .portfolio__projects-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: var(--space-md);
-    }
-
     .portfolio__project-summary {
         padding: var(--space-lg);
     }
