@@ -190,18 +190,54 @@
       "year": "2024-2026",
       "company": "University of Chicago Library",
       "role": "UX Designer",
-      "shortDescription": "Did a lot of things, hard to sell or focus on one thing.",
+      "shortDescription": "Leading UX research and design system for a 15-year overdue redesign of a 10,000+ page institutional website serving 1.6 million annual users across six integrated platforms.",
       "skills": [
+        "User Research",
+        "Information Architecture",
+        "Stakeholder Facilitation",
+        "Frontend Development",
+        "Design Systems",
+        "Data Analysis",
+        "Accessibility (WCAG 2.0 AA)"
       ],
       "contentBlocks": [
         {
-          "prompt1":"Take this dump of information about this project and help me promote it on my online portfolio. First of all, re-write it for clarity. ",
-          "prompt2":"Read everything and identify the main narrative to promote it according to my profile and strategy. Identify the three main points to place a paragraph about eahc on my website. Then list a few bullet points of also interesting facts about this project but which are not not too revealing. Ask any clarifying questions. I barely have images to go along with it, but I'll figure something later. Help me look good with just a little bit of honest embelishment."
+          "id": "overview",
+          "heading": "Overview",
+          "text": "The University of Chicago Library website includes a main CMS with over 10,000 pages, and six vendor platforms unified as a single web experience. Over 400 staff hold editor permissions across the main site. The user base spans the academic affiliates, to the neighborhood community members, and beyond. I am the UX designer on a focused team responsible for research, frontend development, and design system implementation. Over three years, the scope and complexity of the project has required ongoing negotiation with stakeholders across departments with competing priorities and content ownership.",
+          "image": null
         },
         {
-          "id": "draft",
-          "heading": "Draft",
-          "bulletPointsToConvertToSectionsAndText":[
+          "id": "problem-discovery",
+          "heading": "Problem Discovery and IA",
+          "text": "The problem discovery phase included focus groups and interviews with every user group, including the Library departments, as well as web analytics and support ticket analysis. These conversations revealed fundamental IA and navigational issues where most language reflects Library internal structure which is not obvious for most users. A card sort with students confirmed they preferred shorter, noun phrase categories. \n\n The IA was redesigned around user-facing language, with underexposed services repositioned into higher-visibility locations to close an awareness gap the research had surfaced. Tree testing is currently underway to validate the new structure.",
+          "image": null
+        },
+        {
+          "id": "services-dashboard",
+          "heading": "Services Dashboard",
+          "text": "Users need a unified view of all the Library services that live on different vendor platforms. One of these they could only manage via email. I used our research findings to build a mockup on which stakeholder feedback was gathered to shape the final design. A few rounds of feedback with different departments informed the current test implementation, which is now being prepared for user testing.",
+          "image": null
+        },
+        {
+          "id": "extra",
+          "heading": "Extra",
+          "list": [
+            "Built a custom click-tracking script extending Google Analytics to enable heatmap-style interaction analysis",
+            "Developing a design system in frontend code (SCSS + HTML), with annotation layers for accessibility, responsiveness, and custom tracking hooks; geared for simplicity, maintainability, and AI agent usability.",
+            "Studying dynamic personalization of landing pages",
+            "Working with stakeholders to optimize the page ownership model used by 400+ staff editors",
+            "Conducted research, mockups, and user testing loops for the Library Guides landing page"
+          ],
+          "image": null
+        },
+        {
+          "prompt1": "Take this dump of information about this project and help me promote it on my online portfolio. First of all, re-write it for clarity. ",
+          "prompt2": "Read everything and identify the main narrative to promote it according to my profile and strategy. Identify the three main points to place a paragraph about eahc on my website. Then list a few bullet points of also interesting facts about this project but which are not not too revealing. Ask any clarifying questions. I barely have images to go along with it, but I'll figure something later. Help me look good with just a little bit of honest embelishment."
+        },
+        {
+          "active": false,
+          "bulletPointsToConvertToSectionsAndText": [
             "The Library website has about 6 vendor platfoms that are integrated as a single web experince, with common header and similiar styling.",
             "The main part and repo of the website is a CMS and has over 10k pages, of which about 5k are news pages.",
             "Over 400 Library staff (all of them) have editor permissions on almost all pages of the main website. Vendor platforms are accessed on need-to basis.",
@@ -226,9 +262,10 @@
             "We had rounds of ideation with our access services team which manage most of the fetched services. With their feedback I finalized a mockup and delivered to our developer. We continued rounds of ideation and feedback on the test version with other relevant teams untill we were ready to test with users.",
             "We are currently planning the user testing for this dashboard. Staff is excited about this.",
             "We are also studying a way to customize landing pages according to audience with a deeply documented matrix of our services and respective access.",
-            "DS",
-            "page ownership model",
-            "library guides homepage redesign"
+            "My developer skills have allowed me to sit in project management meetings and negotiate with stakeholders without consulting our full stack developer (he still has final say on all his work).",
+            "I am building a Design System directly in front end code. It simplifies handoff as all files are ready to use by a developer, both SCSS and HTML. It allows me to make mockups for any given exercise using our most current design system. IT documents the most critical strategic decisions and maps them to tokens. It has an annotation layer for our custom click tracking script, for any a11y concerns, responsiveness behavior, or specific animation. It establishes global design decisions and demoes several components without being prescriptive about each component and variant. It allows both developers to copy chunks of HTML and to test the DS as it is specified. It creates a realistic environment to develop our design system. It is based on BS5 and structured so that it is easier to maintain long term.",
+            "We've been working with a group of stakeholders to review workflows and simplify the page ownership model, so that is is easier for staff to keep pages updated.",
+            "I've made research and mockups on the landing page for our Library Guides section of the website with stakeholder feedback and user testing loops."
           ]
         }
       ]
