@@ -120,7 +120,7 @@ export function initChat() {
   // Permission request
   setTimeout(() => {
     addMessage(
-      "To chat with me, I need to download a small AI model (~1.4GB). It's a one-time download and will be cached for future visits. Ready to proceed?",
+      "To chat with me, I need to download a small AI model (~2.0GB). It's a one-time download and will be cached for future visits. Ready to proceed?",
       'bot'
     );
 
