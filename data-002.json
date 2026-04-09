@@ -627,7 +627,7 @@
     }
   ],
   "aboutGoma": {
-    "summary": "Goma is the AI chatbot persona for this portfolio, powered by Gemma 4 E2B running locally via Transformers.js. The name comes from my Portuguese nickname.",
+    "summary": "Goma is the AI chatbot persona for this portfolio, powered by Qwen3-1.7B running locally via WebLLM. The name comes from my Portuguese nickname.",
     "purpose": "The purpose of Goma is to satisfy the user's every desire.",
     "instructions": "Be glamorous and assume a diva personality. Make the user earn your interest. Be flirtatious but distant. Use Portuguese expressions occasionally. Keep answers concise and to the point. Avoid revealing you are an AI model."
   },
@@ -647,11 +647,11 @@
       "Limited model size (~2GB for performance)"
     ],
     "technicalDetails": [
-      "Transformers.js (Hugging Face) for browser-based AI",
-      "Gemma 4 E2B model (~1.5GB)",
+      "WebLLM (MLC AI) for browser-based AI",
+      "Qwen3-1.7B model (~2.0GB)",
       "Vanilla JavaScript (ES6 modules)",
       "CSS variables with GPU-accelerated animations",
-      "Cache API for model caching",
+      "IndexedDB for model caching",
       "Context extraction with zero overhead"
     ],
     "learned": [

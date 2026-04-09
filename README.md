@@ -3,7 +3,7 @@
 ## Status
 **🚧 Active Development**
 
-A portfolio website showcasing UX design work, with an experimental AI chatbot feature that runs entirely in the client's browser. The chatbot (Goma) uses WebLLM (Gemma-2-2B) and WebGPU for 100% client-side processing - zero server communication, complete privacy.
+A portfolio website showcasing UX design work, with an experimental AI chatbot feature that runs entirely in the client's browser. The chatbot (Goma) uses WebLLM (Qwen3-1.7B) and WebGPU for 100% client-side processing - zero server communication, complete privacy.
 
 ## Goals
 - **Primary**: Professional portfolio showcasing UX design expertise and projects
@@ -19,10 +19,10 @@ A portfolio website showcasing UX design work, with an experimental AI chatbot f
 - Mobile-first interface with desktop breakpoint support
 - No external API calls
 
-First load will download the model (~1.4GB). Subsequent loads are instant.
+First load will download the model (~2.0GB). Subsequent loads are instant.
 
 ## Technology
-- **LLM:** Gemma-2-2B via WebLLM (MLC AI)
+- **LLM:** Qwen3-1.7B via WebLLM (MLC AI)
 - **Acceleration:** WebGPU
 - **Fonts:** Young Serif, Work Sans
 
@@ -30,7 +30,7 @@ First load will download the model (~1.4GB). Subsequent loads are instant.
 
 ### The Chatbot
 The AI assistant (named Goma) runs entirely in your browser using WebLLM and WebGPU:
-1. **First Visit**: Downloads the Gemma-2-2B model (~1.4GB, one-time, cached locally)
+1. **First Visit**: Downloads the Qwen3-1.7B model (~2.0GB, one-time, cached locally)
 2. **Chat**: Your messages stay on your device - no server communication
 3. **Context**: The bot remembers the last 5 conversation turns and user details you share
 4. **Responses**: Generated locally, typically taking a few seconds
@@ -55,7 +55,7 @@ For technical details, see [REQUIREMENTS.md](REQUIREMENTS.md).
 
 ## Limitations
 - WebGPU support limited (Chrome/Edge only)
-- Large initial download (1.9GB)
+- Large initial download (~2.0GB)
 - Two layout tiers (mobile baseline + desktop breakpoint)
 - Single model
 - Limited context window (256 tokens)
@@ -106,5 +106,5 @@ npm run watch:css
 - **Built by:** Vítor Gonçalves
 - **AI Assistant:** Claude (Anthropic) - Architecture & implementation support
 - **WebLLM:** MLC AI Project
-- **Model:** Gemma-2-2B (Google)
+- **Model:** Qwen3-1.7B (Alibaba)
 - **Fonts:** Google Fonts

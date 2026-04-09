@@ -5,7 +5,8 @@ import { getRelevantContext } from './rag.js';
 
 // Model configuration
 const MODEL_CONFIG = {
-  selectedModel: 'gemma-2-2b-it-q4f16_1-MLC',
+  // selectedModel: 'Qwen3-1.7B-q4f16_1-MLC',   // ~2.0GB | Alibaba | enable_thinking: false required
+  selectedModel: 'gemma-2-2b-it-q4f16_1-MLC', // ~1.4GB | Google  | no special flags needed
   maxTokens: 256,
   temperature: 0.3
 };
@@ -164,7 +165,8 @@ export async function generateResponse(userMessage) {
     const requestPayload = {
       messages,
       max_tokens: MODEL_CONFIG.maxTokens,
-      temperature: MODEL_CONFIG.temperature
+      temperature: MODEL_CONFIG.temperature,
+      enable_thinking: false
     };
     console.info('[telemetry] Model request payload:', requestPayload);
 
@@ -319,9 +321,9 @@ export function checkWebGPUSupport() {
 // Get model display info
 export function getModelInfo() {
   return {
-    name: 'Gemma-2-2B',
+    name: 'Qwen3-1.7B',
     fullName: MODEL_CONFIG.selectedModel,
-    size: '~1.4GB',
+    size: '~2.0GB',
     status: state.modelStatus
   };
 }

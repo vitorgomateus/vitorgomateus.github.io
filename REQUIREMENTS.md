@@ -44,7 +44,7 @@ Showcase UX design expertise and project work through a professional portfolio w
 - Feather Icons, local SVGs
 
 // AI/ML
-- WebLLM (Gemma-2-2B via WebGPU)
+- WebLLM (Qwen3-1.7B via WebGPU)
 - Client-side cosine similarity search (embeddings.json)
 
 // DATA
@@ -131,10 +131,13 @@ src/
 
 #### Model Configuration
 ```javascript
-selectedModel: "gemma-2-2b-it-q4f16_1-MLC" // 1.4GB, Google
+selectedModel: "Qwen3-1.7B-q4f16_1-MLC" // ~2.0GB, Alibaba
 maxTokens: 256
 temperature: 0.3
 maxHistory: 5 (conversation turns)
+
+  // === CURRENT PICK ===
+  this.selectedModel = "Qwen3-1.7B-q4f16_1-MLC"; // ~2.0GB | Alibaba | Better quality/speed balance than Gemma-2-2B on current WebLLM registry. Requires enable_thinking: false for faster answers. 30-80s
 
   // === BEST OVERALL BALANCE (1.5-2GB) ===
   // this.selectedModel = "Phi-3.5-mini-instruct-q4f16_1-MLC"; // 1.9GB | Microsoft | Best balance: strong reasoning, instruction following, coding. >> Reasonable responses in ~100s.
@@ -143,10 +146,12 @@ maxHistory: 5 (conversation turns)
   
   // === COMPACT & FAST (0.8-1.5GB) ===
   // this.selectedModel = "Qwen2.5-1.5B-Instruct-q4f16_1-MLC"; // 0.9GB | Alibaba | Fast responses (~10s), decent reasoning, multilingual. >> Responses in ~10s but dumb.
-  this.selectedModel = "gemma-2-2b-it-q4f16_1-MLC"; // 1.4GB | Google | Excellent safety, factual responses, instruction following
+  // this.selectedModel = "gemma-2-2b-it-q4f16_1-MLC"; // 1.4GB | Google | Good safety and factual responses, but slower and less capable than newer Qwen3 options.
   // this.selectedModel = "Phi-2-q4f16_1-MLC"; // 1.6GB | Microsoft | Strong reasoning and coding for size, common sense
   // this.selectedModel = "SmolLM2-1.7B-Instruct-q4f16_1-MLC"; // 1.0GB | Hugging Face | Efficient, good general chat, open license. >> Responses in ~15s, but can't extract data and questions are a bit silly, seems to not understand context very well.
   // this.selectedModel = "Phi-3-mini-4k-instruct-q4f16_1-MLC"; // 1.9GB | Microsoft | Similar to 3.5 but older, still very capable
+  // this.selectedModel = "Qwen3-0.6B-q4f16_1-MLC"; // 1.4GB VRAM | Alibaba | Very fast, but likely too weak for extraction + RAG consistency.
+  // this.selectedModel = "Qwen3-4B-q4f16_1-MLC"; // 3.4GB VRAM | Alibaba | Stronger quality, but noticeably slower to generate.
   
   // === ULTRA LIGHTWEIGHT (<1GB) ===
   // this.selectedModel = "TinyLlama-1.1B-Chat-v1.0-q4f16_1-MLC"; // 0.6GB | TinyLlama Team | Ultra fast, basic conversation, simple Q&A. >> Lets intructions slip, responses in ~20s.
@@ -162,7 +167,7 @@ maxHistory: 5 (conversation turns)
 
 #### Conversation Flow
 1. **Disclaimer**: Show message gloating full privacy and cloud-free, using large icons when relevant. Hard coded message.
-2. **Permission Request**: Ask to download model (~1.4GB, one-time). Hard coded message.
+2. **Permission Request**: Ask to download model (~2.0GB, one-time). Hard coded message.
 3. **Model Loading**: Progress bar with percentage, status updates. Dynamic WebLLM message.
 4. **Greeting**: Random greeting from predefined, hardcoded set (20 options). 
 6. **AI Response**: Typing indicator (accumulated then displayed).
@@ -750,7 +755,7 @@ The `embeddings.json` file serves three purposes:
 
 ### Dependencies
 - **WebLLM**: Apache 2.0 License (MLC AI)
-- **Gemma-2-2B**: Apache 2.0 License (Google)
+- **Qwen3-1.7B**: Apache 2.0 License (Alibaba)
 - **Google Fonts**: Open Font License
 - **Feather Icons**
 
@@ -758,4 +763,4 @@ The `embeddings.json` file serves three purposes:
 - **Built by**: Vítor Gonçalves
 - **AI Assistant**: Claude (Anthropic) - Architecture & implementation support
 - **WebLLM**: MLC AI Project
-- **Model**: Gemma-2-2B (Google)
+- **Model**: Qwen3-1.7B (Alibaba)
