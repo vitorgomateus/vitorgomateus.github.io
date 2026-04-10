@@ -79,7 +79,9 @@ To keep `embeddings.json` synced automatically while you edit `data-002.json` lo
 npm run watch:embeddings
 ```
 
-The repository also includes a GitHub Actions workflow at `.github/workflows/update-embeddings.yml` that regenerates and commits `embeddings.json` when `data-002.json` (or `generate_embeddings.py`) changes on `main`.
+`embeddings.json` is not tracked in git. GitHub Pages deployment generates embeddings during the workflow run and publishes them as part of the deployed artifact.
+
+The deploy workflow is in `.github/workflows/update-embeddings.yml` and does not create git commits.
 
 See [REQUIREMENTS.md](REQUIREMENTS.md#embeddings-json-structure) for schema details.
 
@@ -92,6 +94,13 @@ npm run dev
 This starts both:
 - a local static server at `http://localhost:8000`
 - the SCSS compiler in watch mode
+- the embeddings watcher (regenerates `embeddings.json` when `data-002.json` changes)
+
+Note: `npm run dev` requires Python plus `sentence-transformers` available in your environment.
+If you only want frontend development (no embeddings watch), use:
+```bash
+npm run dev:web
+```
 
 If you only want the server:
 ```bash
