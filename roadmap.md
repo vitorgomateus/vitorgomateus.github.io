@@ -1,8 +1,6 @@
 # Roadmap (Grouped by Urgency)
 
 ## P0 - Critical (Fix now)
-### Infrastructure & Automation
-- [x] Embedding generation moved to GitHub Actions (`.github/workflows/update-embeddings.yml`).
 
 ### Responsive Layout
 - [ ] The side drawer gets squished on smaller screens.
@@ -63,3 +61,9 @@
 - [ ] Should I consider collecting data without explicit user consent? At least performance data.
     - [ ] You can log website interaction to a Google Sheet for free using only JS and Google Apps Script, suitable for simple/low-volume use cases. On Apps Script, check the Referer HTTP header to see if the request originated from your domain. Maybe get your own domain first, but there are likely security concerns. This could be better than mailto.
 - [ ] How many AI requests to make this project? How much data center power and emissions?
+
+
+
+## ✅ DONE yay
+### Infrastructure & Automation
+- [x] Embedding generation moved to GitHub Actions (`.github/workflows/update-embeddings.yml`).
