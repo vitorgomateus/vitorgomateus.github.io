@@ -50,4 +50,6 @@ Temporary Items
 .apdisk
 /venv
 node_modules/
-.github/
+.github/*
+!.github/workflows/
+!.github/workflows/*.yml

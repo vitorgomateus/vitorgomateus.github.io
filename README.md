@@ -71,8 +71,15 @@ After updating `data-002.json`:
 python -m venv venv
 .\venv\Scripts\Activate.ps1
 pip install sentence-transformers
-python generate_embeddings.py
+npm run generate:embeddings
 ```
+
+To keep `embeddings.json` synced automatically while you edit `data-002.json` locally:
+```bash
+npm run watch:embeddings
+```
+
+The repository also includes a GitHub Actions workflow at `.github/workflows/update-embeddings.yml` that regenerates and commits `embeddings.json` when `data-002.json` (or `generate_embeddings.py`) changes on `main`.
 
 See [REQUIREMENTS.md](REQUIREMENTS.md#embeddings-json-structure) for schema details.
 

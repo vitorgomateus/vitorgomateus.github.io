@@ -4,7 +4,10 @@
   "description": "**🚧 Active Development**",
   "scripts": {
     "serve": "http-server . -p 8000 -c-1",
-    "dev": "concurrently \"npm:serve\" \"npm:watch:css\"",
+    "dev": "concurrently \"npm:serve\" \"npm:watch:css\" \"npm:watch:embeddings\"",
+    "dev:web": "concurrently \"npm:serve\" \"npm:watch:css\"",
+    "generate:embeddings": "python generate_embeddings.py",
+    "watch:embeddings": "python generate_embeddings.py --watch",
     "build:css": "sass src/styles.scss:src/styles.css src/features/portfolio/styles.scss:src/features/portfolio/styles.css --no-source-map",
     "watch:css": "sass --watch src/styles.scss:src/styles.css src/features/portfolio/styles.scss:src/features/portfolio/styles.css --no-source-map"
   },

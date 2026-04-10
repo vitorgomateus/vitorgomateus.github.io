@@ -2,7 +2,7 @@
 
 ## P0 - Critical (Fix now)
 ### Infrastructure & Automation
-- [ ] Maybe I can move embedding generation to GitHub Actions.
+- [x] Embedding generation moved to GitHub Actions (`.github/workflows/update-embeddings.yml`).
 
 ### Responsive Layout
 - [ ] The side drawer gets squished on smaller screens.

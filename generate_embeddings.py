@@ -17,9 +17,13 @@ Reads data-002.json and produces embeddings.json
 import json
 import os
 import re
+import argparse
+import time
 from sentence_transformers import SentenceTransformer
 
 MODEL_NAME = 'all-MiniLM-L6-v2'
+DEFAULT_DATA_FILE = 'data-002.json'
+DEFAULT_OUTPUT_FILE = 'embeddings.json'
 
 SECTION_SYNONYMS = {
     'Summary': ['summary', 'profile', 'about'],
@@ -32,9 +36,8 @@ SECTION_SYNONYMS = {
     'Interests': ['interests', 'personal interests', 'hobbies']
 }
 
-def find_data_file():
-    """Use the fixed portfolio data source file."""
-    data_file = 'data-002.json'
+def find_data_file(data_file=DEFAULT_DATA_FILE):
+    """Use the fixed portfolio data source file by default."""
     if not os.path.exists(data_file):
         raise FileNotFoundError(f'{data_file} not found')
     return data_file
@@ -252,32 +255,76 @@ def generate_embeddings(chunks, model):
     
     return chunks
 
-def main():
-    # Use fixed data file
-    data_file = find_data_file()
+def run_generation(model, data_file=DEFAULT_DATA_FILE, output_file=DEFAULT_OUTPUT_FILE):
+    data_file = find_data_file(data_file)
     print(f'Using data file: {data_file}')
-    
+
     # Load data
     with open(data_file, 'r', encoding='utf-8') as f:
         data = json.load(f)
-    
+
     # Chunk data
     chunks = chunk_data(data)
     print(f'Created {len(chunks)} chunks')
-    
-    # Load model
-    print(f'Loading model: {MODEL_NAME}')
-    model = SentenceTransformer(MODEL_NAME)
-    
+
     # Generate embeddings
     result = generate_embeddings(chunks, model)
-    
+
     # Save
-    output_file = 'embeddings.json'
     with open(output_file, 'w', encoding='utf-8') as f:
         json.dump(result, f, ensure_ascii=False, indent=2)
-    
+
     print(f'Saved {len(result)} embeddings to {output_file}')
 
+
+def watch_data_file(model, data_file, output_file, interval):
+    """Regenerate embeddings when the source data file changes."""
+    print(f'Watching {data_file} every {interval:.1f}s. Press Ctrl+C to stop.')
+
+    last_mtime = None
+    while True:
+        try:
+            current_mtime = os.path.getmtime(data_file)
+            if last_mtime is None:
+                run_generation(model, data_file, output_file)
+                last_mtime = current_mtime
+            elif current_mtime != last_mtime:
+                print(f'Detected update in {data_file}. Regenerating...')
+                # Brief delay helps avoid partial reads while file writes finish.
+                time.sleep(0.2)
+                run_generation(model, data_file, output_file)
+                last_mtime = current_mtime
+        except FileNotFoundError:
+            print(f'Waiting for {data_file} to become available...')
+        except Exception as exc:
+            print(f'Error while watching file: {exc}')
+
+        time.sleep(interval)
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(description='Generate embeddings from portfolio JSON data.')
+    parser.add_argument('--watch', action='store_true', help='Keep running and regenerate on data file changes.')
+    parser.add_argument('--interval', type=float, default=1.0, help='Watch polling interval in seconds.')
+    parser.add_argument('--data-file', default=DEFAULT_DATA_FILE, help='Path to source data JSON file.')
+    parser.add_argument('--output-file', default=DEFAULT_OUTPUT_FILE, help='Path for output embeddings JSON file.')
+    return parser.parse_args()
+
+
+def main():
+    args = parse_args()
+
+    print(f'Loading model: {MODEL_NAME}')
+    model = SentenceTransformer(MODEL_NAME)
+
+    if args.watch:
+        watch_data_file(model, args.data_file, args.output_file, args.interval)
+        return
+
+    run_generation(model, args.data_file, args.output_file)
+
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print('\nStopped by user.')
