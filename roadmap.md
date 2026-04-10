@@ -2,10 +2,6 @@
 
 ## P0 - Critical (Fix now)
 
-### Responsive Layout
-- [x] The side drawer gets squished on smaller screens.
-- [x] The side drawer moves the website to the left when it opens, which looks bad.
-- [x] The input bar needs bottom spacing on smaller screens.
 ### Accessibility
 - [ ] Test with a screen reader simulator.
 
@@ -67,3 +63,7 @@
 ## ✅ DONE yay
 ### Infrastructure & Automation
 - [x] Embedding generation moved to GitHub Actions (`.github/workflows/update-embeddings.yml`).
+### Responsive Layout
+- [x] The side drawer gets squished on smaller screens.
+- [x] The side drawer moves the website to the left when it opens, which looks bad.
+- [x] The input bar needs bottom spacing on smaller screens.
