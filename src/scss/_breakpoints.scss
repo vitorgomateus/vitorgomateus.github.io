@@ -30,7 +30,11 @@
     }
 
     .drawer {
-        width: min(86%, 340px);
+        width: min(94vw, 360px);
+    }
+
+    .input-bar>.container {
+        padding-bottom: calc(var(--space-sm) + env(safe-area-inset-bottom));
     }
 }
 
@@ -81,8 +85,7 @@
     }
 
     .drawer {
-        width: 420px;
-        max-width: 46%;
+        width: min(420px, 42vw);
     }
 
     .modal {

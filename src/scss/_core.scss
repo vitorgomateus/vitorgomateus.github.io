@@ -110,6 +110,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+body.drawer-open {
+  overflow: hidden;
+}
+
 /* ========================================
    Utilities
    ======================================== */
@@ -629,6 +633,7 @@ body {
   min-height: var(--input-bar-height);
   background: var(--background);
   border-top: 1px solid var(--border);
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 .input-bar>.container {
@@ -755,7 +760,7 @@ body {
    ======================================== */
 
 .drawer-overlay {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
@@ -765,12 +770,13 @@ body {
 }
 
 .drawer {
-  position: absolute;
+  position: fixed;
   top: 0;
   right: 0;
   bottom: 0;
-  width: 80%;
-  max-width: 320px;
+  width: clamp(17.5rem, 92vw, 22rem);
+  max-width: 100vw;
+  height: 100dvh;
   background: var(--background);
   z-index: 30;
   display: flex;
@@ -831,6 +837,7 @@ body {
   flex: 1;
   overflow-y: auto;
   padding: var(--space-md);
+  min-width: 0;
 }
 
 .drawer__section {
@@ -866,6 +873,7 @@ body {
 .drawer__btn {
   width: 100%;
   justify-content: center;
+  white-space: normal;
 }
 
 .drawer__accessibility-toggle {

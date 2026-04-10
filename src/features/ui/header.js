@@ -134,6 +134,7 @@ export function openDrawer() {
 
   if (drawer) drawer.hidden = false;
   if (overlay) overlay.hidden = false;
+  document.body.classList.add('drawer-open');
 
   // Update model status display
   updateModelStatusDisplay();
@@ -150,6 +151,7 @@ export function closeDrawer() {
 
   if (drawer) drawer.hidden = true;
   if (overlay) overlay.hidden = true;
+  document.body.classList.remove('drawer-open');
 
   // Restore focus
   if (menuBtn) menuBtn.focus();
