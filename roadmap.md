@@ -1,6 +1,9 @@
 # Roadmap (Grouped by Urgency)
 
 ## P0 - Critical (Fix now)
+### Infrastructure & Automation
+- [ ] Maybe I can move embedding generation to GitHub Actions.
+
 ### Responsive Layout
 - [ ] The side drawer gets squished on smaller screens.
 - [ ] The side drawer moves the website to the left when it opens, which looks bad.
@@ -43,8 +46,6 @@
 - [ ] Can I make my name and the experimental toggle into one?
 
 ## P3 - Low (Research and experiments)
-### Infrastructure & Automation
-- [ ] Maybe I can move embedding generation to GitHub Actions.
 
 ### Product Experiments (Placement & Interaction)
 - [ ] It would be nice if the user typed "images" and all images showed up.
