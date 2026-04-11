@@ -46,9 +46,8 @@ function updateFavicon(hue, saturation, lightness) {
   document.getElementsByTagName('head')[0].appendChild(link);
 }
 
-// Toggle experimental mode
-export function toggleExperimentalMode() {
-  state.experimentalMode = !state.experimentalMode;
+export function setExperimentalMode(isEnabled) {
+  state.experimentalMode = Boolean(isEnabled);
 
   const appContainer = document.getElementById('app-container');
   if (appContainer) appContainer.classList.toggle('is-experimental', state.experimentalMode);
@@ -119,6 +118,11 @@ export function toggleExperimentalMode() {
     state.portfolioStartTime = Date.now();
   }
 
+}
+
+// Toggle experimental mode
+export function toggleExperimentalMode() {
+  setExperimentalMode(!state.experimentalMode);
 }
 
 // Open settings drawer

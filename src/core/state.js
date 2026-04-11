@@ -9,6 +9,7 @@ const state = {
   portfolioData: null,
   expandedProject: null,
   searchActive: false,
+  searchQuery: '',
   searchResults: [],
 
   // Chat

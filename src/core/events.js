@@ -5,6 +5,8 @@ import { setVisibleChunks } from '../features/portfolio/render.js';
 import { showAlert } from '../features/ui/alerts.js';
 import { closeDrawer, openDrawer, toggleAccessibility, toggleExperimentalMode } from '../features/ui/header.js';
 import { closeExpandedView, handleInput, initChat } from '../features/ui/input.js';
+import { initLightbox } from '../features/ui/lightbox.js';
+import { initNavigation, pushNavigationState } from '../features/ui/navigation.js';
 import state from './state.js';
 
 export function setupEvents() {
@@ -14,6 +16,7 @@ export function setupEvents() {
     featureToggle.addEventListener('click', () => {
       toggleExperimentalMode();
       if (state.experimentalMode) initChat();
+      pushNavigationState();
     });
   }
 
@@ -186,6 +189,10 @@ export function setupEvents() {
   // setupFeedbackTimer();
 
   // setupChatPromptTimer(); // replaced by the AI teaser in the Now section
+
+  // Initialize navigation and lightbox
+  initNavigation();
+  initLightbox();
 }
 
 // Handle project click
@@ -199,6 +206,10 @@ function handleProjectClick(projectId) {
   }
 
   setVisibleChunks([`project-${projectId}`], 'project');
+  state.expandedProject = projectId;
+
+  // Push navigation state for browser back button
+  pushNavigationState();
 
   // Jump to top directly (no smooth behavior)
   const main = document.getElementById('main-content');

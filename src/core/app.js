@@ -8,7 +8,21 @@ import { setupTextareaResize } from '../features/ui/input.js';
 import { setupEvents } from './events.js';
 import state from './state.js';
 
+function ensureBaseHref() {
+  const baseUrl = new URL('../../', import.meta.url);
+  let baseEl = document.querySelector('base');
+
+  if (!baseEl) {
+    baseEl = document.createElement('base');
+    document.head.prepend(baseEl);
+  }
+
+  baseEl.href = baseUrl.href;
+}
+
 async function init() {
+  ensureBaseHref();
+
   // Set random primary color & favicon
   setRandomPrimaryColor();
 

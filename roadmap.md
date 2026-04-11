@@ -6,9 +6,6 @@
 - [ ] Test with a screen reader simulator.
 
 ## P1 - High (Core quality and product behavior)
-### Navigation
-- [ ] Allow navigation behavior, like go back after opening a project and maybe from the experimental feature.
-- [ ] Do we have image lightboxes?
 ### Chatbot Model Quality & Behavior
 - [ ] Need better console logs to test and compare models.
 - [ ] Need to test and compare Gemma 2 and Qwen3.
@@ -67,3 +64,6 @@
 - [x] The side drawer gets squished on smaller screens.
 - [x] The side drawer moves the website to the left when it opens, which looks bad.
 - [x] The input bar needs bottom spacing on smaller screens.
+### Navigation
+- [x] Allow navigation behavior, like go back after opening a project and maybe from the experimental feature.
+- [x] Do we have image lightboxes?

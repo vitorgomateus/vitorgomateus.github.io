@@ -6,6 +6,7 @@ import { checkWebGPUSupport, generateResponse, getNextSuggestions, getRandomGree
 import { setVisibleChunks } from '../portfolio/render.js';
 import { resultsToChunkIds, searchEmbeddings } from '../portfolio/search.js';
 import { showAlert } from './alerts.js';
+import { pushNavigationState } from './navigation.js';
 
 let chatInitialized = false;
 let permissionGranted = false;
@@ -48,6 +49,12 @@ async function handleSearchInput(query) {
 
   const chunkIds = resultsToChunkIds(results);
   setVisibleChunks(chunkIds, 'filter', query);
+
+  // Track search state and push to navigation
+  state.searchActive = true;
+  state.searchQuery = query;
+  pushNavigationState();
+
   if (statusEl) statusEl.textContent = `${results.length} result${results.length === 1 ? '' : 's'} found`;
 
   // Scroll to top of results
@@ -239,6 +246,11 @@ function resetTextareaHeight(textarea) {
 export function closeExpandedView() {
   const expandedProjectId = state.expandedProject;
   setVisibleChunks(null);
+
+  // Clear search/project state
+  state.expandedProject = null;
+  state.searchActive = false;
+  state.searchQuery = '';
 
   const statusEl = getSearchStatusTarget();
   if (statusEl) statusEl.textContent = '';
