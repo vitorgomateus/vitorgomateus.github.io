@@ -1,6 +1,7 @@
 # Roadmap (Grouped by Urgency)
 
 ## P0 - Critical (Fix now)
+- [ ] Alert the user when they close the tab and offer to clear the cached model (xxGB).
 
 ### Accessibility
 - [ ] Test with a screen reader simulator.
