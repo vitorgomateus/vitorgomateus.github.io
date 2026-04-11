@@ -8,6 +8,57 @@ import { setupTextareaResize } from '../features/ui/input.js';
 import { setupEvents } from './events.js';
 import state from './state.js';
 
+function estimateCapacityText({ hasWebGPU, memoryGB, cpuCores }) {
+  if (!hasWebGPU) {
+    return {
+      tier: 'likely-fail',
+      text: 'Capacity: May fail (WebGPU unavailable)'
+    };
+  }
+
+  const hasStrongMemory = typeof memoryGB === 'number' && memoryGB >= 8;
+  const hasStrongCpu = typeof cpuCores === 'number' && cpuCores >= 8;
+  const hasLimitedMemory = typeof memoryGB === 'number' && memoryGB <= 4;
+  const hasLimitedCpu = typeof cpuCores === 'number' && cpuCores <= 4;
+
+  if (hasStrongMemory && hasStrongCpu) {
+    return {
+      tier: 'likely',
+      text: 'Capacity: Likely runs well'
+    };
+  }
+
+  if (hasLimitedMemory || hasLimitedCpu) {
+    return {
+      tier: 'maybe-slow',
+      text: 'Capacity: May be slow'
+    };
+  }
+
+  return {
+    tier: 'likely',
+    text: 'Capacity: Likely runs well'
+  };
+}
+
+function detectBrowserCapabilities() {
+  const hasWebGPU = !!navigator.gpu;
+  const cpuCores = Number.isFinite(navigator.hardwareConcurrency)
+    ? navigator.hardwareConcurrency
+    : null;
+  const memoryGB = Number.isFinite(navigator.deviceMemory)
+    ? navigator.deviceMemory
+    : null;
+
+  const estimate = estimateCapacityText({ hasWebGPU, memoryGB, cpuCores });
+
+  state.browserDiagnostics.hasWebGPU = hasWebGPU;
+  state.browserDiagnostics.cpuCores = cpuCores;
+  state.browserDiagnostics.memoryGB = memoryGB;
+  state.browserDiagnostics.capacityTier = estimate.tier;
+  state.browserDiagnostics.capacityText = estimate.text;
+}
+
 function ensureBaseHref() {
   const baseUrl = new URL('../../', import.meta.url);
   let baseEl = document.querySelector('base');
@@ -22,6 +73,7 @@ function ensureBaseHref() {
 
 async function init() {
   ensureBaseHref();
+  detectBrowserCapabilities();
 
   // Set random primary color & favicon
   setRandomPrimaryColor();

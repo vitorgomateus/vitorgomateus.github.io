@@ -46,6 +46,28 @@ const state = {
     maxResponseTime: 0
   },
 
+  // Browser diagnostics
+  browserDiagnostics: {
+    hasWebGPU: false,
+    cpuCores: null,
+    memoryGB: null,
+    capacityTier: 'unknown', // unknown | likely | maybe-slow | likely-fail
+    capacityText: 'Capacity: Estimating...',
+    firstResponseMs: null,
+    firstResponseObserved: false
+  },
+
+  // Retrieval diagnostics
+  retrievalDiagnostics: {
+    queryMs: 0,
+    resultCount: 0,
+    avgScore: 0,
+    topScore: 0,
+    threshold: 0,
+    topK: 0,
+    hasRun: false
+  },
+
   // Feedback
   feedbackDismissed: false,
   feedbackShown: false,

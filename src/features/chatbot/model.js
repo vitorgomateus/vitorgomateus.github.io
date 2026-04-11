@@ -198,6 +198,23 @@ export async function generateResponse(userMessage) {
     if (responseTime > state.performance.maxResponseTime) {
       state.performance.maxResponseTime = responseTime;
     }
+
+    if (!state.browserDiagnostics.firstResponseObserved) {
+      state.browserDiagnostics.firstResponseObserved = true;
+      state.browserDiagnostics.firstResponseMs = responseTime;
+
+      if (!state.browserDiagnostics.hasWebGPU) {
+        state.browserDiagnostics.capacityTier = 'likely-fail';
+        state.browserDiagnostics.capacityText = 'Capacity: May fail (WebGPU unavailable)';
+      } else if (responseTime > 20000) {
+        state.browserDiagnostics.capacityTier = 'maybe-slow';
+        state.browserDiagnostics.capacityText = 'Capacity: May be slow';
+      } else {
+        state.browserDiagnostics.capacityTier = 'likely';
+        state.browserDiagnostics.capacityText = 'Capacity: Likely runs well';
+      }
+    }
+
     console.info(`[telemetry] Model response time: ${Math.round(responseTime)}ms`);
 
     state.isGenerating = false;

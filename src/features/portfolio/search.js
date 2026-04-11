@@ -22,6 +22,7 @@ export async function loadEmbeddings() {
 // Search embeddings with a query string
 // Returns top-k matching chunks above threshold
 export async function searchEmbeddings(query, options = {}) {
+  const start = performance.now();
   const minWords = options.minWords ?? DEFAULT_MIN_WORDS;
 
   if (!query || query.trim().split(/\s+/).length < minWords) {
@@ -48,6 +49,20 @@ export async function searchEmbeddings(query, options = {}) {
     .filter(r => r.score >= SIMILARITY_THRESHOLD)
     .sort((a, b) => b.score - a.score)
     .slice(0, TOP_K);
+
+  const queryMs = performance.now() - start;
+  const avgScore = results.length
+    ? results.reduce((sum, item) => sum + item.score, 0) / results.length
+    : 0;
+  const topScore = results.length ? results[0].score : 0;
+
+  state.retrievalDiagnostics.queryMs = queryMs;
+  state.retrievalDiagnostics.resultCount = results.length;
+  state.retrievalDiagnostics.avgScore = avgScore;
+  state.retrievalDiagnostics.topScore = topScore;
+  state.retrievalDiagnostics.threshold = SIMILARITY_THRESHOLD;
+  state.retrievalDiagnostics.topK = TOP_K;
+  state.retrievalDiagnostics.hasRun = true;
 
   return results;
 }

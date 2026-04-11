@@ -854,6 +854,19 @@ body.drawer-open {
   color: var(--text-light);
 }
 
+.drawer__model-diagnostics,
+.drawer__model-capacity,
+.drawer__model-retrieval {
+  color: var(--text-light);
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+.drawer__model-capacity {
+  color: var(--text);
+  font-weight: 500;
+}
+
 .drawer__btn {
   width: 100%;
   justify-content: center;

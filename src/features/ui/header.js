@@ -164,6 +164,9 @@ export function closeDrawer() {
 // Update model status in drawer
 function updateModelStatusDisplay() {
   const statusEl = document.getElementById('model-status');
+  const browserEl = document.getElementById('browser-capabilities');
+  const capacityEl = document.getElementById('model-capacity');
+  const retrievalEl = document.getElementById('retrieval-summary');
   if (!statusEl) return;
 
   const statusMap = {
@@ -175,6 +178,36 @@ function updateModelStatusDisplay() {
   };
 
   statusEl.textContent = statusMap[state.modelStatus] || 'Unknown';
+
+  if (browserEl) {
+    const gpuText = state.browserDiagnostics.hasWebGPU ? 'WebGPU yes' : 'WebGPU no';
+    const memoryText = state.browserDiagnostics.memoryGB
+      ? `${state.browserDiagnostics.memoryGB}GB RAM hint`
+      : 'RAM hint unavailable';
+    const cpuText = state.browserDiagnostics.cpuCores
+      ? `${state.browserDiagnostics.cpuCores} CPU threads`
+      : 'CPU threads unavailable';
+    browserEl.textContent = `Browser: ${gpuText} | ${memoryText} | ${cpuText}`;
+  }
+
+  if (capacityEl) {
+    let suffix = '';
+    if (state.browserDiagnostics.firstResponseObserved && state.browserDiagnostics.firstResponseMs !== null) {
+      suffix = ` (updated after first reply: ${Math.round(state.browserDiagnostics.firstResponseMs)}ms)`;
+    }
+    capacityEl.textContent = `${state.browserDiagnostics.capacityText}${suffix}`;
+  }
+
+  if (retrievalEl) {
+    if (!state.retrievalDiagnostics.hasRun) {
+      retrievalEl.textContent = 'Retrieval: No queries yet';
+    } else {
+      const avg = state.retrievalDiagnostics.avgScore.toFixed(2);
+      const count = state.retrievalDiagnostics.resultCount;
+      const ms = Math.round(state.retrievalDiagnostics.queryMs);
+      retrievalEl.textContent = `Retrieval: ${count} hit${count === 1 ? '' : 's'} | avg ${avg} | ${ms}ms`;
+    }
+  }
 }
 
 // Toggle accessibility mode
