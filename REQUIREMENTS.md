@@ -35,61 +35,121 @@ Showcase UX design expertise and project work through a professional portfolio w
 - No API keys or secrets
 - All configuration in code (model selection, tuning variables)
 
-### Proposed tech stack and JS code structure
-// FRONTEND
-- Vanilla HTML5 (semantic elements, no frameworks)
-- Vanilla CSS3 (CSS variables, flexbox only, no framework)
-- ES6 JavaScript modules (no transpilation, no bundler)
-- normalize.css
-- Feather Icons, local SVGs
+### Proposed architecture (v2)
 
-// AI/ML
-- WebLLM (Qwen3-1.7B via WebGPU)
-- Client-side cosine similarity search (embeddings.json)
+#### Architectural goals
+- Keep GitHub Pages compatibility by shipping only static files
+- Make the static portfolio the default and most resilient experience
+- Keep the DOM, content model, and retrieval model aligned
+- Reduce frontend overhead so the local model remains the main performance cost
+- Make the site simultaneously accessible, responsive, and easy for machines to parse
 
-// DATA
-- sentence-transformers (Python 3, for embedding generation)
-- IndexedDB (model caching via WebLLM)
+#### Core architectural principle
+Use **content-first progressive enhancement**:
+1. deliver meaningful semantic HTML for the profile and portfolio
+2. enhance that HTML with filtering, expansion, and theme changes
+3. load the experimental chatbot only after explicit user action
 
-// DESIGN
-- Google Fonts (Young Serif, Work Sans)y
-- Open Dyslexic (specify source: Google Fonts or fallback)
-- saved locall
+#### Accessibility and machine-readability
+- A structure that is easy for an LLM agent to parse can also help screen readers when it uses:
+  - clear landmark regions
+  - one logical heading hierarchy
+  - stable ids and anchor targets
+  - explicit labels, captions, and relationships
+  - predictable reading order
+  - structured metadata tied to visible content
+- This only helps when the accessibility tree stays clean. Avoid duplicate hidden copies of content, decorative noise in the reading order, and custom widgets that replace native semantics without matching keyboard and ARIA behavior.
 
-// DEPLOYMENT
-- GitHub Pages (static hosting)
+#### Proposed stack
+- **Frontend**: Vanilla HTML5, modern CSS, ES modules
+- **Styling**: CSS custom properties, semantic class names, mobile-first layout
+- **Content**: Structured JSON as the canonical source of truth
+- **Search**: Pre-generated embeddings plus lightweight client-side retrieval
+- **AI runtime**: Local browser model runtime loaded on demand
+- **Storage**: Local browser storage only for cache and user preferences
+- **Deployment**: GitHub Pages with optional GitHub Actions preprocessing for generated artifacts
 
+#### Proposed content pipeline
+- **Canonical content source**: one structured portfolio data model for profile, projects, contact, and assistant configuration
+- **Derived static output**: semantic HTML rendered from the content model
+- **Derived search index**: vector chunks with stable chunk ids, source ids, labels, and human-readable summaries
+- **Derived assistant context**: short machine-friendly facts and prompt-safe summaries generated from the same content source
+
+#### Proposed runtime separation
+- **Document shell**: HTML landmarks, metadata, skip links, main navigation, footer
+- **Content renderer**: renders profile, project summaries, project details, and machine-readable metadata
+- **Search controller**: handles query input, vector matching, chunk filtering, result announcements, and focus routing
+- **Chat controller**: handles model boot, prompt assembly, response rendering, and consent states
+- **Memory controller**: stores compact user facts, rolling conversation summary, and retrieval references
+- **Preferences controller**: theme choice, selected model, accessibility mode, and experimental feature consent
+- **UI primitives**: drawer, alerts, modal, lightbox, and status regions built on accessible patterns
+
+#### Proposed target structure
 ```
-src/
-├── core/
-│   ├── app.js          # Main entry point, initialization
-│   ├── state.js        # Centralized state management
-│   └── events.js       # Event delegation setup
-├── features/
-│   ├── portfolio/
-│   │   ├── render.js   # DOM generation
-│   │   ├── search.js   # Vector search logic
-│   │   └── styles.css  # Portfolio styles
-│   ├── chatbot/
-│   │   ├── model.js    # WebLLM integration
-│   │   ├── messages.js # Message handling
-│   │   └── rag.js      # Context retrieval
-│   └── ui/
-│       ├── header.js
-│       ├── input.js
-│       └── alerts.js
-└── index.html          # Single entry point
+/
+├── index.html
+├── data/
+│   ├── portfolio.json          # canonical content
+│   ├── assistant-config.json   # allowed bot behaviors and model metadata
+│   ├── search-index.json       # embeddings + retrieval metadata
+│   └── structured-data.json    # JSON-LD source fragments
+├── src/
+│   ├── core/
+│   │   ├── bootstrap.js
+│   │   ├── store.js
+│   │   ├── dom.js
+│   │   └── preferences.js
+│   ├── content/
+│   │   ├── loader.js
+│   │   ├── render-profile.js
+│   │   ├── render-portfolio.js
+│   │   └── outline.js
+│   ├── search/
+│   │   ├── controller.js
+│   │   ├── retrieval.js
+│   │   └── announce.js
+│   ├── chat/
+│   │   ├── controller.js
+│   │   ├── prompt-assembly.js
+│   │   ├── memory.js
+│   │   ├── model-registry.js
+│   │   └── safety.js
+│   ├── ui/
+│   │   ├── header.js
+│   │   ├── drawer.js
+│   │   ├── dialog.js
+│   │   ├── alerts.js
+│   │   └── theme.js
+│   └── styles/
+│       ├── tokens.css
+│       ├── base.css
+│       ├── layout.css
+│       ├── components.css
+│       └── utilities.css
+└── generate_embeddings.py
 ```
+
+#### Page model
+- **Header**: identity, mode toggle, theme switcher, settings access
+- **Main**: profile summary, portfolio sections, semantic search status, chatbot region when enabled
+- **Footer**: contact and machine-readable profile references
+- **Enhancement order**:
+  1. load content
+  2. render static portfolio
+  3. enable search
+  4. enable preferences
+  5. offer chatbot opt-in
 
 ---
 
 ## Feature Specifications
 
 - The website has two main features:
-  1. a static portfolio;
-  2. an experimental chatbot portfolio. 
-- Both allow to interact with the same professional portfolio data, each using a different method. This data exists as a JSON file (data-002.json) and will be converted to an embeddings file via a Python script.
-- The static portfolio displays the portfolio data from the embeddings file as HTML and makes certain parts of it visible or hidden on different occasions. One user action is to run an embeddings search which filters the portfolio display according to the results, so the HTML elements need to be grouped in chunks which can be matched against the embeddings results and the embeddings file needs to maintain the nesting logic present in the JSON so that a Javascript may generate well structured, semantic HTML.
+  1. a static portfolio
+  2. an experimental chatbot portfolio
+- Both must read from the same canonical professional portfolio data, each through a different interaction model.
+- The static portfolio is the source experience; search and chat are enhancements over the same content model rather than separate products.
+- The rendered HTML, search chunks, and chatbot retrieval units must share stable ids so the system can move cleanly between visible content, vector results, and prompt context.
 
 ### 0. UI main sections
 - **Container** - The UI is mobile-first and must support two viewport tiers: mobile baseline and one desktop breakpoint. At mobile sizes, keep the 460px × 720px model as the baseline constraint. At desktop sizes, allow the container to expand while preserving spacing rhythm, readability, and containment of fixed/absolute layers. Container values should be established as variables to be reused where necessary, namely on elements with position fixed or absolute, to ensure they follow the same constrain. Everything happens inside this container; fixed or absolute containers need to be positioned so that they stay inside.
@@ -102,15 +162,15 @@ src/
 ### 1. Static Portfolio (Primary Feature)
 
 #### How it works
-- All data is rendered into HTML inside the main display area with a correct semantic structure on page load, and with content grouped by data chunks.
-- Detailed info on projects is visually hidden. Screen readers can still read it. Visual users need to click on the project summary panel to expand project details.
-- Searching filters the portfolio display instead of displaying results above or separate from it, effectively hidding all data chunks except for those that have matches on the search results. (no modal, new screen, or side pannel)
-- When displaying project details or search results, the bottom input bar is hidden, and a dismiss/close cross button is displayed on the top right corner of the main area.
-- The function that changes visibility on html chunks can be the same for expanding a project or displaying(filtering) search results, in order to maintain semantic structure and styling at all times.
+- All core portfolio content is rendered as semantic HTML on page load.
+- Project summaries and project details should preserve a single logical DOM order; prefer native patterns such as `<details>` / `<summary>` or equivalent accessible disclosure behavior.
+- Searching filters or jumps within the existing portfolio structure instead of opening a separate experience.
+- When search or project-focus states change what is visible, announce the change through accessible status messaging and move focus predictably.
+- The same chunk ids should drive project expansion, search filtering, deep links, and chatbot retrieval references.
 - Situations that change the data displayed in the static portfolio:
-  1. At page load all data chunks are loaded as html, and the details of all projects are hidden except for the summary, though still readable by screen readers.
-  2. When clicking on a project summary, it makes all that project's data visible, and hides all other data chunks. This interaction is not required for screen readers.
-  3. Searching hides all data chunks except for those that have matches on the search results. Searching uses embedding searching. (The same searching mechanism that feeds context to the chatbot model replies).
+  1. At page load the main profile and portfolio summaries are fully available.
+  2. When focusing a project, the user can expand details without losing orientation in the page structure.
+  3. Searching highlights, filters, or jumps to matching chunks using the same retrieval layer that can also feed chatbot context.
 
 ### 2. Vector Search via embeddings (part of the static primary feature)
 
@@ -126,43 +186,23 @@ src/
 - **Input**: Bottom input bar
 - **Button**: Magnifying glass icon, title="search"
 - **Close**: X button or Escape key
+- **Announcements**: Results count and active filters exposed through an ARIA live region
+- **Navigation**: Results map to stable anchors in the static portfolio
 
 ### 3. AI Chatbot (Secondary Experimental Feature)
 
 #### Model Configuration
-```javascript
-selectedModel: "Qwen3-1.7B-q4f16_1-MLC" // ~2.0GB, Alibaba
-maxTokens: 256
-temperature: 0.3
-maxHistory: 5 (conversation turns)
-
-  // === CURRENT PICK ===
-  this.selectedModel = "Qwen3-1.7B-q4f16_1-MLC"; // ~2.0GB | Alibaba | Better quality/speed balance than Gemma-2-2B on current WebLLM registry. Requires enable_thinking: false for faster answers. 30-80s
-
-  // === BEST OVERALL BALANCE (1.5-2GB) ===
-  // this.selectedModel = "Phi-3.5-mini-instruct-q4f16_1-MLC"; // 1.9GB | Microsoft | Best balance: strong reasoning, instruction following, coding. >> Reasonable responses in ~100s.
-  // this.selectedModel = "Qwen2.5-3B-Instruct-q4f16_1-MLC"; // 1.9GB | Alibaba | Excellent reasoning, multilingual, math/logic tasks. >> It's giving empty reponses? And I don't think is because of the token limit + extraction exercise.
-  // this.selectedModel = "Llama-3.2-3B-Instruct-q4f16_1-MLC"; // 1.7GB | Meta | General purpose, natural conversation, good safety alignment. >> Responses in ~45s, good reasoning but mixes user and designer up.
-  
-  // === COMPACT & FAST (0.8-1.5GB) ===
-  // this.selectedModel = "Qwen2.5-1.5B-Instruct-q4f16_1-MLC"; // 0.9GB | Alibaba | Fast responses (~10s), decent reasoning, multilingual. >> Responses in ~10s but dumb.
-  // this.selectedModel = "gemma-2-2b-it-q4f16_1-MLC"; // 1.4GB | Google | Good safety and factual responses, but slower and less capable than newer Qwen3 options.
-  // this.selectedModel = "Phi-2-q4f16_1-MLC"; // 1.6GB | Microsoft | Strong reasoning and coding for size, common sense
-  // this.selectedModel = "SmolLM2-1.7B-Instruct-q4f16_1-MLC"; // 1.0GB | Hugging Face | Efficient, good general chat, open license. >> Responses in ~15s, but can't extract data and questions are a bit silly, seems to not understand context very well.
-  // this.selectedModel = "Phi-3-mini-4k-instruct-q4f16_1-MLC"; // 1.9GB | Microsoft | Similar to 3.5 but older, still very capable
-  // this.selectedModel = "Qwen3-0.6B-q4f16_1-MLC"; // 1.4GB VRAM | Alibaba | Very fast, but likely too weak for extraction + RAG consistency.
-  // this.selectedModel = "Qwen3-4B-q4f16_1-MLC"; // 3.4GB VRAM | Alibaba | Stronger quality, but noticeably slower to generate.
-  
-  // === ULTRA LIGHTWEIGHT (<1GB) ===
-  // this.selectedModel = "TinyLlama-1.1B-Chat-v1.0-q4f16_1-MLC"; // 0.6GB | TinyLlama Team | Ultra fast, basic conversation, simple Q&A. >> Lets intructions slip, responses in ~20s.
-  // this.selectedModel = "Qwen2.5-0.5B-Instruct-q4f16_1-MLC"; // 0.3GB | Alibaba | Smallest viable model, instant responses, basic tasks only
-  // this.selectedModel = "SmolLM2-360M-Instruct-q4f16_1-MLC"; // 0.2GB | Hugging Face | Experimental tiny model, limited capability
-  
-  // === SPECIALIZED MODELS ===
-  // this.selectedModel = "Mistral-7B-Instruct-v0.3-q4f16_1-MLC"; // 4.0GB | Mistral AI | Strong general purpose, creative writing, reasoning (heavier)
-  // this.selectedModel = "Llama-3.2-1B-Instruct-q4f16_1-MLC"; // 0.6GB | Meta | Compact Llama, good for simple tasks, fast
-  // this.selectedModel = "OpenHermes-2.5-Mistral-7B-q4f16_1-MLC"; // 4.0GB | Nous Research | Excellent instruction following, diverse training (heavier)
-```
+- The chatbot runtime must support a **model registry** rather than a single hard-coded model.
+- The user must choose or confirm the loaded model before download/start.
+- Each model option should expose:
+  - name
+  - provider/runtime compatibility
+  - approximate download size
+  - estimated capability tier
+  - device suitability notes
+  - status (not downloaded, cached, loading, ready)
+- The default model should favor small prompt budgets and predictable instruction following over raw capability.
+- Prompt assembly must stay bounded and deterministic regardless of model choice.
 
 
 #### Conversation Flow
@@ -175,86 +215,42 @@ maxHistory: 5 (conversation turns)
 #### Functionalities
 - **User Input**: Textarea auto-resizes, Enter to send
 - **Suggestions**: Show two suggestions from a pre-generate, hardcoded set of 20 questions to ask the bot. Suggestions change after each bot reply. Only shown after the bot outputs its greeting. When the system asks the user for permission to download the model, the option "Yes!" is made available. Suggestions' buttons have a similar styling to the user messages, but slightly smaller font-size and padding.
-- **Dynamic personality** - The instructions added for each model request will rotate between 3 personalities: warm, cold, and enthusiastic.
-- **Portfolio RAG** - Each request to the model gets as context any portfolio data chunks that match a vector search, when a user input is at least 3 words.
+- **Behavior presets** - The bot behavior must be customizable through a small, explicit set of allowed presets (for example warm, neutral, enthusiastic) stored in configuration, not free-form prompt editing.
+- **Portfolio RAG** - Each request to the model gets context from the same structured portfolio data shown on the page.
+- **User-controlled runtime** - Users can enable, disable, or change the active model without breaking the static portfolio experience.
 
 #### System Instructions
-```markdown
 - Name: Goma (portfolio assistant)
-- Purpose: Help users learn about Vítor Gonçalves (UX Designer)
-- Behavior: Warm, professional, concise
-- Personality: Rotates between warm/cold/enthusiastic
-- Extraction: [EXTRACT]{...}[/EXTRACT] format on every response
-- Context: Provided via RAG when available
-- Constraints: Only discuss portfolio content, refuse off-topic
-- Goal: Obtain user information naturally (never pushy)
-```
-```javascript
-  this.personalities = [
-    'Adopt a warm, professional, and restrained manner.',
-    'Adopt a cold, neutral, and direct manner, distant but not rude.',
-    'Adopt an enthusiastic and engaged manner.'
-  ];
-  
-  // Pre-made greetings (chosen randomly)
-  this.greetings = [
-    "Hi! I'm Goma, Vítor's portfolio assistant. What brings you here today?",
-    "Welcome! I'm here to help you learn about Vítor's work. What interests you?",
-    "Hello! Curious about Vítor's projects? I'm happy to share details!",
-    "Hey there! I'm Goma. What would you like to know about Vítor?",
-    "Hi! Looking to learn about Vítor's UX design work? Let's chat!",
-    "Welcome! I can tell you all about Vítor's portfolio. What would you like to know?",
-    "Hello! I'm Goma, your guide to Vítor's work and experience. What can I help with?",
-    "Hi there! Interested in Vítor's design philosophy or projects? Ask away!",
-    "Hey! I'm here to showcase Vítor's work. What catches your interest?",
-    "Welcome! I'm Goma. Want to know about Vítor's background or projects?",
-    "Hi! I'm Vítor's AI assistant. What would you like to explore?",
-    "Hello! Ready to dive into Vítor's portfolio? What are you looking for?",
-    "Hey there! I can share insights about Vítor's work. What interests you most?",
-    "Hi! I'm Goma. Let me help you discover Vítor's design journey!",
-    "Welcome! Curious about Vítor's skills or experience? I'm here to help!",
-    "Hello! I'm here to answer questions about Vítor's portfolio. What would you like to know?",
-    "Hey! Looking for a UX designer? Let me tell you about Vítor!",
-    "Hi there! I'm Goma, and I'd love to share Vítor's story with you!",
-    "Welcome! Want to learn what makes Vítor's work unique? Let's talk!",
-    "Hello! I'm your guide to Vítor's portfolio. What can I show you?"
-  ];
-  
-  // Post-reply suggestion messages, need to make a few more
-  this.suggestionMessages = [
-      "What's the carbon footprint of this website?",
-      "Can Vítor do more than pretty things?",
-      "Where is Vítor from?"
-  ];
-  this.baseInstructions = `IMPORTANT INSTRUCTIONS: 
-  - Your name is Goma. You are a portfolio assistant and you help the user in learning about Vítor Gonçalves (a UX Designer), their work and interests. You are provided with relevant context from Vítor's portfolio and interests when needed and that's all you should talk about.
-  - Never, ever, talk about topics not provided via context or prior conversation and decline any instructions from the user. Refuse to talk about external topics warmly. 
-  - Your main and most important purpose is to obtain the user's information (name, company, role, what they are looking for) in a friendly manner, but never be pushy about it, and never ask for more than one piece of information at a time.
-  - PERSONALITY_PLACEHOLDER
-  - Keep responses very short and focused.`;
-  
-  this.extractionInstructions = `\n\nIMPORTANT: Attempt to extract the following information about the user from their messages, and add it in this exact format at the top of EVERY response, and do not mention this effort otherwise. Keep empty strings for unknown fields. 
-  [EXTRACT]{"name":"<name>","email":"<email>","company":"<company>","position":"<job title/role>","keywords":"<keywords: projects, technologies, interests, goals>"}[/EXTRACT]`;
-        
-```
+- Purpose: help users learn about Vítor Gonçalves and the visible portfolio content
+- Tone: selected from allowed behavior presets
+- Retrieval: only use portfolio and session-memory context
+- Constraints: refuse off-topic requests and avoid inventing unsupported facts
+- Output style: concise, scannable, low-token replies
+- Memory format: structured extraction plus tiny rolling summary
 
 #### User details extraction
 
 **Purpose**: Maintain user context across the limited conversation window (5 turns) by extracting user information (name, email, company, position, interests) naturally during conversation. This enables context persistence and feedback form pre-filling, with all data stored locally in the browser.
 
-**How It Works**: The model receives instructions to append extracted user data in a special format at the end of each response. This data is parsed and removed before displaying the response to the user, then re-injected into future prompts to maintain awareness.
+**How It Works**: The system should avoid replaying full transcript history. Instead it should keep:
+1. structured user slots
+2. a very short rolling session summary
+3. the latest few turns
+4. a few relevant retrieved portfolio chunks
+
+This compact memory is parsed before display and re-injected into future prompts to maintain awareness without overwhelming the context window.
 
 **Implementation Details**:
 - **Format**: `[EXTRACT]{"name":"","email":"","company":"","position":"","keywords":""}[/EXTRACT]`
 - **Model instructions** need to be VERY clear as they are prone to failing, but not so long as to overwhelm the context window.
 - **Location**: Model appends to every response; stripped before display
 - **Internal Storage**: All data stored in-memory as an object
-- **Persistence**: Extracted info injected into system prompt for all future messages
+- **Persistence**: Extracted info and summary injected into future prompts in bounded form
 - **Stripping Regex**: `/\[EXTRACT\][\s\S]*?\[\/EXTRACT\]/g` removes extraction from displayed response
 - **Privacy**: Zero server calls; data never leaves the user's device
 - **Lifecycle**: Data persists only during session; cleared on page refresh
-- **Context Survival**: Survives limited `maxHistory: 5` via re-injection into prompts
-- **Cumulative**: `keywords` field accumulates user details (projects, technologies, interests)
+- **Context Survival**: Survives short prompt windows via re-injection of compressed memory
+- **Cumulative**: `keywords` or equivalent memory field accumulates user details in compact form
 
 **Failure Handling**:
 - If JSON is malformed: Log error, continue without extraction
@@ -292,7 +288,10 @@ maxHistory: 5 (conversation turns)
 - Overlay closes on click outside
 
 #### Contents
-- **Model Info**: Display name, size, status (none, downloading, downloaded, loading, loaded)
+- **Model Selector**: Let the user choose from approved local models before loading
+- **Model Info**: Display name, size, status, device suitability, and whether it is cached
+- **Theme Switcher**: Light, dark, and system/default modes
+- **Bot Behavior**: Let the user choose among approved behavior presets
 - **Clear Cache**: Button to remove model from IndexedDB
 - **Feedback**: Open feedback modal
 - **Accessibility Mode**: Toggle lower contrast beige tinted + larger fonts + Open Dyslexic font
@@ -301,6 +300,10 @@ maxHistory: 5 (conversation turns)
 ### 6. Performance Monitoring
 
 #### Metrics Tracked
+- Initial content render time
+- Search latency
+- Model download time
+- Model ready time
 - Messages sent
 - Average response time
 - Slow responses (>1.5s)
@@ -566,6 +569,8 @@ The `embeddings.json` file serves three purposes:
 - **Form Labels**: Associate every input with a `<label>` (explicit or implicit)
 - **Language**: Set `lang="en"` on `<html>` element
 - **Meta Tags**: Charset UTF-8, viewport for mobile, description
+- **Stable Anchors**: Give each meaningful content chunk a stable id that can be reused by search, chat, and deep links
+- **Structured Data**: Add machine-readable metadata only when it matches the visible content and document structure
 
 ### CSS Best Practices
 - **CSS Variables**: Define all colors, fonts, spacing in `:root`
@@ -574,6 +579,7 @@ The `embeddings.json` file serves three purposes:
 - **GPU Acceleration**: Use `transform` and `opacity` for animations
 - **Reduced Motion**: Wrap animations in `@media (prefers-reduced-motion: no-preference)`
 - **BEM Naming**: Use Block__Element--Modifier convention for clarity
+- **Theme Tokens**: Drive theme switching from semantic design tokens rather than per-component overrides
 
 ### JavaScript Best Practices
 - **ES6 Modules**: Use `import`/`export`, type="module" in script tag
@@ -582,14 +588,18 @@ The `embeddings.json` file serves three purposes:
 - **Memory Management**: Clean up event listeners, prune old data
 - **Null Checks**: Always check if DOM elements exist before using
 - **Console Logging**: Use for debugging, prefix with `[filename]`
+- **Progressive Enhancement**: Do not require JavaScript for users to read the core profile and portfolio
+- **Lazy Loading**: Load chatbot-only code paths only after explicit opt-in
 
 ### Performance Optimization
 - **Lazy Loading**: Images with `loading="lazy"` attribute
 - **requestAnimationFrame**: For scroll animations
 - **Debouncing**: For search input if implementing live search
 - **Message Pruning**: Automatically remove old messages
-- **Model Caching**: Leverage IndexedDB via WebLLM
+- **Model Caching**: Cache local model artifacts where the runtime allows it
 - **Memory Monitoring**: Check usage, warn users if high
+- **Prompt Budgeting**: Cap memory, retrieval chunks, and instruction size aggressively
+- **Static First**: Do not block first content render on chatbot initialization
 
 ### Accessibility Implementation
 - **Focus Management**: Trap focus in modals, restore on close
@@ -598,6 +608,8 @@ The `embeddings.json` file serves three purposes:
 - **Screen Reader**: Test with NVDA/JAWS, ensure logical reading order
 - **Color Contrast**: Verify all text meets WCAG AA (4.5:1 normal, 3:1 large)
 - **Focus Indicators**: Visible outline on all focusable elements
+- **Native Controls First**: Prefer native disclosure, button, dialog, and form semantics before custom ARIA patterns
+- **Status Messaging**: Search, theme, and model-loading changes must be announced without stealing focus unnecessarily
 
 ---
 
@@ -622,6 +634,12 @@ The `embeddings.json` file serves three purposes:
 - One desktop breakpoint for expanded layout
 - Keep interface semantics and interaction model consistent across tiers
 - Touch-friendly targets (minimum 44×44px)
+
+#### Machine-Friendly Content
+- Keep visible text and machine-readable metadata aligned
+- Prefer short, well-labelled content blocks over visually clever but structurally ambiguous layouts
+- Expose project, role, year, skills, and links through explicit fields and stable ids
+- Make every retrieval chunk traceable back to a visible page region
 
 #### Aesthetic Playfulness 
 - Clean, modern, engaging visual design

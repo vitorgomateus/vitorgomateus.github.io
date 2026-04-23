@@ -3,7 +3,9 @@
 ## Status
 **🚧 Active Development**
 
-A portfolio website showcasing UX design work, with an experimental AI chatbot feature that runs entirely in the client's browser. The chatbot (Goma) uses WebLLM (Qwen3-1.7B) and WebGPU for 100% client-side processing - zero server communication, complete privacy.
+A professional UX portfolio with two ways to explore the same content:
+- a static, accessible, responsive portfolio
+- an experimental local chatbot that runs in the browser with no server communication
 
 ## Goals
 - **Primary**: Professional portfolio showcasing UX design expertise and projects
@@ -13,58 +15,79 @@ A portfolio website showcasing UX design work, with an experimental AI chatbot f
 ## Requirements
 
 ### Technical
-- Website must run from Github Pages
+- Website must run from GitHub Pages
+- The static portfolio must remain the primary experience
+- The architecture must stay lightweight because any local model already adds heavy runtime cost
 
 ### Design Constraints
 - Mobile-first interface with desktop breakpoint support
 - No external API calls
+- Strong semantic HTML and structured data for both accessibility and machine parsing
 
-First load will download the model (~2.0GB). Subsequent loads are instant.
+## Proposed Architecture Direction
 
-## Technology
-- **LLM:** Qwen3-1.7B via WebLLM (MLC AI)
-- **Acceleration:** WebGPU
-- **Fonts:** Young Serif, Work Sans
+- **Static-first:** ship meaningful HTML for the profile and portfolio before any JavaScript enhancement
+- **Progressive enhancement:** layer search, chatbot, theme switching, and settings on top of the static document
+- **Single source of truth:** keep profile, portfolio, chatbot context, and search chunks derived from the same structured content
+- **Machine-friendly by design:** use stable ids, explicit headings, landmarks, labels, captions, and structured metadata so agents and bots can parse the site reliably
+- **Accessibility-aligned parsing:** the same clear structure that helps LLM agents usually helps screen readers too, as long as the accessibility tree stays clean and content is not duplicated or hidden incorrectly
+- **Opt-in AI:** load the local model only after explicit user action, and let the user choose the model and tone/preset from a constrained settings UI
+- **Short-context memory:** store user details in compact structured fields plus a tiny rolling session summary instead of replaying long chat history
+- **Performance-first:** lazy-load experimental code paths, keep the portfolio usable without the model, and avoid JS architecture that adds extra work on top of model inference
+
+## Technology Direction
+- **Frontend:** semantic HTML, modern CSS, ES modules, no framework requirement
+- **Hosting:** GitHub Pages
+- **Content:** structured JSON as the canonical portfolio source
+- **Search:** pre-generated vector index used client-side
+- **AI:** local browser runtime with explicit user-controlled model loading
+- **Theming:** CSS custom properties with manual theme selection and system-preference fallback
 
 ## How It Works
 
-### The Chatbot
-The AI assistant (named Goma) runs entirely in your browser using WebLLM and WebGPU:
-1. **First Visit**: Downloads the Qwen3-1.7B model (~2.0GB, one-time, cached locally)
-2. **Chat**: Your messages stay on your device - no server communication
-3. **Context**: The bot remembers the last 5 conversation turns and user details you share
-4. **Responses**: Generated locally, typically taking a few seconds
+### Static Portfolio
+The page should deliver a complete profile and portfolio as readable HTML first, with semantic sections that are easy for people, screen readers, search engines, and LLM agents to interpret.
 
-### Portfolio Search _(Coming Soon)_
-Semantic search will let you query portfolio content using natural language. Currently in development - data file needs updating before implementation.
+### Semantic Search
+Semantic search should use a pre-built vector index generated from the same canonical content source, so search results, static rendering, and chatbot retrieval stay aligned.
+
+### Local Chatbot
+The AI assistant (Goma) should remain a secondary, opt-in feature:
+1. **Consent first:** explain privacy, browser requirements, and model size before loading anything heavy
+2. **User control:** let the user choose the model and whether to enable the experimental mode
+3. **Short-memory strategy:** preserve useful user details as compact structured memory instead of sending long transcripts
+4. **Shared knowledge base:** retrieve from the same profile and portfolio data shown on the page
 
 ### Privacy & Performance
 - **Zero Server Calls**: All processing happens in your browser
-- **Local Storage**: Model cached in IndexedDB for instant future loads
-- **Memory Management**: Old messages automatically pruned to prevent slowdown
-- **Browser Support**: Requires WebGPU (Chrome/Edge on desktop)
+- **Static-first fallback**: The portfolio remains fully usable even if AI features are disabled or unsupported
+- **Lazy Enhancement**: Experimental assets should load only after explicit intent
+- **Memory Management**: Keep prompts small, structured, and bounded
+- **Browser Support**: Degrade gracefully when local AI features are unavailable
 
 For technical details, see [REQUIREMENTS.md](REQUIREMENTS.md).
 
 ## Features
+- Accessible static portfolio
+- Semantic vector search
 - 100% local AI processing
-- Performance monitoring
+- User-controlled model loading
+- Theme switcher
 - Experimental feature on/off toggle
-- Accessibility mode
+- Compact session memory for chatbot personalization
 - Cache management
 
 ## Limitations
-- WebGPU support limited (Chrome/Edge only)
-- Large initial download (~2.0GB)
+- Local AI remains device-dependent
+- Large initial model download is still expected for capable models
 - Two layout tiers (mobile baseline + desktop breakpoint)
-- Single model
-- Limited context window (256 tokens)
-- No streaming display (accumulated then shown)
+- Short context windows require aggressive memory curation
+- The static portfolio must always outperform the experimental layer
 
 ## For Developers
 
 ### Generating Embeddings
-The project uses vector embeddings for semantic search (not yet implemented).
+The project uses vector embeddings for semantic search.
 
 After updating `data-002.json`:
 ```bash
@@ -121,6 +144,4 @@ npm run watch:css
 ## Credits
 - **Built by:** Vítor Gonçalves
 - **AI Assistant:** Claude (Anthropic) - Architecture & implementation support
-- **WebLLM:** MLC AI Project
-- **Model:** Qwen3-1.7B (Alibaba)
 - **Fonts:** Google Fonts
