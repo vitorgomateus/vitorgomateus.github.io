@@ -56,7 +56,6 @@ html {
   font-style: normal;
   font-display: swap;
 }
-
 @font-face {
   font-family: "OpenDyslexic";
   src: url("../res/fonts/OpenDyslexic-Bold.otf") format("opentype");
@@ -64,7 +63,6 @@ html {
   font-style: normal;
   font-display: swap;
 }
-
 @font-face {
   font-family: "OpenDyslexic";
   src: url("../res/fonts/OpenDyslexic-Italic.otf") format("opentype");
@@ -72,7 +70,6 @@ html {
   font-style: italic;
   font-display: swap;
 }
-
 @font-face {
   font-family: "OpenDyslexic";
   src: url("../res/fonts/OpenDyslexic-BoldItalic.otf") format("opentype");
@@ -80,7 +77,6 @@ html {
   font-style: italic;
   font-display: swap;
 }
-
 /* ========================================
    Base
    ======================================== */
@@ -163,7 +159,6 @@ body.drawer-open {
     transition: max-width 0.3s ease, box-shadow 0.3s ease;
   }
 }
-
 .app-container.is-experimental {
   max-width: var(--app-max-width);
   max-height: var(--app-max-height);
@@ -181,7 +176,7 @@ body.drawer-open {
   z-index: 10;
 }
 
-.header>.container {
+.header > .container {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -275,13 +270,11 @@ body.drawer-open {
 }
 
 @media (prefers-reduced-motion: no-preference) {
-
   .header__toggle-knob,
   .header__toggle-track {
     transition: transform var(--transition-speed) ease, background var(--transition-speed) ease;
   }
 }
-
 .header__menu-btn {
   background: none;
   border: none;
@@ -322,7 +315,7 @@ body.drawer-open {
   color: var(--text);
 }
 
-.main__close-bar>.container {
+.main__close-bar > .container {
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -427,35 +420,26 @@ body.drawer-open {
   .typing-indicator__dot {
     animation: typing-bounce 1.4s infinite ease-in-out both;
   }
-
   .typing-indicator__dot:nth-child(1) {
     animation-delay: 0s;
   }
-
   .typing-indicator__dot:nth-child(2) {
     animation-delay: 0.2s;
   }
-
   .typing-indicator__dot:nth-child(3) {
     animation-delay: 0.4s;
   }
 }
-
 @keyframes typing-bounce {
-
-  0%,
-  80%,
-  100% {
+  0%, 80%, 100% {
     transform: scale(0.6);
     opacity: 0.4;
   }
-
   40% {
     transform: scale(1);
     opacity: 1;
   }
 }
-
 /* Progress bar for model loading */
 .progress-bar {
   width: 100%;
@@ -478,7 +462,6 @@ body.drawer-open {
     transition: width 0.3s ease;
   }
 }
-
 /* ========================================
    Alerts
    ======================================== */
@@ -486,7 +469,7 @@ body.drawer-open {
   width: 100%;
 }
 
-.alerts>.container {
+.alerts > .container {
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);
@@ -509,19 +492,16 @@ body.drawer-open {
     animation: alert-slide-in 0.2s ease;
   }
 }
-
 @keyframes alert-slide-in {
   from {
     transform: translateY(10px);
     opacity: 0;
   }
-
   to {
     transform: translateY(0);
     opacity: 1;
   }
 }
-
 .alert--info {
   background: var(--info);
 }
@@ -573,7 +553,7 @@ body.drawer-open {
   width: 100%;
 }
 
-.suggestions>.container {
+.suggestions > .container {
   display: flex;
   gap: var(--space-sm);
   padding: var(--space-sm) var(--content-padding-x);
@@ -601,7 +581,6 @@ body.drawer-open {
     transition: transform var(--transition-speed) ease, filter var(--transition-speed) ease;
   }
 }
-
 .suggestion-btn:hover {
   transform: scale(0.98);
   filter: brightness(1.1);
@@ -622,7 +601,7 @@ body.drawer-open {
   padding-bottom: env(safe-area-inset-bottom);
 }
 
-.input-bar>.container {
+.input-bar > .container {
   display: flex;
   align-items: flex-end;
   gap: var(--space-sm);
@@ -674,7 +653,6 @@ body.drawer-open {
     transition: transform var(--transition-speed) ease, filter var(--transition-speed) ease;
   }
 }
-
 .input-bar__btn:hover {
   transform: scale(0.98);
   filter: brightness(1.1);
@@ -713,7 +691,6 @@ body.drawer-open {
     transition: transform var(--transition-speed) ease, filter var(--transition-speed) ease;
   }
 }
-
 .btn:hover {
   transform: scale(0.98);
   filter: brightness(1.1);
@@ -773,18 +750,15 @@ body.drawer-open {
   .drawer {
     animation: drawer-slide-in 0.25s ease;
   }
-
   @keyframes drawer-slide-in {
     from {
       transform: translateX(100%);
     }
-
     to {
       transform: translateX(0);
     }
   }
 }
-
 .drawer__header {
   display: flex;
   align-items: center;
@@ -854,19 +828,6 @@ body.drawer-open {
   color: var(--text-light);
 }
 
-.drawer__model-diagnostics,
-.drawer__model-capacity,
-.drawer__model-retrieval {
-  color: var(--text-light);
-  font-size: 0.82rem;
-  line-height: 1.35;
-}
-
-.drawer__model-capacity {
-  color: var(--text);
-  font-weight: 500;
-}
-
 .drawer__btn {
   width: 100%;
   justify-content: center;
@@ -909,7 +870,6 @@ body.drawer-open {
     transition: transform var(--transition-speed) ease;
   }
 }
-
 .drawer__accessibility-toggle .header__toggle-switch[aria-checked=true] .header__toggle-knob {
   transform: translateX(1.125rem);
 }
@@ -1104,17 +1064,13 @@ body.drawer-open {
   min-height: 44px;
   z-index: 102;
 }
-
-.lightbox__close:hover,
-.lightbox__close:focus-visible {
+.lightbox__close:hover, .lightbox__close:focus-visible {
   opacity: 0.8;
 }
-
 .lightbox__close:focus-visible {
   outline: 2px solid white;
   outline-offset: 2px;
 }
-
 .lightbox__close svg {
   width: 24px;
   height: 24px;
@@ -1160,25 +1116,20 @@ body.drawer-open {
   transition: background 0.2s ease;
   z-index: 102;
 }
-
 .lightbox__nav:hover {
   background: rgba(255, 255, 255, 0.2);
 }
-
 .lightbox__nav:focus-visible {
   outline: 2px solid white;
   outline-offset: 2px;
 }
-
 .lightbox__nav svg {
   width: 20px;
   height: 20px;
 }
-
 .lightbox__nav--prev {
   left: var(--space-md);
 }
-
 .lightbox__nav--next {
   right: var(--space-md);
 }
@@ -1187,62 +1138,50 @@ body.drawer-open {
   .lightbox__nav {
     opacity: 0.7;
   }
-
   .lightbox {
     padding: 0;
   }
-
   .lightbox__img {
     max-height: calc(100vh - 8rem);
     border-radius: 0;
   }
-
   .lightbox__close {
     top: var(--space-sm);
     right: var(--space-sm);
   }
 }
-
 /* Comfortable padding on 375px and wider */
 @media (min-width: 375px) {
   :root {
     --content-padding-x: 1.25rem;
   }
-
   .header__title {
     font-size: clamp(1.35rem, 1.1vw + 0.95rem, 1.85rem);
   }
-
   .drawer__title,
   .modal__title {
     font-size: clamp(1.2rem, 0.7vw + 0.9rem, 1.55rem);
   }
-
   .drawer__section-title {
     font-size: clamp(0.9rem, 0.3vw + 0.8rem, 1rem);
   }
 }
-
 @media (max-width: 767px) {
   body {
     padding: 0;
   }
-
   /* Experimental chat widget fills full width on small screens */
   .app-container.is-experimental {
     max-width: 100%;
     box-shadow: none;
   }
-
   .drawer {
     width: min(94vw, 360px);
   }
-
-  .input-bar>.container {
+  .input-bar > .container {
     padding-bottom: calc(var(--space-sm) + env(safe-area-inset-bottom));
   }
 }
-
 @media (min-width: 1024px) {
   :root {
     --header-height: 4rem;
@@ -1251,48 +1190,40 @@ body.drawer-open {
     --space-lg: 1.75rem;
     --content-padding-x: 1.5rem;
   }
-
   /* Background and centering only in experimental mode */
   body:has(.app-container.is-experimental) {
     padding: 2rem;
     align-items: center;
     background: radial-gradient(circle at 20% 20%, #eef5ff 0%, #ffffff 50%, #f5f7fb 100%);
   }
-
   /* Floating card appearance only for experimental chat widget */
   .app-container.is-experimental {
     height: min(100vh - 4rem, var(--app-max-height));
     border-radius: 1.25rem;
     border: 1px solid var(--border);
   }
-
-  .header>.container,
-  .input-bar>.container,
-  .main__close-bar>.container,
-  .alerts>.container,
-  #search-status>.container,
-  .suggestions>.container {
+  .header > .container,
+  .input-bar > .container,
+  .main__close-bar > .container,
+  .alerts > .container,
+  #search-status > .container,
+  .suggestions > .container {
     max-width: 900px;
     margin: 0 auto;
   }
-
   .header__title {
     font-size: clamp(1.65rem, 1.2vw + 1rem, 2.2rem);
   }
-
   .chat {
     padding: var(--space-lg);
   }
-
   .message {
     max-width: 72%;
     font-size: 0.95rem;
   }
-
   .drawer {
     width: min(420px, 42vw);
   }
-
   .modal {
     width: min(680px, 100% - 4 * var(--space-lg));
     max-height: min(760px, 100% - 4 * var(--space-lg));
