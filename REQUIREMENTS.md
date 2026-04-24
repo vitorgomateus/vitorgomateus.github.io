@@ -197,7 +197,7 @@ Use **content-first progressive enhancement**:
   - **Delete** – remove the cached model from IndexedDB at any time via the settings drawer
 - The model status must always be visible and accurate. Status uses hyphenated string values:
   - `not-downloaded` – nothing stored locally
-  - `downloading` – transfer in progress (show size and progress percentage)
+  - `downloading` – transfer in progress; show downloaded size / total size and a percentage progress indicator
   - `cached` – downloaded and stored in IndexedDB, not yet in memory
   - `loading` – being transferred from IndexedDB to GPU/CPU memory
   - `ready` – in memory and available for inference
@@ -223,7 +223,7 @@ Use **content-first progressive enhancement**:
   ```json
   {
     "presets": [
-      { "id": "warm", "label": "Warm", "systemInstruction": "Adopt a warm, professional, and restrained manner." },
+      { "id": "warm", "label": "Warm", "systemInstruction": "Adopt a warm, professional, and restrained manner.", "description": "Approachable and friendly — good default for most visitors." },
       { "id": "neutral", "label": "Neutral", "systemInstruction": "Adopt a neutral, direct, and efficient manner." },
       { "id": "enthusiastic", "label": "Enthusiastic", "systemInstruction": "Adopt an enthusiastic and engaged manner." }
     ]
@@ -424,8 +424,8 @@ Character notes:
 
 ### Typography
 ```css
---font-primary: 'Young Serif', serif /* Header's title — used in both themes */
---font-body:    'Work Sans', sans-serif /* Body — used in both themes */
+--font-primary: 'Young Serif', serif /* Header's title */
+--font-body:    'Work Sans', sans-serif /* Body */
 ```
 - `rem` units for fonts-sizes.
 

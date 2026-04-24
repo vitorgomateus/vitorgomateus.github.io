@@ -32,7 +32,7 @@ A professional UX portfolio with two ways to explore the same content:
 - **Machine-friendly by design:** use stable ids and persistent anchors reused by search, chat, and deep links
 - **Semantic and structured:** keep explicit headings, landmarks, labels, captions, and structured metadata so agents and bots can parse the site reliably
 - **Accessibility-aligned parsing:** the same clear structure that helps LLM agents usually helps screen readers too, as long as the accessibility tree stays clean (only meaningful content and controls appear in the reading order) and content is not duplicated or hidden incorrectly
-- **Opt-in AI:** load the local model only after explicit user action, and let the user choose the model and tone/preset from a constrained settings UI
+- **Opt-in AI:** load the local model only after explicit user consent; the active model is a developer-level configuration, not a user-facing choice; the user controls the tone/preset from a constrained settings UI
 - **Short-context memory:** store user details in compact structured fields plus a tiny rolling session summary instead of replaying long chat history
 - **Performance-first:** lazy-load experimental code paths, keep the portfolio usable without the model, and avoid JS architecture that adds extra work on top of model inference
 
