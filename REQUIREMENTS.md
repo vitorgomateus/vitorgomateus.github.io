@@ -217,6 +217,7 @@ Use **content-first progressive enhancement**:
 - **Suggestions**: Show two suggestions from a pre-generate, hardcoded set of 20 questions to ask the bot. Suggestions change after each bot reply. Only shown after the bot outputs its greeting. When the system asks the user for permission to download the model, the option "Yes!" is made available. Suggestions' buttons have a similar styling to the user messages, but slightly smaller font-size and padding.
 - **Behavior presets** - The bot behavior must be customizable through a small, explicit set of allowed presets (for example warm, neutral, enthusiastic) stored in configuration, not free-form prompt editing.
 - **Behavior selection UI** - The active preset is selected in the settings drawer and only changes future prompt assembly, never the underlying portfolio data.
+- **Preset validation** - Allowed preset ids and instruction text are defined in `assistant-config.json`, and the UI must only allow selection from that list.
 - **Portfolio RAG** - Each request to the model gets context from the same structured portfolio data shown on the page.
 - **User-controlled runtime** - Users can enable, disable, or change the active model without breaking the static portfolio experience.
 
@@ -235,9 +236,9 @@ Use **content-first progressive enhancement**:
 
 **How It Works**: The system should avoid replaying full transcript history. Instead it should keep:
 1. structured user slots
-2. a very short rolling session summary
-3. the latest few turns
-4. a few relevant retrieved portfolio chunks
+2. a very short rolling session summary (target: 320 characters max)
+3. the latest few turns (target: last 2 user/assistant turns)
+4. a few relevant retrieved portfolio chunks (target: top 3 chunks)
 
 This compact memory is parsed before display and re-injected into future prompts to maintain awareness without overwhelming the context window.
 
@@ -290,7 +291,7 @@ This compact memory is parsed before display and re-injected into future prompts
 
 #### Contents
 - **Model Selector**: Interactive control that lets the user choose from approved local models before loading
-- **Model Info**: Read-only panel for the currently selected model, including size, status, device suitability, and whether it is cached
+- **Model Info**: Read-only panel for the currently selected model; it updates immediately on selection and shows size, status, device suitability, and whether that selected model is cached or active
 - **Theme Switcher**: Light, dark, and system/default modes
 - **Bot Behavior**: Let the user choose among approved behavior presets
 - **Clear Cache**: Button to remove model from IndexedDB
