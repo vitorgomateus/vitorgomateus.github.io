@@ -42,7 +42,7 @@ A professional UX portfolio with two ways to explore the same content:
 - **Content:** structured JSON as the canonical portfolio source
 - **Search:** pre-generated vector index used client-side
 - **AI:** local browser runtime with explicit user-controlled model loading
-- **Theming:** CSS custom properties with manual theme selection and system-preference fallback
+- **Theming:** Two named themes — Notebook (clean, editorial) and Vaporwave/Glass (edgy, atmospheric) — with CSS custom property tokens
 
 ## How It Works
 
@@ -55,7 +55,7 @@ Semantic search should use a pre-built vector index generated from the same cano
 ### Local Chatbot
 The AI assistant (Goma) should remain a secondary, opt-in feature:
 1. **Consent first:** explain privacy, browser requirements, and model size before loading anything heavy
-2. **User control:** let the user choose the model and whether to enable the experimental mode
+2. **User control over the model:** let the user download or delete the fixed local model; model choice is not exposed to the user
 3. **Short-memory strategy:** preserve useful user details as compact structured memory instead of sending long transcripts
 4. **Shared knowledge base:** retrieve from the same profile and portfolio data shown on the page
 
@@ -72,8 +72,8 @@ For technical details, see [REQUIREMENTS.md](REQUIREMENTS.md).
 - Accessible static portfolio
 - Semantic vector search
 - 100% local AI processing
-- User-controlled model loading
-- Theme switcher
+- Model download and delete controls
+- Two named themes (Notebook, Vaporwave/Glass)
 - Experimental feature on/off toggle
 - Compact session memory for chatbot personalization
 - Cache management

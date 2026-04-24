@@ -81,7 +81,7 @@ Use **content-first progressive enhancement**:
 - **Search controller**: handles query input, vector matching, chunk filtering, result announcements, and focus routing
 - **Chat controller**: handles model boot, prompt assembly, response rendering, and consent states
 - **Memory controller**: stores compact user facts, rolling conversation summary, and retrieval references
-- **Preferences controller**: theme choice, selected model, accessibility mode, and experimental feature consent
+- **Preferences controller**: active theme, accessibility mode, and experimental feature consent
 - **UI primitives**: drawer, alerts, modal, lightbox, and status regions built on accessible patterns
 
 #### Proposed target structure
@@ -112,7 +112,6 @@ Use **content-first progressive enhancement**:
 │   │   ├── controller.js
 │   │   ├── prompt-assembly.js
 │   │   ├── memory.js
-│   │   ├── model-registry.js
 │   │   └── safety.js
 │   ├── ui/
 │   │   ├── header.js
@@ -192,17 +191,18 @@ Use **content-first progressive enhancement**:
 ### 3. AI Chatbot (Secondary Experimental Feature)
 
 #### Model Configuration
-- The chatbot runtime must support a **model registry** rather than a single hard-coded model.
-- The user must choose or confirm the loaded model before download/start.
-- Each model option should expose:
-  - name
-  - provider/runtime compatibility
-  - approximate download size
-  - estimated capability tier
-  - device suitability notes
-  - status (not downloaded, cached, loading, ready)
+- The chatbot uses a **single fixed model** chosen by the developer. Users cannot select or switch models.
+- The user's only runtime controls over the model are:
+  - **Download** – explicitly consent to and start the one-time download before any model code runs
+  - **Delete** – remove the cached model from IndexedDB at any time via the settings drawer
+- The model status must always be visible and accurate. Possible states:
+  - `not-downloaded` – nothing stored locally
+  - `downloading` – transfer in progress (show size and progress percentage)
+  - `cached` – downloaded and stored in IndexedDB, not yet in memory
+  - `loading` – being transferred from IndexedDB to GPU/CPU memory
+  - `ready` – in memory and available for inference
 - The default model should favor small prompt budgets and predictable instruction following over raw capability.
-- Prompt assembly must stay bounded and deterministic regardless of model choice.
+- Prompt assembly must stay bounded and deterministic.
 
 
 #### Conversation Flow
@@ -228,7 +228,7 @@ Use **content-first progressive enhancement**:
   }
   ```
 - **Portfolio RAG** - Each request to the model gets context from the same structured portfolio data shown on the page.
-- **User-controlled runtime** - Users can enable, disable, or change the active model without breaking the static portfolio experience.
+- **User-controlled runtime** - Users can download or delete the model and enable or disable the experimental feature without affecting the static portfolio.
 
 #### System Instructions
 - Name: Goma (portfolio assistant)
@@ -299,14 +299,10 @@ This compact memory is parsed before display and re-injected into future prompts
 - Overlay closes on click outside
 
 #### Contents
-- **Model Selector**: Interactive control that lets the user choose from approved local models before loading
-- **Model Info**: Read-only panel for the currently selected model. It updates immediately on selection and shows:
-  - size
-  - status
-  - device suitability
-  - whether the selected model is cached in IndexedDB
-  - whether the selected model is the currently active in-memory runtime
-- **Theme Switcher**: Light, dark, and system/default modes
+- **Model Info**: Name, size, device suitability, and current status (not-downloaded, downloading, cached, loading, ready)
+- **Download model**: Button that initiates the one-time model download; only shown when status is `not-downloaded`
+- **Delete model**: Button that removes the cached model from IndexedDB; only shown when status is `cached` or `ready`
+- **Theme Switcher**: Two named themes — Notebook and Vaporwave/Glass (see Visual Design Specifications)
 - **Bot Behavior**: Let the user choose among approved behavior presets
 - **Clear Cache**: Button to remove model from IndexedDB
 - **Feedback**: Open feedback modal
@@ -369,24 +365,66 @@ Body: Extracted context + form fields
 
 ## Visual Design Specifications
 
-### Color System
+### Themes
+
+The site ships with two named themes, selectable in the settings drawer:
+
+#### Theme 1: Notebook
+Clean, typographic, and calm. Inspired by a printed notebook or editorial layout.
 ```
---primary: hsl(random, 60-90%, 25-40%); /* Generated on load */
---primary-dark: hsl(random, 60-90%, 15-30%);
---background: #ffffff
---surface: #f8f9fa
---text: #1a1a1a
---text-light: #666666
---border: #e0e0e0
---error: #dc3545
+--background:      #fafaf7
+--surface:         #f0efe9
+--text:            #1a1a16
+--text-light:      #5a5a4d
+--border:          #d6d4c8
+--primary:         hsl(random, 45-65%, 30-45%) /* warm, readable */
+--primary-dark:    hsl(same, same, 20-35%)
+--font-primary:    'Young Serif', serif
+--font-body:       'Work Sans', sans-serif
+--radius-base:     0.25rem   /* tight corners, page-like */
+--shadow-base:     0 1px 3px rgba(0,0,0,0.08)
+```
+Character notes:
+- Warm off-white background, not pure white
+- Subtle paper-texture feel through low-contrast tones
+- Typography is the main personality carrier
+- Primary accent: earthy or ink-like hues (greens, ambers, navys)
+- Generous line-height; content breathes like a printed page
+
+#### Theme 2: Vaporwave/Glass
+Edgy, atmospheric, and high-contrast. Inspired by glassmorphism and vaporwave aesthetics.
+```
+--background:      hsl(260, 30%, 8%)   /* near-black purple */
+--surface:         rgba(255,255,255,0.07) /* frosted glass panel */
+--text:            #e8e0ff
+--text-light:      #a89ec7
+--border:          rgba(180,140,255,0.2)
+--primary:         hsl(random, 70-90%, 60-75%) /* neon: violet, cyan, pink */
+--primary-dark:    hsl(same, same, 45-60%)
+--font-primary:    'Young Serif', serif
+--font-body:       'Work Sans', sans-serif
+--radius-base:     1rem                /* rounded, soft-glassy */
+--shadow-base:     0 4px 30px rgba(120,80,255,0.15)
+--glass-blur:      blur(12px)          /* backdrop-filter on surfaces */
+```
+Character notes:
+- Dark purple-black base with frosted-glass surfaces
+- Neon accents cycle across violet, cyan, and pink ranges
+- Translucent panels use `backdrop-filter: blur` and soft borders
+- Subtle glow effects on primary actions (box-shadow with primary color)
+- Reduce or eliminate motion unless user explicitly opts in
+
+### Shared tokens (both themes)
+```css
+--error:   #dc3545
 --success: #28a745
---info: #17a2b8
+--info:    #17a2b8
 ```
 
 ### Typography
 ```css
---font-primary: 'Young Serif', serif /* Header's title */
---font-body: 'Work Sans', sans-serif /* Body */
+--font-primary: 'Young Serif', serif /* Header's title — used in both themes */
+--font-body:    'Work Sans', sans-serif /* Body — used in both themes */
 ```
 - `rem` units for fonts-sizes.
 
@@ -662,28 +700,8 @@ The `embeddings.json` file serves three purposes:
 - Clean, modern, engaging visual design
 - Smooth animations respecting reduced motion preferences
 - Typography: Young Serif (personality) + Work Sans (readability)
-- Random primary color for playful surprise on each load, used for the header background, highlights and primary elements.
-- A favicon of a white "i" inside a primary color colored circle is generated at each load.
-  ```javascript
-    setRandomPrimaryColor() {
-      // Generate random hue (0-360)
-      const hue = Math.floor(Math.random() * 360);
-      // High saturation for vibrant colors (60-90%)
-      const saturation = 60 + Math.floor(Math.random() * 31);
-      // Low lightness for good contrast with white text (25-40%)
-      const lightness = 25 + Math.floor(Math.random() * 16);
-      
-      const primaryColor = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
-      const primaryDark = `hsl(${hue}, ${saturation}%, ${Math.max(15, lightness - 10)}%)`;
-      
-      // Set CSS variables
-      document.documentElement.style.setProperty('--primary', primaryColor);
-      document.documentElement.style.setProperty('--primary-dark', primaryDark);
-      
-      // Update favicon with primary color
-      this.updateFavicon(hue, saturation, lightness);
-    }
-  ```
+- Primary accent color is randomized within each theme's hue range on page load, keeping the palette coherent per theme.
+- A favicon of a white "i" inside a primary-color circle is generated at each load.
 
 ---
 
