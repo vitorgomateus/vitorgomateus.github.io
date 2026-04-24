@@ -195,7 +195,7 @@ Use **content-first progressive enhancement**:
 - The user's only runtime controls over the model are:
   - **Download** – explicitly consent to and start the one-time download before any model code runs
   - **Delete** – remove the cached model from IndexedDB at any time via the settings drawer
-- The model status must always be visible and accurate. Possible states:
+- The model status must always be visible and accurate. Status uses hyphenated string values:
   - `not-downloaded` – nothing stored locally
   - `downloading` – transfer in progress (show size and progress percentage)
   - `cached` – downloaded and stored in IndexedDB, not yet in memory
@@ -301,7 +301,7 @@ This compact memory is parsed before display and re-injected into future prompts
 - Overlay closes on click outside
 
 #### Contents
-- **Model Info**: Name, size, device suitability, and current status (not-downloaded, downloading, cached, loading, ready)
+- **Model Info**: Name, size, device suitability, and current status. Status uses hyphenated string values: `not-downloaded`, `downloading`, `cached`, `loading`, `ready`
 - **Download model**: Button that initiates the one-time model download; only shown when status is `not-downloaded`
 - **Delete model**: Button that removes the cached model from IndexedDB; only shown when status is `cached` or `ready`
 - **Theme Switcher**: Two named themes — Notebook and Vaporwave/Glass (see Visual Design Specifications)

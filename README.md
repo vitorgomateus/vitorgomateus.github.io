@@ -55,7 +55,7 @@ Semantic search should use a pre-built vector index generated from the same cano
 ### Local Chatbot
 The AI assistant (Goma) should remain a secondary, opt-in feature:
 1. **Consent first:** explain privacy, browser requirements, and model size before loading anything heavy
-2. **User control over the model:** let the user download or delete the fixed local model; model choice is not exposed to the user
+2. **Download and delete control:** let the user download or delete the fixed local model from their device; model selection is a developer decision, not a user-facing option
 3. **Short-memory strategy:** preserve useful user details as compact structured memory instead of sending long transcripts
 4. **Shared knowledge base:** retrieve from the same profile and portfolio data shown on the page
 
