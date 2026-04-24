@@ -223,7 +223,9 @@ Use **content-first progressive enhancement**:
   ```json
   {
     "presets": [
-      { "id": "warm", "label": "Warm", "systemInstruction": "Adopt a warm, professional, and restrained manner." }
+      { "id": "warm", "label": "Warm", "systemInstruction": "Adopt a warm, professional, and restrained manner." },
+      { "id": "neutral", "label": "Neutral", "systemInstruction": "Adopt a neutral, direct, and efficient manner." },
+      { "id": "enthusiastic", "label": "Enthusiastic", "systemInstruction": "Adopt an enthusiastic and engaged manner." }
     ]
   }
   ```
@@ -304,7 +306,6 @@ This compact memory is parsed before display and re-injected into future prompts
 - **Delete model**: Button that removes the cached model from IndexedDB; only shown when status is `cached` or `ready`
 - **Theme Switcher**: Two named themes — Notebook and Vaporwave/Glass (see Visual Design Specifications)
 - **Bot Behavior**: Let the user choose among approved behavior presets
-- **Clear Cache**: Button to remove model from IndexedDB
 - **Feedback**: Open feedback modal
 - **Accessibility Mode**: Toggle lower contrast beige tinted + larger fonts + Open Dyslexic font
 - **Close**: X button or Escape key
