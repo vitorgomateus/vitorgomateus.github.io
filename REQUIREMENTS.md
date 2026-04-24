@@ -216,6 +216,7 @@ Use **content-first progressive enhancement**:
 - **User Input**: Textarea auto-resizes, Enter to send
 - **Suggestions**: Show two suggestions from a pre-generate, hardcoded set of 20 questions to ask the bot. Suggestions change after each bot reply. Only shown after the bot outputs its greeting. When the system asks the user for permission to download the model, the option "Yes!" is made available. Suggestions' buttons have a similar styling to the user messages, but slightly smaller font-size and padding.
 - **Behavior presets** - The bot behavior must be customizable through a small, explicit set of allowed presets (for example warm, neutral, enthusiastic) stored in configuration, not free-form prompt editing.
+- **Behavior selection UI** - The active preset is selected in the settings drawer and only changes future prompt assembly, never the underlying portfolio data.
 - **Portfolio RAG** - Each request to the model gets context from the same structured portfolio data shown on the page.
 - **User-controlled runtime** - Users can enable, disable, or change the active model without breaking the static portfolio experience.
 
@@ -288,8 +289,8 @@ This compact memory is parsed before display and re-injected into future prompts
 - Overlay closes on click outside
 
 #### Contents
-- **Model Selector**: Let the user choose from approved local models before loading
-- **Model Info**: Display name, size, status, device suitability, and whether it is cached
+- **Model Selector**: Interactive control that lets the user choose from approved local models before loading
+- **Model Info**: Read-only panel for the currently selected model, including size, status, device suitability, and whether it is cached
 - **Theme Switcher**: Light, dark, and system/default modes
 - **Bot Behavior**: Let the user choose among approved behavior presets
 - **Clear Cache**: Button to remove model from IndexedDB
