@@ -146,7 +146,7 @@ Use **content-first progressive enhancement**:
 
 - The website has two main features:
   1. a static portfolio
-  2. an experimental chatbot portfolio
+  2. an experimental chatbot assistant
 - Both must read from the same canonical professional portfolio data, each through a different interaction model.
 - The static portfolio is the source experience; search and chat are enhancements over the same content model rather than separate products.
 - The rendered HTML, search chunks, and chatbot retrieval units must share stable ids so the system can move cleanly between visible content, vector results, and prompt context.
@@ -218,6 +218,7 @@ Use **content-first progressive enhancement**:
 - **Behavior presets** - The bot behavior must be customizable through a small, explicit set of allowed presets (for example warm, neutral, enthusiastic) stored in configuration, not free-form prompt editing.
 - **Behavior selection UI** - The active preset is selected in the settings drawer and only changes future prompt assembly, never the underlying portfolio data.
 - **Preset validation** - Allowed preset ids and instruction text are defined in `assistant-config.json`, and the UI must only allow selection from that list.
+- **Preset schema** - `assistant-config.json` should define a list of preset objects with `id`, `label`, `systemInstruction`, and optional `description`.
 - **Portfolio RAG** - Each request to the model gets context from the same structured portfolio data shown on the page.
 - **User-controlled runtime** - Users can enable, disable, or change the active model without breaking the static portfolio experience.
 
@@ -291,7 +292,7 @@ This compact memory is parsed before display and re-injected into future prompts
 
 #### Contents
 - **Model Selector**: Interactive control that lets the user choose from approved local models before loading
-- **Model Info**: Read-only panel for the currently selected model; it updates immediately on selection and shows size, status, device suitability, and whether that selected model is cached or active
+- **Model Info**: Read-only panel for the currently selected model; it updates immediately on selection and shows size, status, device suitability, whether that selected model is cached in IndexedDB, and whether it is the currently active in-memory runtime
 - **Theme Switcher**: Light, dark, and system/default modes
 - **Bot Behavior**: Let the user choose among approved behavior presets
 - **Clear Cache**: Button to remove model from IndexedDB
@@ -572,6 +573,7 @@ The `embeddings.json` file serves three purposes:
 - **Language**: Set `lang="en"` on `<html>` element
 - **Meta Tags**: Charset UTF-8, viewport for mobile, description
 - **Stable Anchors**: Give each meaningful content chunk a stable id that can be reused by search, chat, and deep links
+- **Anchor Naming**: Use predictable kebab-case ids with semantic prefixes such as `profile-`, `project-`, `project-block-`, and `section-`
 - **Structured Data**: Add machine-readable metadata only when it matches the visible content and document structure
 
 ### CSS Best Practices
