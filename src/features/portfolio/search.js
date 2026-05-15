@@ -2,8 +2,6 @@
 
 import state from '../../core/state.js';
 
-const SIMILARITY_THRESHOLD = 0.3;
-const TOP_K = 3;
 const DEFAULT_MIN_WORDS = 3;
 
 // Load embeddings from JSON
@@ -24,8 +22,9 @@ export async function loadEmbeddings() {
 export async function searchEmbeddings(query, options = {}) {
   const start = performance.now();
   const minWords = options.minWords ?? DEFAULT_MIN_WORDS;
+  const queryWords = normalizeQueryWords(query);
 
-  if (!query || query.trim().split(/\s+/).length < minWords) {
+  if (!query || queryWords.length < minWords) {
     return [];
   }
 
@@ -35,20 +34,29 @@ export async function searchEmbeddings(query, options = {}) {
   }
 
   const queryEmbedding = await getQueryEmbedding(query);
-  if (!queryEmbedding) return [];
+  if (!queryEmbedding && !state.retrievalConfig.useHybridScoring) return [];
 
-  // Compute cosine similarity for each chunk
+  const { threshold, topK } = getDynamicRetrievalConfig(queryWords, state.embeddings.length);
+  const canUseVectorScore = Array.isArray(queryEmbedding);
+
+  // Compute score for each chunk using vector and lexical signals.
   const scored = state.embeddings.map((chunk, index) => ({
     ...chunk,
     index,
-    score: cosineSimilarity(queryEmbedding, chunk.embedding)
+    score: computeHybridScore({
+      chunk,
+      query,
+      queryWords,
+      queryEmbedding,
+      canUseVectorScore
+    })
   }));
 
   // Filter by threshold, sort by score, take top-k
   const results = scored
-    .filter(r => r.score >= SIMILARITY_THRESHOLD)
+    .filter(r => r.score >= threshold)
     .sort((a, b) => b.score - a.score)
-    .slice(0, TOP_K);
+    .slice(0, topK);
 
   const queryMs = performance.now() - start;
   const avgScore = results.length
@@ -60,11 +68,63 @@ export async function searchEmbeddings(query, options = {}) {
   state.retrievalDiagnostics.resultCount = results.length;
   state.retrievalDiagnostics.avgScore = avgScore;
   state.retrievalDiagnostics.topScore = topScore;
-  state.retrievalDiagnostics.threshold = SIMILARITY_THRESHOLD;
-  state.retrievalDiagnostics.topK = TOP_K;
+  state.retrievalDiagnostics.threshold = threshold;
+  state.retrievalDiagnostics.topK = topK;
   state.retrievalDiagnostics.hasRun = true;
 
   return results;
+}
+
+function getDynamicRetrievalConfig(queryWords, corpusSize) {
+  const cfg = state.retrievalConfig;
+
+  let threshold = cfg.baseThreshold;
+  if (queryWords.length <= 2) threshold -= 0.08;
+  else if (queryWords.length >= 8) threshold += 0.05;
+
+  let topK = cfg.baseTopK;
+  if (queryWords.length >= 6) topK += 1;
+  if (corpusSize >= 250) topK += 1;
+
+  threshold = Math.max(cfg.minThreshold, Math.min(cfg.maxThreshold, threshold));
+  topK = Math.max(2, Math.min(cfg.maxTopK, topK));
+
+  return { threshold, topK };
+}
+
+function computeHybridScore({ chunk, query, queryWords, queryEmbedding, canUseVectorScore }) {
+  const cfg = state.retrievalConfig;
+  const text = String(chunk.searchable_text || chunk.text || '').toLowerCase();
+
+  const lexical = lexicalScore(queryWords, query, text);
+
+  if (!cfg.useHybridScoring) {
+    return canUseVectorScore ? cosineSimilarity(queryEmbedding, chunk.embedding) : lexical;
+  }
+
+  const vector = canUseVectorScore ? cosineSimilarity(queryEmbedding, chunk.embedding) : 0;
+  return (vector * cfg.vectorWeight) + (lexical * cfg.lexicalWeight);
+}
+
+function lexicalScore(queryWords, rawQuery, text) {
+  if (!queryWords.length || !text) return 0;
+
+  const uniqueWords = Array.from(new Set(queryWords));
+  const matched = uniqueWords.filter(word => text.includes(word)).length;
+  const wordRatio = matched / uniqueWords.length;
+
+  const normalizedQuery = String(rawQuery || '').trim().toLowerCase();
+  const exactPhraseBonus = normalizedQuery && text.includes(normalizedQuery) ? 0.15 : 0;
+
+  return Math.min(1, wordRatio + exactPhraseBonus);
+}
+
+function normalizeQueryWords(query) {
+  return String(query || '')
+    .toLowerCase()
+    .split(/\s+/)
+    .map(w => w.trim())
+    .filter(Boolean);
 }
 
 // Compute cosine similarity between two vectors
@@ -109,10 +169,7 @@ async function getQueryEmbedding(query) {
   }
 
   if (matchingEmbeddings.length === 0) {
-    // Fallback: use first embedding dimensions as a zero vector
-    if (state.embeddings.length > 0) {
-      return new Array(state.embeddings[0].embedding.length).fill(0);
-    }
+    // No lexical overlap across chunks, rely on lexical-only scoring fallback.
     return null;
   }
 

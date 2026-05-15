@@ -466,6 +466,10 @@ body.drawer-open {
   margin: var(--space-sm) 0;
 }
 
+#model-progress-status {
+  font-size: 0.78rem;
+}
+
 .progress-bar__fill {
   height: 100%;
   background: var(--primary);

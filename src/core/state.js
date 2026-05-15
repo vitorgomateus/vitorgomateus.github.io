@@ -68,6 +68,17 @@ const state = {
     hasRun: false
   },
 
+  retrievalConfig: {
+    useHybridScoring: true,
+    baseThreshold: 0.3,
+    minThreshold: 0.18,
+    maxThreshold: 0.45,
+    baseTopK: 3,
+    maxTopK: 6,
+    vectorWeight: 0.7,
+    lexicalWeight: 0.3
+  },
+
   // Feedback
   feedbackDismissed: false,
   feedbackShown: false,

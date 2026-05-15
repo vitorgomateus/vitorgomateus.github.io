@@ -205,7 +205,9 @@ function updateModelStatusDisplay() {
       const avg = state.retrievalDiagnostics.avgScore.toFixed(2);
       const count = state.retrievalDiagnostics.resultCount;
       const ms = Math.round(state.retrievalDiagnostics.queryMs);
-      retrievalEl.textContent = `Retrieval: ${count} hit${count === 1 ? '' : 's'} | avg ${avg} | ${ms}ms`;
+      const thr = state.retrievalDiagnostics.threshold.toFixed(2);
+      const topK = state.retrievalDiagnostics.topK;
+      retrievalEl.textContent = `Retrieval: ${count} hit${count === 1 ? '' : 's'} | avg ${avg} | ${ms}ms | thr ${thr} | k ${topK}`;
     }
   }
 }
