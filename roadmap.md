@@ -9,16 +9,12 @@
 ## P1 - High (Core quality and product behavior)
 ### Chatbot Model Quality & Behavior
 - [ ] Need better console logs to test and compare models.
-- [ ] Need to test and compare Gemma 2 and Qwen3.
+- [ ] Need to test and compare Gemma 2, Qwen3, and one SmolVLM-family model.
 - [ ] Need to review chatbot instructions. Qwen3 seems to generate very long incomplete answers and Gemma 2 seems to generate too dry and useless replies, even an empty reply. Qwen also seems to expose `<thinking>` strings.
 
 ### Chatbot UX (Suggestions & Media)
 - [ ] Need to review message suggestions.
 - [ ] Need to make the suggestions look more different from sent messages.
-
-### Architecture, Performance & Diagnostics
-- [ ] Can we detect the memory or CPU capacity of the browser and tell users if their system will withstand the model?
-- [ ] Should I review the embedding or RAG method?
 
 ## P2 - Medium (UX polish and design direction)
 ### Chat Runtime UX
@@ -68,3 +64,6 @@
 ### Navigation
 - [x] Allow navigation behavior, like go back after opening a project and maybe from the experimental feature.
 - [x] Do we have image lightboxes?
+### Architecture, Performance & Diagnostics
+- [x] Browser capability diagnostics now check `navigator.deviceMemory` and `navigator.hardwareConcurrency` and show a readiness estimate before heavy model use.
+- [x] Embedding/RAG flow was reviewed and is currently centralized through `getRelevantContext` over embedding search results.
